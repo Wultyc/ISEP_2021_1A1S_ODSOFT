@@ -36,6 +36,9 @@ public class Calculator {
             case "cubert":
                 accumulator = Math.cbrt(accumulator);
                 break;
+            case "exp":
+                accumulator = Math.pow(accumulator, operand);
+                break;
             case "cancel":
                 accumulator = 0;
                 break;
