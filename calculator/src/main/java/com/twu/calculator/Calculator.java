@@ -36,6 +36,9 @@ public class Calculator {
             case "cubert":
                 accumulator = Math.cbrt(accumulator);
                 break;
+            case "third":
+            	accumulator = accumulator/3;
+            	break;
             case "cancel":
                 accumulator = 0;
                 break;
