@@ -33,3 +33,12 @@ task runApp (type: JavaExec, dependsOn: classes){
     main = "com.twu.calculator.CalculatorApp"
     classpath = sourceSets.main.runtimeClasspath
 }
+
+task moveDiagrams (type: Copy) {
+	from'build/puml/com/twu/calculator'
+	include'*.png'
+	into'build/docs/javadoc/com/twu/calculator'
+}
+
+renderPlantUml.dependsOn javadoc
+moveDiagrams.dependsOn renderPlantUml
