@@ -24,6 +24,23 @@ javadoc {
 task renderPlantUml(type: RenderPlantUmlTask) {
 }
 
+//A simple example of a copy task
+task copyFiles(type: Copy) {
+	description = "Copy files '.png' to another location"
+	from 'build/puml'
+	include '*.png'
+	into '/build/docs/javadoc/com/twu/calculator/'
+}
+
+
+/*
+ 1- render
+ 2- copy 
+ 3-	javadoc
+ */
+javadoc.dependsOn copyFiles
+copyFiles.dependsOn renderPlantUml
+
 // To execute the app
 task runApp (type: JavaExec, dependsOn: classes){
     /* Can pass all the properties: */

@@ -10,7 +10,7 @@ class CalculatorApp {
   public static main()
 
   private isOperationNeedExternalOperator()
-  private getOperation()∏
+  private getOperation()
   private getOperand()
 }
 class Calculator {
