@@ -148,5 +148,25 @@ public class CalculatorTest {
 
         assertThat(actualResult, is(4.0));
     }
+    
+    @Test
+    public void shouldReturnCorrectValueWhenFirstCommandIsAddAndSecondCommandIsDouble() {
+        Calculator calculator = new Calculator();
+        calculator.doOperation("add", 23);
+
+        actualResult = calculator.doOperation("double", 0);
+
+        assertThat(actualResult, is(46.0));
+    }
+    
+    @Test
+    public void shouldReturnCorrectValueWhenFirstCommandIsAddAndSecondCommandIsDouble2() {
+        Calculator calculator = new Calculator();
+        calculator.doOperation("add", 23.5);
+
+        actualResult = calculator.doOperation("double", 0);
+
+        assertThat(actualResult, is(47.0));
+    }
 
 }
