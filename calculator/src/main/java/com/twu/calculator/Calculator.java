@@ -20,6 +20,9 @@ public class Calculator {
             case "divide":
                 accumulator /= operand;
                 break;
+            case "double":
+            	accumulator = accumulator * 2;
+            	break;
             case "abs":
                 accumulator = Math.abs(accumulator);
                 break;

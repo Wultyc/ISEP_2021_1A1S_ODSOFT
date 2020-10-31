@@ -150,6 +150,7 @@ public class CalculatorTest {
     }
     
     @Test
+
     public void shouldReturnThirdOfResult() {
         Calculator calculator = new Calculator();
         calculator.doOperation("add", 39);
@@ -175,6 +176,26 @@ public class CalculatorTest {
         double actualResult = calculator.doOperation("exp", 2);
 
         assertThat(actualResult, is(16.0));
+    }
+
+    @Test
+    public void shouldReturnCorrectValueWhenFirstCommandIsAddAndSecondCommandIsDouble() {
+        Calculator calculator = new Calculator();
+        calculator.doOperation("add", 23);
+
+        actualResult = calculator.doOperation("double", 0);
+
+        assertThat(actualResult, is(46.0));
+    }
+    
+    @Test
+    public void shouldReturnCorrectValueWhenFirstCommandIsAddAndSecondCommandIsDouble2() {
+        Calculator calculator = new Calculator();
+        calculator.doOperation("add", 23.5);
+
+        actualResult = calculator.doOperation("double", 0);
+
+        assertThat(actualResult, is(47.0));
     }
 
 }
