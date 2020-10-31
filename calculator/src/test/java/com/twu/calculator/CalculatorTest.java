@@ -149,4 +149,13 @@ public class CalculatorTest {
         assertThat(actualResult, is(4.0));
     }
 
+    @Test
+    public void shouldReturnFactorialOfResult() {
+        Calculator calculator = new Calculator();
+
+        double actualResult = calculator.doOperation("factorial", 6);
+
+        assertThat(actualResult, is(720.0));
+    }
+
 }
