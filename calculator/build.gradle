@@ -39,4 +39,4 @@ task runApp (type: JavaExec, dependsOn: classes){
 
 
 
-javadoc.dependsOn renderPlantUml
+javadoc.dependsOn(renderPlantUml)
