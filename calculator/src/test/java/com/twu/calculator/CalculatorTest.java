@@ -148,6 +148,16 @@ public class CalculatorTest {
 
         assertThat(actualResult, is(4.0));
     }
+    
+    @Test
+    public void shouldReturnThirdOfResult() {
+        Calculator calculator = new Calculator();
+        calculator.doOperation("add", 39);
+
+        double actualResult = calculator.doOperation("third", 0);
+
+        assertThat(actualResult, is(13.0));
+    }
 
     @Test
     public void shouldReturnFactorialOfResult() {
