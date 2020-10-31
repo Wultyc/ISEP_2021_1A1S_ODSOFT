@@ -2,6 +2,7 @@ apply plugin: "java"
 apply plugin: "application"
 
 
+
 mainClassName = 'com.twu.calculator.CalculatorApp'
 group = 'calculator'
 version = '1.0-SNAPSHOT'
@@ -17,11 +18,13 @@ dependencies {
 }
 
 javadoc {
+	println "Javadoc Generated "
     source = sourceSets.main.allJava
     options.overview = "src/main/javadoc/overview.html" // relative to source root
 }
 
 task renderPlantUml(type: RenderPlantUmlTask) {
+	println "RenderPlantUml Executed! "
 }
 
 // To execute the app
@@ -33,3 +36,7 @@ task runApp (type: JavaExec, dependsOn: classes){
     main = "com.twu.calculator.CalculatorApp"
     classpath = sourceSets.main.runtimeClasspath
 }
+
+
+
+javadoc.dependsOn renderPlantUml
