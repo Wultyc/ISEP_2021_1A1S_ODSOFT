@@ -158,7 +158,6 @@ public class CalculatorTest {
 
         assertThat(actualResult, is(13.0));
     }
-
     @Test
     public void shouldReturnFactorialOfResult() {
         Calculator calculator = new Calculator();
@@ -166,6 +165,16 @@ public class CalculatorTest {
         double actualResult = calculator.doOperation("factorial", 6);
 
         assertThat(actualResult, is(720.0));
+    }
+
+    @Test
+    public void shouldReturnExpOfResult() {
+        Calculator calculator = new Calculator();
+        calculator.doOperation("add", 4);
+
+        double actualResult = calculator.doOperation("exp", 2);
+
+        assertThat(actualResult, is(16.0));
     }
 
 }

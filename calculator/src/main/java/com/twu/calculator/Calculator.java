@@ -41,6 +41,9 @@ public class Calculator {
             case "third":
             	accumulator = accumulator/3;
             	break;
+            case "exp":
+                accumulator = Math.pow(accumulator, operand);
+                break;
             case "cancel":
                 accumulator = 0;
                 break;
