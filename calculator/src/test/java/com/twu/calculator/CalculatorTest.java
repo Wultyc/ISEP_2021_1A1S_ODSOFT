@@ -148,5 +148,15 @@ public class CalculatorTest {
 
         assertThat(actualResult, is(4.0));
     }
+    
+    @Test
+    public void shouldReturnExpOfResult() {
+        Calculator calculator = new Calculator();
+        calculator.doOperation("add", 4);
+
+        double actualResult = calculator.doOperation("exp", 2);
+
+        assertThat(actualResult, is(16.0));
+    }
 
 }
