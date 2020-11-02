@@ -1,4 +1,4 @@
-@startuml class-diagram.png
+@startuml Diagrama-Sequencia-Update.PNG
 skinparam handwritten true
 skinparam monochrome true
 skinparam packageStyle rect
@@ -6,22 +6,23 @@ skinparam defaultFontName FG Virgil
 skinparam shadowing false
 
 actor User
-participant CalculatorApp
-participant Calculator
+participant EditContactPresenter
+participant ContractUpdateEvent
+participant ContractController
+participant ContactsPresenter
 
-create Calculator
-CalculatorApp -> Calculator : new
-Calculator -> Calculator : accumulator=0.0
+User -> EditContactPresenter : click on a contact
+User <- EditContactPresenter : show the "update info" of the contact select
 
-User ->> CalculatorApp : "add 5.5"
-CalculatorApp ->> Calculator : doOperation("add", 5.5)
-CalculatorApp <<-- Calculator : returns 5.5
-User <<-- CalculatorApp : displays "5.5"
+User -> EditContactPresenter : update the contact info
+EditContactPresenter -> EditContactPresenter : blind();
+EditContactPresenter -> EditContactPresenter : doSave();
+EditContactPresenter -> ContractUpdateEvent : ContactUpdatedEvent(result);
 
-User ->> CalculatorApp : "double"
-CalculatorApp ->> Calculator : doOperation("double", 0)
-CalculatorApp <<-- Calculator : returns 11
-User <<-- CalculatorApp : displays "11"
+ContractUpdateEvent -> ContractController : onContactUpdated();
+ContractController -> ContactsPresenter : go(container);
 
+ContactsPresenter -> ContactsPresenter : fetchContactDetails();
+ContactsPresenter -> ContactsPresenter : sortContactDetails();
 
 @enduml

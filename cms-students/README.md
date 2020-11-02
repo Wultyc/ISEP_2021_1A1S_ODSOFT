@@ -152,3 +152,23 @@ This project is based on examples from the GWT project (http://www.gwtproject.or
 
 - http://www.gwtproject.org/articles/mvp-architecture.html
 
+# 9. Extras
+@JoãoSantos
+## Sequence diagram illustrating the "Update Contact" operation
+### EditContactPresenter.java
+![EditContactPresenter](imagens/EditContactPresenter.PNG)
+### ContractUpdateEvent.java
+![ContractUpdateEvent](imagens/ContractUpdateEvent.PNG)
+### ContractController.java
+![ContractController](imagens/ContractController.PNG)
+
+![ContractController2](imagens/ContractController2.PNG)
+
+###ContactsPresenter.java
+![ContactsPresenter](imagens/ContactsPresenter.PNG)
+
+###Aplication
+![aplication](imagens/aplication.PNG)
+
+###Diagrama Sequencia Update
+![Diagrama_Sequencia_Update](imagens/Diagrama_Sequencia_Update.png)
