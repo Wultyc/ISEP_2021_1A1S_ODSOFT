@@ -33,3 +33,5 @@ www-test/
 war/
 reports/
 
+.settings
+.project
