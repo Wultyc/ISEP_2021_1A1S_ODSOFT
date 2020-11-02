@@ -27,7 +27,7 @@ dependencies {
 
 }
 task renderPlantUmlCMS(type: RenderPlantUmlTask){
-	output = "build/docs/javadoc"
+	//output = "build/docs/javadoc"
 }
 
 javadoc {
