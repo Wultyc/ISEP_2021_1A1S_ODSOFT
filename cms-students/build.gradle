@@ -27,7 +27,7 @@ dependencies {
 
 }
 task renderPlantUmlCMS(type: RenderPlantUmlTask){
-	output = "build/docs/javadoc"
+	//output = "build/docs/javadoc"
 }
 
 javadoc {
@@ -36,9 +36,9 @@ javadoc {
     options.addStringOption("sourcepath", "$projectDir/src/main/java")
 }
 
-task renderPlantUML(type: RenderPlantUmlTask){
+//task renderPlantUML(type: RenderPlantUmlTask){
 
-}
+//}
 
 // If we woant to use the default ant build inside gradle
 // ant.importBuild "build.xml"
@@ -122,4 +122,22 @@ test {
   		//classDumpFile = file("${buildDir}/jacoco/classpathdumps")
     }	
 }
-javadoc.dependsOn renderPlantUmlCMS
+
+//João
+//A simple example of a copy task
+ task copyFiles(type: Copy) {
+ 	description = "Copy files '.png' to another location"
+ 	from 'build/puml'
+ 	include '*.png'
+ 	into 'build/docs/javadoc/com/twu/calculator/'
+ }
+
+
+// /*
+//  1- Javadoc
+//  2- Render 
+//  3-	CopyFiles
+//  */
+ copyFiles.dependsOn renderPlantUmlCMS
+ renderPlantUmlCMS.dependsOn javadoc
+
