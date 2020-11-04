@@ -26,18 +26,17 @@ dependencies {
 	testCompile 'com.google.gwt:gwt-dev:2.8.1'
 
 }
-task renderPlantUmlCMS(type: RenderPlantUmlTask){
-	output = "build/docs/javadoc"
-}
+
 
 javadoc {
     source = sourceSets.main.allJava
-    options.overview = "src/main/javadoc/overview.html" // relative to source root
     options.addStringOption("sourcepath", "$projectDir/src/main/java")
+    options.overview = "src/main/javadoc/overview.html" // relative to source root
+    
 }
 
-task renderPlantUML(type: RenderPlantUmlTask){
-
+task renderPlantUml(type: RenderPlantUmlTask){
+	println "RenderPlantUml Executed! "
 }
 
 // If we woant to use the default ant build inside gradle
@@ -122,4 +121,5 @@ test {
   		//classDumpFile = file("${buildDir}/jacoco/classpathdumps")
     }	
 }
-javadoc.dependsOn renderPlantUmlCMS
+
+javadoc.dependsOn(renderPlantUml)
