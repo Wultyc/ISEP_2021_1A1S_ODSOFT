@@ -1,22 +1,24 @@
 @startuml class-diagram.png
-skinparam handwritten true
-skinparam monochrome true
-skinparam packageStyle rect
-skinparam defaultFontName FG Virgil
-skinparam shadowing false
+ skinparam handwritten true
+ skinparam monochrome true
+ skinparam packageStyle rect
+ skinparam defaultFontName FG Virgil
+ skinparam shadowing false
 
-actor User
-participant CalculatorApp
-participant Calculator
+ actor User
+ participant ContactPresenter
+ participant ContactsServiceAsync
+ participant AddContactEvent
+ participant ContactsController
 
-create Calculator
-CalculatorApp -> Calculator : new
-Calculator -> Calculator : accumulator=0.0
+ User ->> ContactPresenter : "Click on add button"
+ ContactPresenter ->> ContactsServiceAsync : "addContact"
 
-User ->> CalculatorApp : "add 5.5"
-CalculatorApp ->> Calculator : doOperation("add", 5.5)
-CalculatorApp <<-- Calculator : returns 5.5
-User <<-- CalculatorApp : displays "5.5"
+ ContactsServiceAsync ->> AddContactEvent : "onAddContact()"
+
+ ContactsController <<-- AddContactEvent : "onAddContact()"
+ ContactsController ->> ContactsPresenter : "go()"
+ User <<-- ContactsPresenter : "showContacts"
 
 
 @enduml
