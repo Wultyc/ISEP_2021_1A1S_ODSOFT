@@ -131,6 +131,13 @@ test {
  	include '*.png'
  	into 'build/docs/javadoc/com/twu/calculator/'
  }
+ 
+  task copyFilesJavadoc(type: Copy) {
+ 	description = "Copy files '.png' to another location in javadoc"
+ 	from 'build/puml'
+ 	include '*.png'
+ 	into 'src/main/javadoc/com/twu/calculator/'
+ }
 
 
 // /*
