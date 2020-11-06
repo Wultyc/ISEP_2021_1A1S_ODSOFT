@@ -154,27 +154,31 @@ This project is based on examples from the GWT project (http://www.gwtproject.or
 
 # 9. Extras
 @JoãoSantos
+
 ## Sequence diagram illustrating the "Update Contact" operation
+
 ### EditContactPresenter.java
 ![EditContactPresenter](imagens/EditContactPresenter.PNG)
+
 ### ContractUpdateEvent.java
 ![ContractUpdateEvent](imagens/ContractUpdateEvent.PNG)
+
 ### ContractController.java
 ![ContractController](imagens/ContractController.PNG)
 
 ![ContractController2](imagens/ContractController2.PNG)
 
-###ContactsPresenter.java
+### ContactsPresenter.java
 ![ContactsPresenter](imagens/ContactsPresenter.PNG)
 
 
-###Aplication
+### Aplication
 ![aplication](imagens/aplication.PNG)
 
 
-###Diagrama Sequencia Update
+### Diagrama Sequencia Update
 ![Diagrama_Sequencia_Update](imagens/Diagrama_Sequencia_Update.png)
 
 
-##Build the Project using Jenkins [Analysis/Design]
+## Build the Project using Jenkins [Analysis/Design]
 ![BuildSucess_Ext1](imagens/BuildSucess_Ext1.png)
