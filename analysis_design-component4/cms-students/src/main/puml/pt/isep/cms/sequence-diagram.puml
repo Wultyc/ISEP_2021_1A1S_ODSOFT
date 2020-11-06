@@ -6,22 +6,17 @@ skinparam defaultFontName FG Virgil
 skinparam shadowing false
 
 actor User
-participant CalculatorApp
-participant Calculator
+boundary Showcase
+control ContactController
 
-create Calculator
-CalculatorApp -> Calculator : new
-Calculator -> Calculator : accumulator=0.0
-
-User ->> CalculatorApp : "add 5.5"
-CalculatorApp ->> Calculator : doOperation("add", 5.5)
-CalculatorApp <<-- Calculator : returns 5.5
-User <<-- CalculatorApp : displays "5.5"
-
-User ->> CalculatorApp : "double"
-CalculatorApp ->> Calculator : doOperation("double", 0)
-CalculatorApp <<-- Calculator : returns 11
-User <<-- CalculatorApp : displays "11"
+User -> Showcase : "Click Contact"
+Showcase -> ContactController : doContactUpdated()
+ContactController -> Showcase : "Open window for update the contact"
+Showcase -> User : "Displays window"
+User -> Showcase : "Click Cancel"
+Showcase -> ContactController : doEditContactCancelled()
+ContactController -> Showcase : "Do nothing"
+Showcase -> User : "Displays initial page"
 
 
 @enduml

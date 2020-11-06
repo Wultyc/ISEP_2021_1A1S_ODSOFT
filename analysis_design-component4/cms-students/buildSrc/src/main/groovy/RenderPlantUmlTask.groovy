@@ -49,14 +49,14 @@ import groovy.io.FileType
 class RenderPlantUmlTask extends DefaultTask {
 
     def Path assetsPathInput = project.projectDir.toPath().resolve('src/main/puml/')
-    def Path assetsPathOutput = project.projectDir.toPath().resolve('build/docs/javadoc/')
+    def Path assetsPathOutput = project.projectDir.toPath().resolve('build/docs/javadoc')
 
 
 
     RenderPlantUmlTask() {
 
         //println project.getTasksByName("javadoc",true).getAt(0).path
-
+		Path projectPath = project.projectDir.toPath()
 
         new File(assetsPathInput.toString()).eachFileRecurse( FileType.FILES,
             { pumlFile ->
