@@ -17,4 +17,14 @@
     <url-pattern>/showcase/contactsService</url-pattern>
   </servlet-mapping>
 
+	<!-- Servlets for the Warehouses -->
+  <servlet>
+    <servlet-name>warehousesServiceServlet</servlet-name>
+    <servlet-class>pt.isep.cms.warehouses.server.WarehousesServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>warehousesServiceServlet</servlet-name>
+    <url-pattern>/showcase/warehousesService</url-pattern>
+  </servlet-mapping>
 </web-app>
