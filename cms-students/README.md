@@ -182,3 +182,6 @@ This project is based on examples from the GWT project (http://www.gwtproject.or
 
 ## Build the Project using Jenkins [Analysis/Design]
 ![BuildSucess_Ext1](imagens/BuildSucess_Ext1.png)
+
+## Debug 
+Erro numa biblioteca, voltar atrás!
