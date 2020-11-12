@@ -13,10 +13,14 @@ create Calculator
 CalculatorApp -> Calculator : new
 Calculator -> Calculator : accumulator=0.0
 
-User ->> CalculatorApp : "add 5.5"
-CalculatorApp ->> Calculator : doOperation("add", 5.5)
-CalculatorApp <<-- Calculator : returns 5.5
-User <<-- CalculatorApp : displays "5.5"
+User ->> CalculatorApp : "add 9.0"
+CalculatorApp ->> Calculator : doOperation("add", 9.0)
+CalculatorApp <<-- Calculator : returns 9.0
+User <<-- CalculatorApp : displays "9.0"
+User ->> CalculatorApp : "third"
+Calculator ->> Calculator : doOperation("third", 0)
+CalculatorApp <<-- Calculator : returns 3.0
+User <<-- CalculatorApp : displays "3.0"
 
 
 @enduml
