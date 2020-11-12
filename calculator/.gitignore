@@ -25,6 +25,8 @@ Thumbs.db
 *.patch
 .settings
 ._*
+.project
+.classpath
 
 # Gradle
 .gradle

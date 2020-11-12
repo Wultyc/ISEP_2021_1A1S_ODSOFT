@@ -18,5 +18,10 @@ CalculatorApp ->> Calculator : doOperation("add", 5.5)
 CalculatorApp <<-- Calculator : returns 5.5
 User <<-- CalculatorApp : displays "5.5"
 
+User ->> CalculatorApp : "double"
+CalculatorApp ->> Calculator : doOperation("double", 0)
+CalculatorApp <<-- Calculator : returns 11
+User <<-- CalculatorApp : displays "11"
+
 
 @enduml

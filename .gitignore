@@ -3,9 +3,15 @@
 # Learn more about .gitignore:
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
+
+*.cache.js
+
 # Node artifact files
 node_modules/
 dist/
+
+#
+*.cache.js
 
 # Compiled Java class files
 *.class
@@ -48,3 +54,8 @@ Thumbs.db
 *.mov
 *.wmv
 
+/bin/
+/.gradle/
+
+.classpath
+.project

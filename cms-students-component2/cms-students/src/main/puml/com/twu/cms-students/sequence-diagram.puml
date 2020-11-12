@@ -1,0 +1,21 @@
+@startuml class-diagram.png
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User
+ participant ContactPresenter
+ participant ContactsServiceAsync
+ participant ContactDeletedEvent
+ participant ContactsServiceImpl
+
+ User ->> ContactPresenter : "Click on delete button"
+ ContactPresenter ->> ContactsServiceAsync : "deleteContacts"
+ ContactsServiceAsync ->> ContactDeletedEvent : "onContactDeleted()"
+ ContactDeletedEvent ->> ContactsServiceImpl : "deleteContact()"
+ User <<-- ContactsPresenter : "showContacts"
+
+
+@enduml

@@ -1,5 +1,7 @@
 package com.twu.calculator;
 
+import java.util.stream.LongStream;
+
 public class Calculator {
 
     private double accumulator;
@@ -18,6 +20,9 @@ public class Calculator {
             case "divide":
                 accumulator /= operand;
                 break;
+            case "double":
+            	accumulator = accumulator * 2;
+            	break;
             case "abs":
                 accumulator = Math.abs(accumulator);
                 break;
@@ -36,9 +41,18 @@ public class Calculator {
             case "cubert":
                 accumulator = Math.cbrt(accumulator);
                 break;
+            case "third":
+            	accumulator = accumulator/3;
+            	break;
+            case "exp":
+                accumulator = Math.pow(accumulator, operand);
+                break;
             case "cancel":
                 accumulator = 0;
                 break;
+            case "factorial":
+            	accumulator = LongStream.rangeClosed((long) 1, (long) operand).reduce(1, (long x, long y) -> x * y);
+            	break;
             case "exit":
                 System.exit(0);
         }

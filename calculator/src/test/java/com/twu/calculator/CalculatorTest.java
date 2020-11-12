@@ -148,5 +148,54 @@ public class CalculatorTest {
 
         assertThat(actualResult, is(4.0));
     }
+    
+    @Test
+
+    public void shouldReturnThirdOfResult() {
+        Calculator calculator = new Calculator();
+        calculator.doOperation("add", 39);
+
+        double actualResult = calculator.doOperation("third", 0);
+
+        assertThat(actualResult, is(13.0));
+    }
+    @Test
+    public void shouldReturnFactorialOfResult() {
+        Calculator calculator = new Calculator();
+
+        double actualResult = calculator.doOperation("factorial", 6);
+
+        assertThat(actualResult, is(720.0));
+    }
+
+    @Test
+    public void shouldReturnExpOfResult() {
+        Calculator calculator = new Calculator();
+        calculator.doOperation("add", 4);
+
+        double actualResult = calculator.doOperation("exp", 2);
+
+        assertThat(actualResult, is(16.0));
+    }
+
+    @Test
+    public void shouldReturnCorrectValueWhenFirstCommandIsAddAndSecondCommandIsDouble() {
+        Calculator calculator = new Calculator();
+        calculator.doOperation("add", 23);
+
+        actualResult = calculator.doOperation("double", 0);
+
+        assertThat(actualResult, is(46.0));
+    }
+    
+    @Test
+    public void shouldReturnCorrectValueWhenFirstCommandIsAddAndSecondCommandIsDouble2() {
+        Calculator calculator = new Calculator();
+        calculator.doOperation("add", 23.5);
+
+        actualResult = calculator.doOperation("double", 0);
+
+        assertThat(actualResult, is(47.0));
+    }
 
 }

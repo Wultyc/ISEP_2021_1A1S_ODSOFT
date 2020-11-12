@@ -2,6 +2,7 @@ apply plugin: "java"
 apply plugin: "application"
 
 
+
 mainClassName = 'com.twu.calculator.CalculatorApp'
 group = 'calculator'
 version = '1.0-SNAPSHOT'
@@ -17,12 +18,32 @@ dependencies {
 }
 
 javadoc {
+	println "Javadoc Generated "
     source = sourceSets.main.allJava
     options.overview = "src/main/javadoc/overview.html" // relative to source root
 }
 
 task renderPlantUml(type: RenderPlantUmlTask) {
+	println "RenderPlantUml Executed! "
 }
+
+//João
+//A simple example of a copy task
+// task copyFiles(type: Copy) {
+// 	description = "Copy files '.png' to another location"
+// 	from 'build/puml'
+// 	include '*.png'
+// 	into '/build/docs/javadoc/com/twu/calculator/'
+// }
+
+
+// /*
+//  1- render
+//  2- copy 
+//  3-	javadoc
+//  */
+// javadoc.dependsOn copyFiles
+// copyFiles.dependsOn renderPlantUml
 
 // To execute the app
 task runApp (type: JavaExec, dependsOn: classes){
@@ -33,3 +54,15 @@ task runApp (type: JavaExec, dependsOn: classes){
     main = "com.twu.calculator.CalculatorApp"
     classpath = sourceSets.main.runtimeClasspath
 }
+
+task moveDiagrams (type: Copy) {
+	from'build/puml/com/twu/calculator'
+	include'*.png'
+	into'build/docs/javadoc/com/twu/calculator'
+}
+
+renderPlantUml.dependsOn javadoc
+moveDiagrams.dependsOn renderPlantUml
+
+//Rita
+//javadoc.dependsOn(renderPlantUml)
