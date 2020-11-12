@@ -24,7 +24,7 @@ public class ExampleJRETest extends TestCase {
 		WarehousesPresenter = new WarehousesPresenter(mockRpcService, eventBus, mockDisplay);
 	}
 
-	public void testWarehouseSort() {
+	public void testWarehouseList() {
 		ArrayList<WarehouseDetails> WarehouseDetails = new ArrayList<WarehouseDetails>();
 		WarehouseDetails.add(new WarehouseDetails("0", "c_Warehouse"));
 		WarehouseDetails.add(new WarehouseDetails("1", "b_Warehouse"));
