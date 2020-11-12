@@ -10,6 +10,9 @@
 node_modules/
 dist/
 
+#
+*.cache.js
+
 # Compiled Java class files
 *.class
 
