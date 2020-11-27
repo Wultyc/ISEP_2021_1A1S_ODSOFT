@@ -16,7 +16,7 @@ pipeline {
 				        echo 'Hello world (Parallel 1)'
 			        }
                 }
-                stages('Stage 2.2'){    
+                stage('Stage 2.2'){    
                     steps{
 				        echo 'Hello world (Parallel 2)'
 			        }
