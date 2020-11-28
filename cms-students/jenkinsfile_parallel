@@ -27,14 +27,14 @@ pipeline {
 		}
         stage('Unit tests'){
             steps{
-                dir(cms2Path){
+                //dir(cms2Path){
                     script{
                         //Test this part
                         //sh 'gradle check'
                         sh 'pwd'
                         sh 'ls -la'
                     }
-                } 
+                //} 
             }
         }
     }
