@@ -24,11 +24,11 @@ pipeline {
                 }
             }
 		}
-        stage('UNit tests'){
+        stage('Unit tests'){
             steps{
                 script{
                 //Unit Tests
-                sh 'gradle test'
+                sh './gradlew check'
                 sh 'ls -la'
                 }
             }
