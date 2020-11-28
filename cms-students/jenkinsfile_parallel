@@ -30,7 +30,8 @@ pipeline {
                 dir(cms2Path){
                     script{
                         //Test this part
-                        sh 'gradle check'
+                        //sh 'gradle check'
+                        sh 'pwd'
                         sh 'ls -la'
                     }
                 } 
