@@ -14,8 +14,7 @@ pipeline {
 			parallel {
                 stage('Stage 2.1'){
                     steps{
-				        sh 'echo "Hello world (Parallel 1)"'
-                        sh 'echo "Build number: ${env.BUILD_NUMBER}"'
+				        echo 'Hello world (Parallel 1)'
 			        }
                 }
                 stage('Stage 2.2'){    
@@ -27,8 +26,11 @@ pipeline {
 		}
         stage('UNit tests'){
             steps{
+                script{
                 //Unit Tests
                 sh 'gradle test'
+                sh 'ls -la'
+                }
             }
         }
     }
