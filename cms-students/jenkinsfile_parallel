@@ -1,19 +1,21 @@
 #!/usr/bin/env groovy 
 
+
 pipeline {
 	agent any
 
 	stages {
 	    stage('Stage 1') {
 			steps{
-                echo 'Running ${env.BUILD_ID} on §{env.JENKINS_URL}'
+                echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL} [Build number: ${env.BUILD_NUMBER}] [Workspace: ${env.WORKSPACE}]"
 			}
         }    
 	    stage('Stage 2') {
 			parallel {
                 stage('Stage 2.1'){
                     steps{
-				        echo 'Hello world (Parallel 1)'
+				        sh 'echo "Hello world (Parallel 1)"'
+                        sh 'echo "Build number: ${env.BUILD_NUMBER}"'
 			        }
                 }
                 stage('Stage 2.2'){    
@@ -23,5 +25,11 @@ pipeline {
                 }
             }
 		}
+        stage('UNit tests'){
+            steps{
+                //Unit Tests
+                sh 'gradle test'
+            }
+        }
     }
 } 
