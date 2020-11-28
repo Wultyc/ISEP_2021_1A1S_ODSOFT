@@ -30,7 +30,7 @@ pipeline {
                 dir(cms2Path){
                     script{
                         //Test this part
-                        sh './gradlew clean test'
+                        sh './gradlew clean test --no-daemon'
                         //sh 'pwd'
                         sh 'ls -la'
                     }
