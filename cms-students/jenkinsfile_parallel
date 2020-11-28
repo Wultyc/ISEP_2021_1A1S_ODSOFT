@@ -1,5 +1,6 @@
 #!/usr/bin/env groovy 
 
+def cms2Path = './'
 
 pipeline {
 	agent any
@@ -26,11 +27,13 @@ pipeline {
 		}
         stage('Unit tests'){
             steps{
-                script{
-                //Unit Tests
-                sh './gradlew check'
-                sh 'ls -la'
-                }
+                dir(cms2Path){
+                    script{
+                        //Test this part
+                        sh 'gradle check'
+                        sh 'ls -la'
+                    }
+                } 
             }
         }
     }
