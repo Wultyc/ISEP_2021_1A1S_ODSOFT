@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy 
 
-def cms2Path = '/cms-students'
+def cms2Path = '/var/lib/jenkins/workspace/cms-2/cms-students'
 
 pipeline {
 	agent any
@@ -27,14 +27,14 @@ pipeline {
 		}
         stage('Unit tests'){
             steps{
-                //dir(cms2Path){
+                dir(cms2Path){
                     script{
                         //Test this part
                         //sh 'gradle check'
                         sh 'pwd'
                         sh 'ls -la'
                     }
-                //} 
+                } 
             }
         }
     }
