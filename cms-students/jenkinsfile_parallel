@@ -1,5 +1,7 @@
 #!/usr/bin/env groovy 
 
+def credential_ID = 'a40dafd0-e2c0-4218-8eca-0f4eefc35f17'
+
 def cms2Path = '/var/lib/jenkins/workspace/cms-2/cms-students'
 
 pipeline {
@@ -30,7 +32,7 @@ pipeline {
                 dir(cms2Path){
                     script{
                         //Test this part
-                        sh './gradlew check'
+                        sh 'gradle check'
                         //sh 'pwd'
                         sh 'ls -la'
                     }
