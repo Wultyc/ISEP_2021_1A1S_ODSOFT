@@ -33,7 +33,7 @@ pipeline {
                 dir(cms2Path){
                     //script{
                         //Test this part
-                        sh "./gradlew build"
+                        sh "gradle build"
                         //sh 'pwd'
                         sh "ls -la ${pwd()}"
                     //}
