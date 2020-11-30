@@ -1,0 +1,68 @@
+#!/usr/bin/env groovy 
+
+pipeline {
+    agent any
+
+	stages {
+	    stage('Start Pipeline') {
+			steps{
+                echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL} [Build number: ${env.BUILD_NUMBER}] [Workspace: ${env.WORKSPACE}]"
+			}
+        }
+	    stage('Checkout') {
+			steps{
+                echo "chechout"
+			}
+        }
+	    stage('Build War file') {
+			steps{
+                echo "Build war file"
+			}
+        }
+	    stage('Unit test') {
+			steps{
+                echo "Unit test"
+			}
+        }
+	    stage('Integration test') {
+			steps{
+                echo "Integration Test"
+			}
+        }
+	    stage('Mutation Test') {
+			steps{
+                echo "Mutation test"
+			}
+        }
+	    stage('Deploy') {
+			steps{
+                echo "Deploy"
+			}
+        }
+	    stage('Javadoc') {
+			steps{
+                echo "Javadoc"
+			}
+        }
+	    stage('Smoke test') {
+			steps{
+                echo "Smoke test"
+			}
+        }
+	    stage('Send invite email') {
+			steps{
+                echo "Send email"
+			}
+        }
+	    stage('Manual Approve') {
+			steps{
+                echo "Manual Approve"
+			}
+        }
+	    stage('Push tag to bitbucket') {
+			steps{
+                echo "Push tag to bitbucket"
+			}
+        }
+	}
+}
