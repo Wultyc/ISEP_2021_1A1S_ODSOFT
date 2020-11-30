@@ -29,12 +29,13 @@ pipeline {
 		}
         stage('Unit tests'){
             steps{
+                //Run the commands from withinthat directory!
                 dir(cms2Path){
                     //script{
                         //Test this part
                         //sh 'gradle check'
                         //sh 'pwd'
-                        sh 'ls -la ${pwd()}'
+                        sh "ls -la ${pwd()}"
                     //}
                 } 
             }
