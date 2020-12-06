@@ -8,36 +8,27 @@ pipeline {
 	agent any
 
 	stages {
-	    stage('Stage 1') {
+	    stage('Start') {
 			steps{
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL} [Build number: ${env.BUILD_NUMBER}] [Workspace: ${env.WORKSPACE}]"
 			}
-        }    
-	    stage('Stage 2') {
-			parallel {
-                stage('Stage 2.1'){
-                    steps{
-				        echo 'Hello world (Parallel 1)'
-			        }
-                }
-                stage('Stage 2.2'){    
-                    steps{
-				        echo 'Hello world (Parallel 2)'
-			        }
-                }
+        }
+        stage('Checkout') {
+			steps {
+                git url: 'https://bitbucket.org/1160929/odsoft-m1b_g1.git',
+                        branch: 'master',
+                        credentialsId: credential_ID
             }
-		}
-        stage('Unit tests'){
-            steps{
-                //Run the commands from withinthat directory!
-                dir(cms2Path){
-                    //script{
-                        //Test this part
-                        sh "gradle build"
-                        //sh 'pwd'
-                        sh "ls -la ${pwd()}"
-                    //}
-                } 
+        }
+        stage('Build War file') {
+			steps {
+                dir(cmsPath) {
+                    script {
+                        sh 'gradle clean build'
+                    }
+
+                    archiveArtifacts warPath
+                }
             }
         }
     }
