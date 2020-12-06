@@ -1,5 +1,14 @@
 #!/usr/bin/env groovy 
 
+def cmsPath = 'cms-students'
+def warPath = 'build/libs/cms-students-1.0.war'
+def javadocPath = 'build/docs/javadoc/'
+def unitTestReport = 'build/reports/test'
+def unitTestResults = 'build/test-results/test'
+def integrationTestResults = 'build/jacocoHtmlReport'
+def mutationTestResults = 'build/reports/pitest'
+def cmsHttp = 'http://localhost:9000/job/Final_Project/'
+
 pipeline {
     agent any
 
@@ -10,29 +19,101 @@ pipeline {
 			}
         }
 	    stage('Checkout') {
-			steps{
-                echo "chechout"
-			}
+			steps {
+                git url: 'https://bitbucket.org/1160929/odsoft-m1b_g1.git',
+                        branch: 'master',
+                        credentialsId: 'db746efe-3c61-40e5-8071-c81f2763b723'
+            }
         }
 	    stage('Build War file') {
-			steps{
-                echo "Build war file"
-			}
+			steps {
+                dir(cmsPath) {
+                    script {
+                        sh 'gradle clean build'
+                    }
+
+                    archiveArtifacts warPath
+                }
+            }
         }
 	    stage('Unit test') {
-			steps{
-                echo "Unit test"
+			steps {
+				dir(cmsPath) {
+					script {
+						sh 'gradle clean test'
+						sh 'gradle jacocoTestReport'
+						sh 'ls -la ' + unitTestResults // To show the contents on the log before publishing
+					}
+					junit unitTestResults + '/*.xml'
+					publishHTML([
+							allowMissing         : false,
+							alwaysLinkToLastBuild: false,
+							keepAll              : false,
+							reportDir            : unitTestReport,
+							reportFiles          : 'index.html',
+							reportName           : 'Unit Test Coverage HTML Report',
+							reportTitles         : ''])
+				}
 			}
         }
 	    stage('Integration test') {
 			steps{
-                echo "Integration Test"
+				echo "Integration test"
 			}
+			/*steps {
+		        dir(cmsPath) {
+		            script {
+		                sh 'gradle clean integrationTest'
+		                sh 'gradle jacocoIntegrationReport'
+		                sh 'ls -la ' + integrationTestResults
+		                // To show the contents on the log before publishing
+		            }
+		            jacoco buildOverBuild: true,
+		                    deltaBranchCoverage: '5',
+		                    deltaClassCoverage: '5',
+		                    deltaComplexityCoverage: '5',
+		                    deltaInstructionCoverage: '5',
+		                    deltaLineCoverage: '5',
+		                    deltaMethodCoverage: '5',
+		                    maximumBranchCoverage: '80',
+		                    maximumClassCoverage: '80',
+		                    maximumComplexityCoverage: '80',
+		                    maximumInstructionCoverage: '80',
+		                    maximumLineCoverage: '80',
+		                    maximumMethodCoverage: '80',
+		                    minimumBranchCoverage: '5',
+		                    minimumClassCoverage: '5',
+		                    minimumComplexityCoverage: '5',
+		                    minimumInstructionCoverage: '5',
+		                    minimumLineCoverage: '5',
+		                    minimumMethodCoverage: '5'
+		            publishHTML([
+		                    allowMissing         : false,
+		                    alwaysLinkToLastBuild: false,
+		                    keepAll              : false,
+		                    reportDir            : integrationTestResults,
+		                    reportFiles          : 'index.html',
+		                    reportName           : 'Integration Test Coverage HTML Report',
+		                    reportTitles         : ''])
+		        }
+		    }*/
         }
 	    stage('Mutation Test') {
-			steps{
-                echo "Mutation test"
-			}
+			steps {
+		        dir(cmsPath) {
+		            script {
+		                sh 'gradle clean pitest'
+		            }
+		            publishHTML([
+		                    allowMissing         : false,
+		                    alwaysLinkToLastBuild: false,
+		                    keepAll              : false,
+		                    reportDir            : mutationTestResults,
+		                    reportFiles          : 'index.html',
+		                    reportName           : 'Pit Mutation Test Coverage HTML Report',
+		                    reportTitles         : ''])
+		        }
+		    }
         }
 	    stage('Deploy') {
 			steps{
@@ -40,19 +121,48 @@ pipeline {
 			}
         }
 	    stage('Javadoc') {
-			steps{
-                echo "Javadoc"
-			}
+			steps {
+                dir(cmsPath) {
+                    script {
+                        sh 'gradle clean javadoc'
+                    }
+                    step $class: 'JavadocArchiver',
+                            javadocDir: javadocPath,
+                            keepAll: false
+                }
+            }
         }
 	    stage('Smoke test') {
-			steps{
-                echo "Smoke test"
-			}
+			steps {
+                echo 'Waiting 10 seconds before Smoke Test...'
+                sleep(
+                        time: 10,
+                        unit: "SECONDS"
+                )
+                script {
+                    // ALTERNATIVE: check the exit status. if it's 0 = 200 http
+                    // def response = sh(returnStatus: true, script: 'curl --fail --write-out "%{http_code}" --silent --output /dev/null ' + cmsHttp
+                    def response = sh(
+                            returnStdout: true,
+                            script: 'curl --write-out "%{http_code}" --silent --output /dev/null ' + cmsHttp
+                    )
+                    if (response == "200") {
+                        echo 'CMS is up! (HTTP 200)'
+                        return true
+                    } else {
+                        error("Error executing smoke test! Response code: " + response)
+                    }
+                }
+            }
         }
 	    stage('Send invite email') {
-			steps{
-                echo "Send email"
-			}
+			steps {
+                mail(from: 'no-replay@jenkins.localhost',
+                        to: '1160929@isep.ipp.pt',
+                        subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for approval",
+                        body: "The job '${env.JOB_NAME}' is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue.");
+                input 'Ready?';
+            }
         }
 	    stage('Manual Approve') {
 			steps{
