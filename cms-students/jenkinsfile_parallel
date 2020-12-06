@@ -17,7 +17,7 @@ pipeline {
 			steps {
                 git url: 'https://bitbucket.org/1160929/odsoft-m1b_g1.git',
                         branch: 'master',
-                        credentialsId: credential_ID
+                        credentialsId: 'a40dafd0-e2c0-4218-8eca-0f4eefc35f17'
             }
         }
         stage('Build War file') {
