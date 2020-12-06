@@ -22,7 +22,7 @@ pipeline {
         }
         stage('Build War file') {
 			steps {
-                dir(cmsPath) {
+                dir(cms2Path) {
                     script {
                         sh 'gradle clean build'
                     }
