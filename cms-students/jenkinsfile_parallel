@@ -4,6 +4,7 @@ def credential_ID = 'a40dafd0-e2c0-4218-8eca-0f4eefc35f17'
 def warPath = 'build/libs/cms-students-1.0.war'
 def javadocPath = 'build/docs/javadoc/'
 def cms2Path = 'cms-students/'
+def unitTestResults = 'build/test-results/test'
 
 pipeline {
 	agent any
@@ -37,20 +38,32 @@ pipeline {
 			steps {
                			 dir(cms2Path) {
                    			 script {
-                       				 sh 'gradle clean javadoc -g gradle-user-home'
+                       		    sh 'gradle clean javadoc -g gradle-user-home'
                    			 }
-
-					step $class: 'JavadocArchiver',
-                            		javadocDir: javadocPath,
-                            		keepAll: false
+					        step $class: 'JavadocArchiver',
+                            javadocDir: javadocPath,
+                            keepAll: false
                			 }
            		 }
         }
         stage('4.1 Unit Tests') {
-			steps {
-				echo "Unit Tests"
-   			 }
-		}
+						dir(cmsPath) {
+					script {
+						sh 'gradle clean test'
+						sh 'gradle jacocoTestReport'
+						sh 'ls -la ' + unitTestResults // To show the contents on the log before publishing
+					}
+					junit unitTestResults + '/*.xml'
+					publishHTML([
+							allowMissing         : false,
+							alwaysLinkToLastBuild: false,
+							keepAll              : false,
+							reportDir            : unitTestReport,
+							reportFiles          : 'index.html',
+							reportName           : 'Unit Test Coverage HTML Report',
+							reportTitles         : ''])
+				}
+        }
  
         stage('4.2 Integration Tests') {
 			steps {
