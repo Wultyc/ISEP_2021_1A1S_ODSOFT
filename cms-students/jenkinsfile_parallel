@@ -2,6 +2,7 @@
 
 def credential_ID = 'a40dafd0-e2c0-4218-8eca-0f4eefc35f17'
 def warPath = 'build/libs/cms-students-1.0.war'
+def javadocPath = 'build/docs/javadoc/'
 def cms2Path = 'cms-students/'
 
 pipeline {
@@ -13,14 +14,14 @@ pipeline {
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL} [Build number: ${env.BUILD_NUMBER}] [Workspace: ${env.WORKSPACE}]"
 			}
         }
-        stage('Checkout') {
+        stage('1. Repository Checkout') {
 			steps {
                 git url: 'https://bitbucket.org/1160929/odsoft-m1b_g1.git',
                         branch: 'master',
                         credentialsId: '1fb50392-6260-431d-b1e6-ea6a12c9778c'
             }
         }
-        stage('Build War file') {
+        stage('2. War file') {
 			steps {
                 dir(cms2Path) {
                     script {
@@ -31,5 +32,50 @@ pipeline {
                 }
             }
         }
-    }
-} 
+
+        stage('3. Javadoc') {
+			steps {
+               			 dir(cms2Path) {
+                   			 script {
+                       				 sh 'gradle clean javadoc -g gradle-user-home'
+                   			 }
+
+					step $class: 'JavadocArchiver',
+                            		javadocDir: javadocPath,
+                            		keepAll: false
+               			 }
+           		 }
+        }
+        stage('4.1 Unit Tests') {
+			steps {
+				echo "Unit Tests"
+   			 }
+		}
+ 
+        stage('4.2 Integration Tests') {
+			steps {
+				echo "Integration Tests"
+   			 }
+		} 
+        stage('4.3 Mutation Tests') {
+			steps {
+				echo "Mutation Tests"
+   			 }
+		} 
+        stage('4.4 System Test') {
+			steps {
+				echo "System Test"
+   			 }
+		} 
+        stage('4.5. Manuel Test') {
+			steps {
+				echo "Manual Test"
+   			 }
+		} 
+        stage('5. Feedback') {
+			steps {
+				echo "Feedback"
+   			 }
+		} 
+	}
+}
