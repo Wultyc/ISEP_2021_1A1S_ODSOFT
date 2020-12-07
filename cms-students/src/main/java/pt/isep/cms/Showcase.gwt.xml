@@ -30,8 +30,8 @@
 
   <!-- Only generate permutations for safari and chrome -->
   <set-property name="user.agent" value="safari, ie9" />
-  
-  <!-- Possible values for other bowsers 
+  <extend-property name="user.agent" values="gecko1_8" />  Firefox 3.0
+  <!-- Possible values for other bowsers
   <extend-property name="user.agent" values="ie8" />
   <extend-property name="user.agent" values="gecko1_8" />  Firefox 3.0 
   <extend-property name="user.agent" values="safari" />   Webkit based browsers, usually Safari&Chrome 

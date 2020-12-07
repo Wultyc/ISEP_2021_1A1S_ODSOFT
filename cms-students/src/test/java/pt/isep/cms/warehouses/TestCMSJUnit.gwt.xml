@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module rename-to='testwarehouses'>
+
+    <inherits name='pt.isep.cms.Showcase'/>
+
+    <servlet path="/warehouses/warehousesService" class="pt.isep.cms.warehouses.server.WarehousesServiceImpl" />
+
+</module>
