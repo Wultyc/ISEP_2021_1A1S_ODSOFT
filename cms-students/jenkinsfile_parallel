@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy 
 
 def credential_ID = 'a40dafd0-e2c0-4218-8eca-0f4eefc35f17'
-
+def warPath = 'build/libs/cms-students-1.0.war'
 def cms2Path = 'cms-students/'
 
 pipeline {
