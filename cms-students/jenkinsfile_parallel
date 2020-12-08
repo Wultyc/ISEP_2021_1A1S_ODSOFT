@@ -79,7 +79,8 @@ pipeline {
                     sript {
                         sh 'gradle clean integrationTest -g gradle-user-home'
                         sh'gradle jacocoIntegrationReport -g gradle-user-home'
-                        sh 'ls -la' + integrationTestResults //Lista os conteodos dos resultados;
+                        sh 'ls -la' + integrationTestResults
+                        //Lista os conteodos dos resultados;
                     }
 		            jacoco buildOverBuild: true,
 		                    deltaBranchCoverage: '5',
@@ -100,7 +101,7 @@ pipeline {
 		                    minimumInstructionCoverage: '5',
 		                    minimumLineCoverage: '5',
 		                    minimumMethodCoverage: '5'
-		            publishHTML(target [
+		            publishHTML([
 		                    allowMissing         : false,
 		                    alwaysLinkToLastBuild: false,
 		                    keepAll              : false,
