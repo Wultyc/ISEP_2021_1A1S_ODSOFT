@@ -5,6 +5,7 @@ def warPath = 'build/libs/cms-students-1.0.war'
 def javadocPath = 'build/docs/javadoc/'
 def cms2Path = 'cms-students/'
 def unitTestResults = 'build/test-results/test'
+def unitTestReport = 'build/reports/test'
 
 pipeline {
 	agent any
