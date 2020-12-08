@@ -1,0 +1,56 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.plugins.copyartifact.CopyArtifact plugin="copyartifact@1.45.3">
+      <project>Class-Assignment-Javadoc</project>
+      <filter></filter>
+      <target></target>
+      <excludes></excludes>
+      <selector class="hudson.plugins.copyartifact.TriggeredBuildSelector">
+        <fallbackToLastSuccessful>true</fallbackToLastSuccessful>
+        <upstreamFilterStrategy>UseGlobalSetting</upstreamFilterStrategy>
+        <allowUpstreamDependencies>false</allowUpstreamDependencies>
+      </selector>
+      <doNotFingerprintArtifacts>false</doNotFingerprintArtifacts>
+    </hudson.plugins.copyartifact.CopyArtifact>
+    <hudson.plugins.gradle.Gradle plugin="gradle@1.36">
+      <switches></switches>
+      <tasks>pitest</tasks>
+      <rootBuildScriptDir>${workspace}/ODSOFT-M1B_G1/cms-students/cms-students</rootBuildScriptDir>
+      <buildFile></buildFile>
+      <gradleName>gradle-local</gradleName>
+      <useWrapper>false</useWrapper>
+      <makeExecutable>false</makeExecutable>
+      <useWorkspaceAsHome>false</useWorkspaceAsHome>
+      <wrapperLocation></wrapperLocation>
+      <passAllAsSystemProperties>false</passAllAsSystemProperties>
+      <projectProperties></projectProperties>
+      <passAllAsProjectProperties>false</passAllAsProjectProperties>
+    </hudson.plugins.gradle.Gradle>
+  </builders>
+  <publishers>
+    <org.jenkinsci.plugins.pitmutation.PitPublisher plugin="pitmutation@1.0-18">
+      <buildConditions>
+        <org.jenkinsci.plugins.pitmutation.PitPublisher_-PercentageThresholdCondition>
+          <percentage>0.0</percentage>
+          <outer-class reference="../../.."/>
+        </org.jenkinsci.plugins.pitmutation.PitPublisher_-PercentageThresholdCondition>
+      </buildConditions>
+      <mutationStatsFile></mutationStatsFile>
+      <killRatioMustImprove>false</killRatioMustImprove>
+      <minimumKillRatio>100.0</minimumKillRatio>
+    </org.jenkinsci.plugins.pitmutation.PitPublisher>
+  </publishers>
+  <buildWrappers/>
+</project>
