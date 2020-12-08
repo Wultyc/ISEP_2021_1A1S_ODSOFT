@@ -9,12 +9,12 @@ def gitUsername = "1160929"
 
 def cmsPath = 'cms-students'
 def warPath = 'build/libs/cms-students-1.0.war'
-def javadocPath = 'build/docs/javadoc/'
+def javadocPath = 'cms-students/build/docs/javadoc/'
 
-def unitTestReport = 'build/reports/test'
-def unitTestResults = 'build/test-results/test'
-def integrationTestResults = 'build/jacocoHtmlReport'
-def mutationTestResults = 'build/reports/pitest'
+def unitTestReport = 'cms-students/build/reports/test'
+def unitTestResults = 'cms-students/build/test-results/test'
+def integrationTestResults = 'cms-students/build/jacocoHtmlReport'
+def mutationTestResults = 'cms-students/build/reports/pitest'
 
 def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms-student-seq-pipeline/builds"
 def jenkinsArchiveFolder = "archive"
