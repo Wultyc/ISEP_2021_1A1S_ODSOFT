@@ -1,10 +1,21 @@
 # Class Assignment - 2
----------------------------------------------
-## Parallel Pipeline using the Build Pipeline Plug-In
+
+## Objetivos globais do projeto
+
+## Desenho das pipelines
+
+## Implementação das Pipelines
+A implementação teve por base a combinação de dois fatores:
+ - Pipelines Sequencias VS Pipelines Paralelas
+ - Scripted Pipelines VS Pipelines construidas com o plugin Build Pipeline
+
+### Pipeline sequencial utilizando Build Pipeline Plug-In
+
+### Pipeline paralela utilizando Build Pipeline Plug-In
 
 Esta parte do Class Assignment teve como objectivo a implementação de uma pipeline no Jenkins utilizando um plug in. Este plug in foi o Build Pipeline, permitindo, sem a utilização de scripts, implementar uma pipeline com os objectivos suprarreferidos.
 
-### **Checkout e clean**
+#### **Checkout e clean**
 
 O job referente a esta parte da pipeline é: **Class-Assignment-Checkout-clean**.
 
@@ -14,7 +25,7 @@ Após esta execução, e de forma a evitar a reutilização do workspace para ev
 
 -- **Figura relativa ao archive dos artefactos** -- 
 
-### **Build e war**
+#### **Build e war**
 
 De seguida, é executado outro job da pipeline, que faz o build e gera o ficheiro .war da aplicação. O código utilizado para este ficheiro ser gerado é o provenienete do último job, checkout, e do seu consequente armazenamento do artefactos. 
 
@@ -24,7 +35,7 @@ Aqui simplesmente é executada a task .war do gradle, que gera o ficheiro. De se
 
 Nas post-build actions, são armazenados os artefactos.
  
-### **Javadoc**
+#### **Javadoc**
 
 A geração do javadoc é feita no Job **Class-Assignment-Javadoc**.
 
@@ -34,7 +45,7 @@ Depois é feita a geração do Javadoc e a sua consequente publicação. após i
 
 -- **Figura relativa ao plugi in do join trigger** --
 
-### **Unit Tests**
+#### **Unit Tests**
 
 A proxima task, a ser executada em paralelo com os integration e mutation tests, são os unit tests, no Job: ** Class-Assignment-Unit-Test**.
 
@@ -46,13 +57,13 @@ Neste caso não será necessário fazer trigger do próximo passo, uma vez que e
 
 -- **imagem referente aos post build actions**
 
-### **Integration tests**
+#### **Integration tests**
 
 Paralelamente é executada a task integration tests, sendo o seu nome: **Class-Assignment-Integration-Test**
 
 De maneira semelhante ao que acontece nos unit tests, é feita a cópia dos artefactos e é executada a task integrationTest.
 
-### **Mutation tests**
+#### **Mutation tests**
 
 Também em paralelo, é executado o projeto do jenkins chamado **Class-Assignment-PiTest**, que executa os Mutation Tests.
 
@@ -60,7 +71,7 @@ Também em paralelo, é executado o projeto do jenkins chamado **Class-Assignmen
 
 -- ** PIT MUTATION TESTS IMAGE** --
 
-### Deployment
+#### Deployment
 
 De seguida, é feito o deployment para uma instancia de servidor do tomcat. Este processo pode ser acompnhado no projeto **Class-Assignment-System**.
 
@@ -71,13 +82,13 @@ De seguida é executada uma post build action que é Deploy war to a container, 
 
 --**Figura deste deployment**
 
-### Smoke test 
+#### Smoke test 
 
 Após o sucesso do projeto anterior, é executado o **Class-Assignment-SmokeTest**.
 
 Este consiste num simples curl que permite saber o estado do servidor depois do deployment, se este é acessível.
 
-### Manual test and aproval
+#### Manual test and aproval
 
 Chegando a este projeto, **Class-Assignment-Manual-Test**, significa que todos os passos anteriores foram executados com sucesso.
 
@@ -90,10 +101,17 @@ Já para a aprovação do utilizador é utilizada a opção post-build **Build O
 
 --**Imagem do build other projects**--
 
-### Envio da tag para um repositório
+#### Envio da tag para um repositório
 
 Por ultimo, esta task é apenas executada se o utilizador assim o permitir e chama-se **Class-Assignment-Build-Tag**.
 
 Aqui é utilizado o Git Plugin e é utilizada a post build action git publisher que permite fazer o push de uma tag para o repositório remoto, tal como demonstra a imagem.
 
 -- **imagem**--
+
+### Pipeline Sequencial utilizando Jenkins File
+Nesta componente do projeto foi desenvolvida um pipeline utilizado o Jenkins File para fazer o Deploy da aplicação CMS Student
+
+### Pipeline Paralela utilizando Jenkins File
+
+## Conclusões
