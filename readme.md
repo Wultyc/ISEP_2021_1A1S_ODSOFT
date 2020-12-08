@@ -4,6 +4,12 @@
 
 ## Desenho das pipelines
 
+### Pipeline Sequencial
+![Pipeline Sequencial](images/Sequencial_Pipeline.jpg)
+
+### Pipeline Paralela
+![Pipeline Paralela](images/Parallel_Pipeline.jpg)
+
 ## Implementação das Pipelines
 A implementação teve por base a combinação de dois fatores:
  - Pipelines Sequencias VS Pipelines Paralelas
@@ -111,6 +117,8 @@ Aqui é utilizado o Git Plugin e é utilizada a post build action git publisher 
 
 ### Pipeline Sequencial utilizando Jenkins File
 Nesta componente do projeto foi desenvolvida um pipeline utilizado o Jenkins File para fazer o Deploy da aplicação CMS Student
+
+![Pipeline](images/Report_Component_3/0_pipeline.png)
 
 ### Pipeline Paralela utilizando Jenkins File
 
