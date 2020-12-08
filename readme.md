@@ -120,6 +120,65 @@ Nesta componente do projeto foi desenvolvida um pipeline utilizado o Jenkins Fil
 
 ![Pipeline](images/Report_Component_3/0_pipeline.png)
 
+#### Configuração do script
+Para facilitar a manutenção e leitura do script, foram criadas no inicio algumas variaveis com valores de configuração (paths, urls, branchs, ...)
+
+#### Start Pipeline.
+Este é um passo extra apenas para dar alguns detalhes sobre a execução que vai acontecer.
+
+#### Checkout
+Neste passo é feito o checkout da aplicação com recurso ao plugin de git do próprio Jenkins.
+
+#### Build 
+O build da aplicação foi feito utilizando as tasks do Gradle. No final deste passo é executado um comando ```archiveArtifacte``` para fazer o armazenamento do build para ser utilizado mais à frente.
+
+#### Javadoc
+Neste passo é gerado o javadoc da aplicação. Este processo utiliza a task ```javadoc``` do grade. No final do processo de gerar o javadoc, este é publicado utilizando o plugin instalado para o CA anterior.
+
+#### Unit Test
+Neste passo são executados os unit tests que foram escritos para aplicação com o auxilio do comando ```gradle test```. No final da execução o report gerado é publicado utilizando o plugin Jacoco, também utilizado no CA anterior.
+
+#### Integration Test
+Neste passo são executados os integration tests que foram escritos para aplicação com o auxilio do comando ```gradle integrationTest```. No final da execução o report gerado é publicado utilizando o plugin Jacoco, também utilizado no CA anterior.
+
+#### Mutation Test
+Para executar os mutation test é utilizada task ```pitest``` disponivel no gradle file. À semelhança dos testes anteriores, o resultado destes testes também é publicado utilizando um plugin, que neste caso é o PiTest.
+
+#### Deploy
+Neste passo o objetivo é tonar a aplicação disponivel através de um servidor tomcat. Inicialmente a abordagem escolhida foi tentar utilizar um plugin do Jenkins para fazer a cópia do ficheiro ```.war``` para o servidor, mas foram aparecendo alguns problemas no processo. Então optou-se por fazer uma cópia diretamente utilizando a própria shell do sistema. Assim exxecutou-se o comando 
+```bash
+cp <Localização do ficheiro .war no arquivo do Jenkins> <Pasta Webapps do Tomcat>
+```
+Todos os caminhos utilizados neste comando foram incluidos nas variaveis definidas no inicio do jenkins file.
+
+>Como seria feito o deploy caso o Jenkins e o Tomcat não estivessem na mesma máquina?  
+Neste caso a solução passaria por utilizar o comando ```scp``` para fazer a copia do ficheiro ```.war``` através de ```ssh```.
+
+#### Smoke Test
+O smoke test serve para verificar que a aplicação foi disponibilizada com sucesso. Antes de ser executado é feito um delay de 10 segundo para garantir que o servidor fez reload que teve tempo para disponibilizar a aplicação. De seguinda é executado o comando ```curl ``` para fazer um pedido à homepage da aplicação. Caso o comando retorne um 200 (referente ao código http que o servidor retorna no caso de encontrar o recurso pedido) o processo continua.
+
+#### Send Invite email
+Este é o momento que passa a ser necessária a intrevenção humana. Inicialmente é enviado um email a solicitar que o utilizador prossiga com o deploy. Neste email é incluido um link direto para o deploy 
+
+![email enviado](images/Report_Component_3/email.png)
+
+A configuração do envio do email teve de acontecer dentro das definições do Jenkins, em Configure System. Lá foi preenchida a secção "Extended E-mail Notification" com as configurações do servidor SMTP de onde o email é enviado.
+
+#### Manual Approve
+No manual approve é apenas pedido que o utilizador indique se pretende continuar ou abortar a execução da pipeline.
+
+![email enviado](images/Report_Component_3/manual_approve.png)
+
+Caso o utilizador selecione "Proceed" a execução segue para o ultimo passo.
+
+#### Push tag to bitbucket
+No push da tag é simplesmente feito o push de uma tag ```ScriptedPipeline-Build-<Build Nr>``` para o repositório no Bitbucket
+
+#### Página do Job no final da execução
+No final da execução, se o utilizador for à pagina do job além do histórico das utiimas execuções, é ainda apresentado os relatórios execução dos testes, os relatórios de cobertura e um link para obter a versão mais recente do ficheiro ```.war```.
+
+![página do job](images/Report_Component_3/job_page.png)
+
 ### Pipeline Paralela utilizando Jenkins File
 
 ## Conclusões
