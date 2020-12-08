@@ -5,6 +5,7 @@ def projectName = 'cms-student-seq-pipeline'
 def gitCred = 'db746efe-3c61-40e5-8071-c81f2763b723'
 def gitRepo = 'bitbucket.org/1160929/odsoft-m1b_g1.git'
 def gitBranch = 'master'
+def gitUsername = "1160929"
 
 def cmsPath = 'cms-students'
 def warPath = 'build/libs/cms-students-1.0.war'
@@ -158,8 +159,6 @@ pipeline {
                         unit: "SECONDS"
                 )
                 script {
-                    // ALTERNATIVE: check the exit status. if it's 0 = 200 http
-                    // def response = sh(returnStatus: true, script: 'curl --fail --write-out "%{http_code}" --silent --output /dev/null ' + cmsHttp
                     def response = sh(
                             returnStdout: true,
                             script: 'curl --write-out "%{http_code}" --silent --output /dev/null ' + cmsHttp
@@ -175,11 +174,10 @@ pipeline {
         }
 	    stage('Send invite email') {
 			steps {
-                mail(from: 'no-replay@jenkins.localhost',
+                mail(from: 'notificationsystemisep@gmail.com',
                         to: '1160929@isep.ipp.pt',
                         subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for approval",
                         body: "The job '${env.JOB_NAME}' is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue.");
-                input 'Ready?';
             }
         }
 	    stage('Manual Approve') {
@@ -193,7 +191,7 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         sh "git tag ScriptedPipeline-Build-${BUILD_NUMBER}"
-                        sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${gitRepo} master"
+                        sh "git push https://${gitUsername}:${env.GIT_PASSWORD}@${gitRepo} --tags"
                     }
                 }
             }
