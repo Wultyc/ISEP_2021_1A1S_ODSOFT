@@ -113,3 +113,5 @@ Aqui é utilizado o Git Plugin e é utilizada a post build action git publisher 
 Nesta componente do projeto foi desenvolvida um pipeline utilizado o Jenkins File para fazer o Deploy da aplicação CMS Student
 
 ### Pipeline Paralela utilizando Jenkins File
+
+## Conclusões
