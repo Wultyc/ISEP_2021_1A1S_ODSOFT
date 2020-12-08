@@ -85,7 +85,7 @@ pipeline {
 			steps{
 				echo "Integration test"
 			}
-			/*steps {
+			steps {
 		        dir(cmsPath) {
 		            script {
 		                sh 'gradle clean integrationTest'
@@ -121,13 +121,13 @@ pipeline {
 		                    reportName           : 'Integration Test Coverage HTML Report',
 		                    reportTitles         : ''])
 		        }
-		    }*/
+		    }
         }
 	    stage('Mutation Test') {
 	    	steps{
 				echo "Mutation test"
 			}
-			/*steps {
+			steps {
 		        dir(cmsPath) {
 		            script {
 		                sh 'gradle clean pitest'
@@ -141,7 +141,7 @@ pipeline {
 		                    reportName           : 'Pit Mutation Test Coverage HTML Report',
 		                    reportTitles         : ''])
 		        }
-		    }*/
+		    }
         }
 	    stage('Deploy') {
 			steps{                
