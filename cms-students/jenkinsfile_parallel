@@ -76,7 +76,7 @@ pipeline {
         stage('4.2 Integration Tests') {
 			steps {
 				dir(cms2Path){
-                    sript {
+                    script {
                         sh 'gradle clean integrationTest -g gradle-user-home'
                         sh'gradle jacocoIntegrationReport -g gradle-user-home'
                         sh 'ls -la' + integrationTestResults
