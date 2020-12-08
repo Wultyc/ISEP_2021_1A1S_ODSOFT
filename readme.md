@@ -23,7 +23,7 @@ Esta parte do Class Assignment teve como objectivo a implementação de uma pipe
 
 Esta pipeline permitiu então executar uma pipeline com algumas tasks em paralelo, sendo estas as tasks de Unit, integration e mutation tests. Na seguinte imagem está representada a imagem da pipeline implementada e corrida com este plug in.
 
-![Pipeline Paralela Jenkins](images/Report_Component_2/Pipeline_Plugin_Paralel4.jpg)
+![Pipeline Paralela Jenkins](images/Report_Component_2/Pipeline_Plugin_Paralel4.JPG)
 
 #### **Checkout e clean**
 
@@ -33,7 +33,7 @@ A pipeline inicia com o checkout da branch do bitbucket onde o código fonte est
 
 Após esta execução, e de forma a evitar a reutilização do workspace para evitar futuros problemas devido a commits simultâneos, ou outro tipo de alterações a acontecer no Jenkins/Repositório remoto, é utilizado o Copy artifacts, para poder ser passado o código referente a este checkout ao próximo projeto do jenkins, neste caso o projeto relativo ao War.
 
-![Post Build Checkout](images/Report_Component_2/Post_Build_Checkout.jpg)
+![Post Build Checkout](images/Report_Component_2/Post_Build_Checkout.JPG)
 
 #### **Build e war**
 
