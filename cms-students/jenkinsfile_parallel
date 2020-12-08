@@ -1,11 +1,14 @@
 #!/usr/bin/env groovy 
 
-def credential_ID = 'a40dafd0-e2c0-4218-8eca-0f4eefc35f17'
+//def credential_ID = '1fb50392-6260-431d-b1e6-ea6a12c9778c' //DeskTop
+def credential_ID = 'a40dafd0-e2c0-4218-8eca-0f4eefc35f17' //LapTop
+
 def warPath = 'build/libs/cms-students-1.0.war'
 def javadocPath = 'build/docs/javadoc/'
 def cms2Path = 'cms-students/'
 def unitTestResults = 'build/test-results/test'
 def unitTestReport = 'build/reports/test'
+def integrationTestResults = 'build/jacocoHtmlReport'
 
 pipeline {
 	agent any
@@ -72,7 +75,40 @@ pipeline {
 
         stage('4.2 Integration Tests') {
 			steps {
-				echo "Integration Tests"
+				dir(cms2Path){
+                    sript {
+                        sh 'gradle clean integrationTest -g gradle-user-home'
+                        sh'gradle jacocoIntegrationReport -g gradle-user-home'
+                        sh 'ls -la' + integrationTestResults //Lista os conteodos dos resultados;
+                    }
+		            jacoco buildOverBuild: true,
+		                    deltaBranchCoverage: '5',
+		                    deltaClassCoverage: '5',
+		                    deltaComplexityCoverage: '5',
+		                    deltaInstructionCoverage: '5',
+		                    deltaLineCoverage: '5',
+		                    deltaMethodCoverage: '5',
+		                    maximumBranchCoverage: '80',
+		                    maximumClassCoverage: '80',
+		                    maximumComplexityCoverage: '80',
+		                    maximumInstructionCoverage: '80',
+		                    maximumLineCoverage: '80',
+		                    maximumMethodCoverage: '80',
+		                    minimumBranchCoverage: '5',
+		                    minimumClassCoverage: '5',
+		                    minimumComplexityCoverage: '5',
+		                    minimumInstructionCoverage: '5',
+		                    minimumLineCoverage: '5',
+		                    minimumMethodCoverage: '5'
+		            publishHTML(target [
+		                    allowMissing         : false,
+		                    alwaysLinkToLastBuild: false,
+		                    keepAll              : false,
+		                    reportDir            : integrationTestResults,
+		                    reportFiles          : 'index.html',
+		                    reportName           : 'Integration Test Coverage HTML Report',
+		                    reportTitles         : ''])
+                }
    			 }
 		} 
         
