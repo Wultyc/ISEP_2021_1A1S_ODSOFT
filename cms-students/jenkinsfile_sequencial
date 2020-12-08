@@ -82,9 +82,6 @@ pipeline {
 			}
         }
 	    stage('Integration test') {
-			steps{
-				echo "Integration test"
-			}
 			steps {
 		        dir(cmsPath) {
 		            script {
@@ -124,9 +121,6 @@ pipeline {
 		    }
         }
 	    stage('Mutation Test') {
-	    	steps{
-				echo "Mutation test"
-			}
 			steps {
 		        dir(cmsPath) {
 		            script {
