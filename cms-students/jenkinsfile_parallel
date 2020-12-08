@@ -13,8 +13,9 @@ def mutationTestResults = 'build/reports/pitest'
 
 def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms2/builds"
 def jenkinsArchiveFolder = "archive"
-def artifactDeployPath = "/opt/tomcat/webapps/cms-students.war" 
-def cmsHttp = 'http://127.0.0.1:8090/cms-students/'
+def artifactBuildPath = "build/libs/cms-students-1.0.war"
+def artifactDeployPath = "/opt/tomcat/webapps/cms-students/" 
+def cmsHttp = 'http://127.0.0.1:1997/cms-students/'
 
 def email = 'notificationsystemisep@gmail.com'
 
@@ -144,7 +145,7 @@ pipeline {
 			steps{                
                 script{
                 	sh 'ls -la *'
-                    sh "cp ${jenkinsBuildFolder}/${env.BUILD_NUMBER}/${jenkinsArchiveFolder}/${artifactBuildPath} ${warPath}"
+                    sh "cp ${jenkinsBuildFolder}/${env.BUILD_NUMBER}/${jenkinsArchiveFolder}/${artifactBuildPath} ${wartifactDeployPath}"
                 }
 			}
         }
