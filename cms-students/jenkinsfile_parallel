@@ -125,7 +125,7 @@ pipeline {
 			steps {
 		        dir(cms2Path) {
 		            script {
-		                sh 'gradle clean pitest'
+		                sh 'gradle clean pitest -g gradle-user-home'
 		            }
 
 		            publishHTML([
