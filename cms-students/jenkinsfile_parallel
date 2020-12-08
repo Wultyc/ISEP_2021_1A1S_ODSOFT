@@ -8,7 +8,7 @@ def javadocPath = 'build/docs/javadoc/'
 def cms2Path = 'cms-students/'
 def unitTestResults = 'build/test-results/test'
 def unitTestReport = 'build/reports/test'
-def integrationTestResults = 'build/jacocoHtmlReport'
+def integrationTestResults = 'build/test-results/integrationTest'
 
 pipeline {
 	agent any
