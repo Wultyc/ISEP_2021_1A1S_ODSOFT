@@ -46,14 +46,17 @@ pipeline {
                			 }
            		 }
         }
+        
         stage('4.1 Unit Tests') {
-						dir(cmsPath) {
+			steps {
+                dir(cmsPath) {
 					script {
 						sh 'gradle clean test'
 						sh 'gradle jacocoTestReport'
 						sh 'ls -la ' + unitTestResults // To show the contents on the log before publishing
 					}
-					junit unitTestResults + '/*.xml'
+					
+                    junit unitTestResults + '/*.xml'
 					publishHTML([
 							allowMissing         : false,
 							alwaysLinkToLastBuild: false,
@@ -63,18 +66,21 @@ pipeline {
 							reportName           : 'Unit Test Coverage HTML Report',
 							reportTitles         : ''])
 				}
+            }
         }
- 
+
         stage('4.2 Integration Tests') {
 			steps {
 				echo "Integration Tests"
    			 }
 		} 
+        
         stage('4.3 Mutation Tests') {
 			steps {
 				echo "Mutation Tests"
    			 }
 		} 
+        
         stage('4.4 System Test') {
 			steps {
 				echo "System Test"
@@ -85,6 +91,7 @@ pipeline {
 				echo "Manual Test"
    			 }
 		} 
+        
         stage('5. Feedback') {
 			steps {
 				echo "Feedback"
