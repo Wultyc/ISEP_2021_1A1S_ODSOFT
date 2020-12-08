@@ -52,8 +52,8 @@ pipeline {
 			steps {
                 dir(cms2Path) {
 					script {
-						sh 'gradle clean test'
-						sh 'gradle jacocoTestReport'
+						sh 'gradle clean test -g gradle-user-home'
+						sh 'gradle jacocoTestReport -g gradle-user-home'
 						sh 'ls -la ' + unitTestResults // To show the contents on the log before publishing
 					}
 					
