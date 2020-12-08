@@ -79,7 +79,7 @@ pipeline {
                     script {
                         sh 'gradle clean integrationTest -g gradle-user-home'
                         sh'gradle jacocoIntegrationReport -g gradle-user-home'
-                        sh 'ls -la' + integrationTestResults
+                        sh 'ls -la ' + integrationTestResults
                         //Lista os conteodos dos resultados;
                     }
 		            jacoco buildOverBuild: true,
