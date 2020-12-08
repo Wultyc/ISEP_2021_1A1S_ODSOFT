@@ -3,7 +3,7 @@
 def projectName = 'cms-student-seq-pipeline'
 
 def gitCred = 'db746efe-3c61-40e5-8071-c81f2763b723'
-def gitRepo = 'https://bitbucket.org/1160929/odsoft-m1b_g1.git'
+def gitRepo = 'bitbucket.org/1160929/odsoft-m1b_g1.git'
 def gitBranch = 'master'
 
 def cmsPath = 'cms-students'
@@ -32,7 +32,7 @@ pipeline {
         }
 	    stage('Checkout') {
 			steps {
-                git url: gitRepo,
+                git url: "https://${gitRepo}",
                         branch: gitBranch,
                         credentialsId: gitCred
             }
@@ -124,7 +124,7 @@ pipeline {
         }
 	    stage('Mutation Test') {
 	    	steps{
-				echo "Integration test"
+				echo "Mutation test"
 			}
 			/*steps {
 		        dir(cmsPath) {
@@ -184,13 +184,19 @@ pipeline {
         }
 	    stage('Manual Approve') {
 			steps{
-                echo "Manual Approve"
+				input 'Approve deploy?'
 			}
         }
+        
 	    stage('Push tag to bitbucket') {
-			steps{
-                echo "Push tag to bitbucket"
-			}
+			steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        sh "git tag ScriptedPipeline-Build-${BUILD_NUMBER}"
+                        sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${gitRepo} master"
+                    }
+                }
+            }
         }
 	}
 }
