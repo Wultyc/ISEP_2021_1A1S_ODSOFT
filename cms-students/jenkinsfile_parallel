@@ -145,7 +145,7 @@ pipeline {
 			steps{                
                 script{
                 	sh 'ls -la *'
-                    sh "cp ${jenkinsBuildFolder}/${env.BUILD_NUMBER}/${jenkinsArchiveFolder}/${artifactBuildPath} ${wartifactDeployPath}"
+                    sh "cp ${jenkinsBuildFolder}/${env.BUILD_NUMBER}/${jenkinsArchiveFolder}/${artifactBuildPath} ${artifactDeployPath}"
                 }
 			}
         }
