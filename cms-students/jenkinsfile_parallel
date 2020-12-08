@@ -8,7 +8,8 @@ def javadocPath = 'build/docs/javadoc/'
 def cms2Path = 'cms-students/'
 def unitTestResults = 'build/test-results/test'
 def unitTestReport = 'build/reports/test'
-def integrationTestResults = 'build/test-results/integrationTest'
+def integrationTestResults = 'build/jacoco'
+def mutationTestResults = 'build/reports/pitest'
 
 pipeline {
 	agent any
@@ -115,9 +116,22 @@ pipeline {
         
         stage('4.3 Mutation Tests') {
 			steps {
-				echo "Mutation Tests"
-   			 }
-		} 
+		        dir(cmsPath) {
+		            script {
+		                sh 'gradle clean pitest'
+		            }
+
+		            publishHTML([
+		                    allowMissing         : false,
+		                    alwaysLinkToLastBuild: false,
+		                    keepAll              : false,
+		                    reportDir            : mutationTestResults,
+		                    reportFiles          : 'index.html',
+		                    reportName           : 'Pit Mutation Test Coverage HTML Report',
+		                    reportTitles         : ''])
+		        }
+		    }
+        }
         
         stage('4.4 System Test') {
 			steps {
