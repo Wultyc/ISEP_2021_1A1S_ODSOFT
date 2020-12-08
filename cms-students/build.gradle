@@ -124,7 +124,7 @@ test {
 }
 
 pitest {
-	targetClasses = ['pt.isep.cms.client.*']
+	targetClasses = ['pt.isep.cms.*']
 	outputFormats = ['XML','HTML']
 }
 
