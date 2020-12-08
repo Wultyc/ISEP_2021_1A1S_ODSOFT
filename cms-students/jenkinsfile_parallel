@@ -8,7 +8,16 @@ def javadocPath = 'build/docs/javadoc/'
 def cms2Path = 'cms-students/'
 def unitTestResults = 'build/test-results/test'
 def unitTestReport = 'build/reports/test'
-def integrationTestResults = 'build/jacocoHtmlReport'
+def integrationTestResults = 'build/test-results/integrationTest'
+def mutationTestResults = 'build/reports/pitest'
+
+def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms2/builds"
+def jenkinsArchiveFolder = "archive"
+def artifactBuildPath = "build/libs/cms-students-1.0.war"
+def artifactDeployPath = "/opt/tomcat/webapps/cms-students/" 
+def cmsHttp = 'http://127.0.0.1:1997/cms-students/'
+
+def email = 'notificationsystemisep@gmail.com'
 
 pipeline {
 	agent any
@@ -19,14 +28,14 @@ pipeline {
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL} [Build number: ${env.BUILD_NUMBER}] [Workspace: ${env.WORKSPACE}]"
 			}
         }
-        stage('1. Repository Checkout') {
+        stage('Repository Checkout') {
 			steps {
                 git url: 'https://bitbucket.org/1160929/odsoft-m1b_g1.git',
                         branch: 'master',
                         credentialsId: credential_ID
             }
         }
-        stage('2. War file') {
+        stage('War file') {
 			steps {
                 dir(cms2Path) {
                     script {
@@ -38,7 +47,7 @@ pipeline {
             }
         }
 
-        stage('3. Javadoc') {
+        stage('Javadoc') {
 			steps {
                			 dir(cms2Path) {
                    			 script {
@@ -51,7 +60,7 @@ pipeline {
            		 }
         }
         
-        stage('4.1 Unit Tests') {
+        stage('Unit Tests') {
 			steps {
                 dir(cms2Path) {
 					script {
@@ -73,7 +82,7 @@ pipeline {
             }
         }
 
-        stage('4.2 Integration Tests') {
+        stage('Integration Tests') {
 			steps {
 				dir(cms2Path){
                     script {
@@ -113,24 +122,73 @@ pipeline {
    			 }
 		} 
         
-        stage('4.3 Mutation Tests') {
+        stage('Mutation Tests') {
 			steps {
-				echo "Mutation Tests"
-   			 }
-		} 
-        
-        stage('4.4 System Test') {
+		        dir(cms2Path) {
+		            script {
+		                sh 'gradle clean pitest -g gradle-user-home'
+		            }
+
+		            publishHTML([
+		                    allowMissing         : false,
+		                    alwaysLinkToLastBuild: false,
+		                    keepAll              : false,
+		                    reportDir            : mutationTestResults,
+		                    reportFiles          : 'index.html',
+		                    reportName           : 'Pit Mutation Test Coverage HTML Report',
+		                    reportTitles         : ''])
+		        }
+		    }
+        }
+    
+        stage('Deploy to TomCat') {
+			steps{                
+                script{
+                	sh 'ls -la *'
+                    sh "cp ${jenkinsBuildFolder}/${env.BUILD_NUMBER}/${jenkinsArchiveFolder}/${artifactBuildPath} ${artifactDeployPath}"
+                }
+			}
+        }
+
+	    stage('Smoke test') {
 			steps {
-				echo "System Test"
-   			 }
-		} 
-        stage('4.5. Manuel Test') {
+                echo 'Waiting 10 seconds before Smoke Test...'
+                sleep(
+                        time: 10,
+                        unit: "SECONDS"
+                )
+                script {
+                    def response = sh(
+                            returnStdout: true,
+                            script: 'curl --write-out "%{http_code}" --silent --output /dev/null ' + cmsHttp
+                    )
+                    if (response == "200") {
+                        echo 'CMS is up! (HTTP 200)'
+                        return true
+                    } else {
+                        error("Error executing smoke test! Response code: " + response)
+                    }
+                }
+            }
+        }
+
+        stage('Email notification for manual test') {
 			steps {
-				echo "Manual Test"
-   			 }
-		} 
-        
-        stage('5. Feedback') {
+                mail(from: 'notificationsystemisep@gmail.com',
+                        to: '1150639@isep.ipp.pt',
+                        subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for approval",
+                        body: "The job '${env.JOB_NAME}' is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue.");
+                input 'Ready?';
+            }
+        }
+	
+        stage('Manual Approve') {
+			steps{
+				input 'Approve deploy?'
+			}
+        }
+    
+        stage('Feedback') {
 			steps {
 				echo "Feedback"
    			 }
