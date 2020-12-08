@@ -1,13 +1,25 @@
 #!/usr/bin/env groovy 
 
+def projectName = 'cms-student-seq-pipeline'
+
+def gitCred = 'db746efe-3c61-40e5-8071-c81f2763b723'
+def gitRepo = 'bitbucket.org/1160929/odsoft-m1b_g1.git'
+def gitBranch = 'master'
+
 def cmsPath = 'cms-students'
 def warPath = 'build/libs/cms-students-1.0.war'
 def javadocPath = 'build/docs/javadoc/'
+
 def unitTestReport = 'build/reports/test'
 def unitTestResults = 'build/test-results/test'
 def integrationTestResults = 'build/jacocoHtmlReport'
 def mutationTestResults = 'build/reports/pitest'
-def cmsHttp = 'http://localhost:9000/job/Final_Project/'
+
+def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms-student-seq-pipeline/builds"
+def jenkinsArchiveFolder = "archive"
+def artifactBuildPath = "build/libs/cms-students-1.0.war" 
+def artifactDeployPath = "/opt/tomcat/webapps/cms-students.war" 
+def cmsHttp = 'http://127.0.0.1:8080/cms-students/'
 
 pipeline {
     agent any
@@ -20,19 +32,31 @@ pipeline {
         }
 	    stage('Checkout') {
 			steps {
-                git url: 'https://bitbucket.org/1160929/odsoft-m1b_g1.git',
-                        branch: 'master',
-                        credentialsId: 'db746efe-3c61-40e5-8071-c81f2763b723'
+                git url: "https://${gitRepo}",
+                        branch: gitBranch,
+                        credentialsId: gitCred
             }
         }
 	    stage('Build War file') {
 			steps {
                 dir(cmsPath) {
                     script {
-                        sh 'gradle clean build'
+                        sh 'gradle clean war'
                     }
 
                     archiveArtifacts warPath
+                }
+            }
+        }
+	    stage('Javadoc') {
+			steps {
+                dir(cmsPath) {
+                    script {
+                        sh 'gradle clean javadoc'
+                    }
+                    step $class: 'JavadocArchiver',
+                            javadocDir: javadocPath,
+                            keepAll: false
                 }
             }
         }
@@ -99,7 +123,10 @@ pipeline {
 		    }*/
         }
 	    stage('Mutation Test') {
-			steps {
+	    	steps{
+				echo "Mutation test"
+			}
+			/*steps {
 		        dir(cmsPath) {
 		            script {
 		                sh 'gradle clean pitest'
@@ -113,24 +140,15 @@ pipeline {
 		                    reportName           : 'Pit Mutation Test Coverage HTML Report',
 		                    reportTitles         : ''])
 		        }
-		    }
+		    }*/
         }
 	    stage('Deploy') {
-			steps{
-                echo "Deploy"
-			}
-        }
-	    stage('Javadoc') {
-			steps {
-                dir(cmsPath) {
-                    script {
-                        sh 'gradle clean javadoc'
-                    }
-                    step $class: 'JavadocArchiver',
-                            javadocDir: javadocPath,
-                            keepAll: false
+			steps{                
+                script{
+                	sh 'ls -la *'
+                	sh "cp ${jenkinsBuildFolder}/${env.BUILD_NUMBER}/${jenkinsArchiveFolder}/${artifactBuildPath} ${artifactDeployPath}"
                 }
-            }
+			}
         }
 	    stage('Smoke test') {
 			steps {
@@ -166,13 +184,19 @@ pipeline {
         }
 	    stage('Manual Approve') {
 			steps{
-                echo "Manual Approve"
+				input 'Approve deploy?'
 			}
         }
+        
 	    stage('Push tag to bitbucket') {
-			steps{
-                echo "Push tag to bitbucket"
-			}
+			steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        sh "git tag ScriptedPipeline-Build-${BUILD_NUMBER}"
+                        sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${gitRepo} master"
+                    }
+                }
+            }
         }
 	}
 }
