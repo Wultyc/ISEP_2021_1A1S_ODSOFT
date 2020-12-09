@@ -16,7 +16,7 @@ def integrationTestResults = 'build/test-results/integrationTest'
 def mutationTestResults = 'build/reports/pitest'
 
 //def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms2/builds"
-def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms-student-seq-parallel/builds"
+def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms-student-parallel-pipeline/builds/"
 def jenkinsArchiveFolder = "archive"
 def artifactBuildPath = "build/libs/cms-students-1.0.war"
 def artifactDeployPath = "/opt/tomcat/webapps/cms-students.war" 
@@ -188,8 +188,8 @@ pipeline {
 
         stage('Email notification for manual test') {
 			steps {
-                            mail(from: 'notificationsystemisep@gmail.com',
-                            to: '1160929@isep.ipp.pt',
+                            mail(from: email_from,
+                            to: email_to,
                             subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for approval",
                             body: "The job '${env.JOB_NAME}' is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue.");
             }
