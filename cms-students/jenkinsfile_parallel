@@ -20,9 +20,9 @@ def cmsHttp = 'http://127.0.0.1:1997/cms-students/'
 def email = 'notificationsystemisep@gmail.com'
 
 //SSH Agent 
-def pushBuildStatusTa(){
+def pushBuildStatusTag(){
     sshagent (credentials: [credential_ID]) {
-        sh "git tag -a Build#${env.BUILD_NUMBER}"
+        sh "git tag -a Build#${env.BUILD_NUMBER}-currentBuild.result -m 'Jenkins Feedback'"
         sh "git push --tags"
     }
 }
@@ -183,7 +183,7 @@ pipeline {
         stage('Email notification for manual test') {
 			steps {
                 emailext(
-                        from: 'notificationsystemisep@gmail.com',
+                        from: 'jonasg97@gmail.com',
                         to: '1150639@isep.ipp.pt',
                         subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for approval",
                         body: "The job '${env.JOB_NAME}' is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue.");
@@ -202,4 +202,11 @@ pipeline {
    			 }
 		} 
 	}
+    post {
+        success {
+            pushBuildStatusTag()
+        }
+        failure {
+            pushBuildStatusTag()
+        }
 }
