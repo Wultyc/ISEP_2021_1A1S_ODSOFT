@@ -174,7 +174,7 @@ pipeline {
 
         stage('Email notification for manual test') {
 			steps {
-                emailtext(
+                emailext(
                         from: 'notificationsystemisep@gmail.com',
                         to: '1150639@isep.ipp.pt',
                         subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for approval",
