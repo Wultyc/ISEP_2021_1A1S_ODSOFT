@@ -1,0 +1,44 @@
+Pipeline Design - Componente 1
+**Ana Rita Rodrigues 1191182**
+
+plugin usado: Build Pipeline
+
+1) pipeline0 - Repository Checkout
+	(checkout repository)
+	--terminada, acciona trigger que inicia o seguinte--
+
+2) pipeline1 - War file
+	(faz build do ficheiro .war e publica no jenkins)
+	--terminada, acciona trigger que inicia o seguinte--
+
+3) pipeline2 - Javadoc
+	(faz build do javadoc e publica no jenkins)
+	--terminada, acciona trigger que inicia o seguinte--
+
+4) pipeline3 - Unit Tests
+	(executa os unit tests, gera relatório dos mesmos e também o coverage report. Publica ambos no jenkins)
+	--terminada, acciona trigger que inicia o seguinte--
+
+5) pipeline4 - Integration Tests
+	(executa os integration tests, gera relatório dos mesmos e também o coverage report. Publica ambos no jenkins)
+	--terminada, acciona trigger que inicia o seguinte--
+
+6) pipeline5 - Mutation Tests
+	(executa os mutation tests, gera o coverage report. Publica ambos no jenkins)
+	--terminada, acciona trigger que inicia o seguinte--
+
+7) pipeline6 - System Test
+	(faz deploy do ficheiro war no TomCat)
+	--terminada, acciona trigger que inicia o seguinte--
+
+7) pipeline6.1 - System Test
+	(faz curl do URL)
+	--terminada, acciona trigger que inicia o seguinte--
+
+8) pipeline7 - UI Acceptance Manual Tests
+	(envia mail com notificação que é preciso efetuar um teste. É necessário ir aprovar em Promoted Build para iniciar o próximo job)
+	--terminada, acciona trigger que inicia o seguinte--
+
+9) pipeline8 - Continuous Integration Feedback
+	(faz push da tag Build#$BUILD_NUMBER-Passed) 
+	--terminada a pipeline sequencial--
