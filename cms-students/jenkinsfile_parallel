@@ -58,7 +58,7 @@ pipeline {
 			steps {
                			 dir(cms2Path) {
                    			 script {
-                       		    sh 'gradle clean javadoc -g gradle-user-home'
+                       		    sh 'gradle javadoc -g gradle-user-home'
                    			 }
 					        step $class: 'JavadocArchiver',
                             javadocDir: javadocPath,
@@ -72,7 +72,7 @@ pipeline {
 			steps {
                             dir(cms2Path) {
 					script {
-						sh 'gradle clean test -g gradle-user-home'
+						sh 'gradle test -g gradle-user-home'
 						sh 'gradle jacocoTestReport -g gradle-user-home'
 						sh 'ls -la ' + unitTestResults // To show the contents on the log before publishing
 					}
@@ -94,7 +94,7 @@ pipeline {
 			steps {
 				dir(cms2Path){
                     script {
-                        sh 'gradle clean integrationTest -g gradle-user-home'
+                        sh 'gradle integrationTest -g gradle-user-home'
                         sh'gradle jacocoIntegrationReport -g gradle-user-home'
                         sh 'ls -la ' + integrationTestResults
                         //Lista os conteodos dos resultados;
@@ -134,7 +134,7 @@ pipeline {
 			steps {
 		        dir(cms2Path) {
 		            script {
-		                sh 'gradle clean pitest -g gradle-user-home'
+		                sh 'gradle pitest -g gradle-user-home'
 		            }
 
 		            publishHTML([
