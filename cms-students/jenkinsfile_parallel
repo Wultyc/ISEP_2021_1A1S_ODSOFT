@@ -53,7 +53,7 @@ pipeline {
             }
         }
 
-/*
+
         stage('Javadoc') {
 			steps {
                			 dir(cms2Path) {
@@ -66,18 +66,19 @@ pipeline {
                			 }
            		 }
         }
-        
-        stage('Unit Tests') {
+        stage('Run Tests'){
+            parallel {
+                stage('Unit Tests') {
 			steps {
-                dir(cms2Path) {
+                            dir(cms2Path) {
 					script {
 						sh 'gradle clean test -g gradle-user-home'
 						sh 'gradle jacocoTestReport -g gradle-user-home'
 						sh 'ls -la ' + unitTestResults // To show the contents on the log before publishing
 					}
 					
-                    junit unitTestResults + '/*.xml'
-					publishHTML([
+                                        junit unitTestResults + '/*.xml'
+					    publishHTML([
 							allowMissing         : false,
 							alwaysLinkToLastBuild: false,
 							keepAll              : false,
@@ -125,9 +126,9 @@ pipeline {
 		                    reportFiles          : 'index.html',
 		                    reportName           : 'Integration Test Coverage HTML Report',
 		                    reportTitles         : ''])
-                }
-   			 }
-		} 
+                            }
+   		}
+            } 
         
         stage('Mutation Tests') {
 			steps {
@@ -146,8 +147,10 @@ pipeline {
 		                    reportTitles         : ''])
 		        }
 		    }
-        }
-    */
+            }
+            }
+        }       
+    
         stage('Deploy to TomCat') {
 			steps{                
                 script{
