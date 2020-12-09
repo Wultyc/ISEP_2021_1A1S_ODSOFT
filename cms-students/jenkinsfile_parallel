@@ -26,7 +26,7 @@ def pushBuildStatusTag(){
                 script {
                     withCredentials([usernamePassword(credentialsId: '1fb50392-6260-431d-b1e6-ea6a12c9778c', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         sh "git tag -a Build#${env.BUILD_NUMBER}-currentBuild.result -m 'Jenkins Feedback'"
-                        sh "git push ${git_repo} --tags"
+                        sh "git push https://bitbucket.org/1160929/odsoft-m1b_g1.git --tags"
                     }
                 }
 }
