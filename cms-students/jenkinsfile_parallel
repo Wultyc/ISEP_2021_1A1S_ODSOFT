@@ -209,4 +209,5 @@ pipeline {
         failure {
             pushBuildStatusTag()
         }
+    }
 }
