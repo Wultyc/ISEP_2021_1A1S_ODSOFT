@@ -21,7 +21,7 @@ def email = 'notificationsystemisep@gmail.com'
 
 //SSH Agent 
 def pushBuildStatusTag(){
-    sshagent (credentials: '1fb50392-6260-431d-b1e6-ea6a12c9778c') {
+    sshagent (credentials: ['1fb50392-6260-431d-b1e6-ea6a12c9778c']) {
         sh "git tag -a Build#${env.BUILD_NUMBER}-currentBuild.result -m 'Jenkins Feedback'"
         sh "git push --tags"
     }
