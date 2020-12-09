@@ -174,11 +174,11 @@ pipeline {
 
         stage('Email notification for manual test') {
 			steps {
-                mail(from: 'notificationsystemisep@gmail.com',
+                emailtext(
+                        from: 'notificationsystemisep@gmail.com',
                         to: '1150639@isep.ipp.pt',
                         subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for approval",
                         body: "The job '${env.JOB_NAME}' is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue.");
-                input 'Ready?';
             }
         }
 	
