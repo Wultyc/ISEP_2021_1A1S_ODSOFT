@@ -50,7 +50,7 @@ pipeline {
                         credentialsId: credential_ID
             }
         }
-        /*
+        
         stage('War file') {
 			steps {
                 dir(cms2Path) {
@@ -63,6 +63,7 @@ pipeline {
             }
         }
 
+/*
         stage('Javadoc') {
 			steps {
                			 dir(cms2Path) {
