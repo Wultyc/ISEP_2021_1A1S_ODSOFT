@@ -1,0 +1,71 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@4.4.5">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://nunomcd@bitbucket.org/1160929/odsoft-m1b_g1.git</url>
+        <credentialsId>faeec4fa-f2ab-49a2-86ac-a08d8a4a0147</credentialsId>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>2764351</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions>
+      <hudson.plugins.git.extensions.impl.RelativeTargetDirectory>
+        <relativeTargetDir>ODSOFT-M1B_G1/cms-students</relativeTargetDir>
+      </hudson.plugins.git.extensions.impl.RelativeTargetDirectory>
+    </extensions>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.plugins.gradle.Gradle plugin="gradle@1.36">
+      <switches></switches>
+      <tasks>clean</tasks>
+      <rootBuildScriptDir>${workspace}/ODSOFT-M1B_G1/cms-students/cms-students</rootBuildScriptDir>
+      <buildFile></buildFile>
+      <gradleName>gradle-local</gradleName>
+      <useWrapper>false</useWrapper>
+      <makeExecutable>false</makeExecutable>
+      <useWorkspaceAsHome>false</useWorkspaceAsHome>
+      <wrapperLocation></wrapperLocation>
+      <passAllAsSystemProperties>false</passAllAsSystemProperties>
+      <projectProperties></projectProperties>
+      <passAllAsProjectProperties>false</passAllAsProjectProperties>
+    </hudson.plugins.gradle.Gradle>
+  </builders>
+  <publishers>
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>**</artifacts>
+      <allowEmptyArchive>false</allowEmptyArchive>
+      <onlyIfSuccessful>false</onlyIfSuccessful>
+      <fingerprint>false</fingerprint>
+      <defaultExcludes>true</defaultExcludes>
+      <caseSensitive>true</caseSensitive>
+      <followSymlinks>false</followSymlinks>
+    </hudson.tasks.ArtifactArchiver>
+    <hudson.tasks.BuildTrigger>
+      <childProjects>Class-Assignment-WAR</childProjects>
+      <threshold>
+        <name>SUCCESS</name>
+        <ordinal>0</ordinal>
+        <color>BLUE</color>
+        <completeBuild>true</completeBuild>
+      </threshold>
+    </hudson.tasks.BuildTrigger>
+  </publishers>
+  <buildWrappers/>
+</project>

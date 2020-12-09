@@ -2,13 +2,26 @@
 
 def credential_ID = '1fb50392-6260-431d-b1e6-ea6a12c9778c' //DeskTop
 //def credential_ID = 'a40dafd0-e2c0-4218-8eca-0f4eefc35f17' //LapTop
+def git_repo = 'bitbucket.org/1160929/odsoft-m1b_g1.git'
+def gitUsername = "1150639"
 
 def warPath = 'build/libs/cms-students-1.0.war'
 def javadocPath = 'build/docs/javadoc/'
 def cms2Path = 'cms-students/'
 def unitTestResults = 'build/test-results/test'
 def unitTestReport = 'build/reports/test'
-def integrationTestResults = 'build/jacocoHtmlReport'
+def integrationTestResults = 'build/test-results/integrationTest'
+def mutationTestResults = 'build/reports/pitest'
+
+def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms2/builds"
+def jenkinsArchiveFolder = "archive"
+def artifactBuildPath = "build/libs/cms-students-1.0.war"
+def artifactDeployPath = "/opt/tomcat/webapps/cms-students.war" 
+def cmsHttp = 'http://127.0.0.1:1997/cms-students/'
+
+def email_from = 'notificationsystemisep@gmail.com'
+def email_to = '1150639@isep.ipp.pt'
+
 
 pipeline {
 	agent any
@@ -19,14 +32,16 @@ pipeline {
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL} [Build number: ${env.BUILD_NUMBER}] [Workspace: ${env.WORKSPACE}]"
 			}
         }
-        stage('1. Repository Checkout') {
+        
+        stage('Repository Checkout') {
 			steps {
-                git url: 'https://bitbucket.org/1160929/odsoft-m1b_g1.git',
+                git url: "https://${git_repo}",
                         branch: 'master',
                         credentialsId: credential_ID
             }
         }
-        stage('2. War file') {
+        
+        stage('War file') {
 			steps {
                 dir(cms2Path) {
                     script {
@@ -38,11 +53,12 @@ pipeline {
             }
         }
 
-        stage('3. Javadoc') {
+
+        stage('Javadoc') {
 			steps {
                			 dir(cms2Path) {
                    			 script {
-                       		    sh 'gradle clean javadoc -g gradle-user-home'
+                       		    sh 'gradle javadoc -g gradle-user-home'
                    			 }
 					        step $class: 'JavadocArchiver',
                             javadocDir: javadocPath,
@@ -50,18 +66,19 @@ pipeline {
                			 }
            		 }
         }
-        
-        stage('4.1 Unit Tests') {
+        stage('Run Tests'){
+            parallel {
+                stage('Unit Tests') {
 			steps {
-                dir(cms2Path) {
+                            dir(cms2Path) {
 					script {
-						sh 'gradle clean test -g gradle-user-home'
+						sh 'gradle test -g gradle-user-home'
 						sh 'gradle jacocoTestReport -g gradle-user-home'
 						sh 'ls -la ' + unitTestResults // To show the contents on the log before publishing
 					}
 					
-                    junit unitTestResults + '/*.xml'
-					publishHTML([
+                                        junit unitTestResults + '/*.xml'
+					    publishHTML([
 							allowMissing         : false,
 							alwaysLinkToLastBuild: false,
 							keepAll              : false,
@@ -73,11 +90,11 @@ pipeline {
             }
         }
 
-        stage('4.2 Integration Tests') {
+        stage('Integration Tests') {
 			steps {
 				dir(cms2Path){
                     script {
-                        sh 'gradle clean integrationTest -g gradle-user-home'
+                        sh 'gradle integrationTest -g gradle-user-home'
                         sh'gradle jacocoIntegrationReport -g gradle-user-home'
                         sh 'ls -la ' + integrationTestResults
                         //Lista os conteodos dos resultados;
@@ -109,31 +126,89 @@ pipeline {
 		                    reportFiles          : 'index.html',
 		                    reportName           : 'Integration Test Coverage HTML Report',
 		                    reportTitles         : ''])
+                            }
+   		}
+            } 
+        
+        stage('Mutation Tests') {
+			steps {
+		        dir(cms2Path) {
+		            script {
+		                sh 'gradle pitest -g gradle-user-home'
+		            }
+
+		            publishHTML([
+		                    allowMissing         : false,
+		                    alwaysLinkToLastBuild: false,
+		                    keepAll              : false,
+		                    reportDir            : mutationTestResults,
+		                    reportFiles          : 'index.html',
+		                    reportName           : 'Pit Mutation Test Coverage HTML Report',
+		                    reportTitles         : ''])
+		        }
+		    }
+            }
+            }
+        }       
+    
+        stage('Deploy to TomCat') {
+			steps{                
+                script{
+                	sh 'ls -la *'
+                    sh "cp ${jenkinsBuildFolder}/${env.BUILD_NUMBER}/${jenkinsArchiveFolder}/${artifactBuildPath} ${artifactDeployPath}"
                 }
-   			 }
-		} 
+			}
+        }
+
+	    stage('Smoke test') {
+			steps {
+                echo 'Waiting 10 seconds before Smoke Test...'
+                sleep(
+                        time: 10,
+                        unit: "SECONDS"
+                )
+                script {
+                    def response = sh(
+                            returnStdout: true,
+                            script: 'curl --write-out "%{http_code}" --silent --output /dev/null ' + cmsHttp
+                    )
+                    if (response == "200") {
+                        echo 'CMS is up! (HTTP 200)'
+                        return true
+                    } else {
+                        error("Error executing smoke test! Response code: " + response)
+                    }
+                }
+            }
+        }
+
+        stage('Email notification for manual test') {
+			steps {
+                            mail(from: 'notificationsystemisep@gmail.com',
+                            to: '1150639@isep.ipp.pt',
+                            subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for approval",
+                            body: "The job '${env.JOB_NAME}' is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue.");
+            }
+        }
+	
+        stage('Manual Approve') {
+			steps{
+				input 'Approve deploy?'
+			}
+        }
+
+        stage('FeedBack'){
+        //Push tags to Bitbucket using a script 
+            steps{
+                script {
+                    withCredentials([usernamePassword(credentialsId: '1fb50392-6260-431d-b1e6-ea6a12c9778c', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        sh "git tag Build#${env.BUILD_NUMBER}-currentBuild.result -m 'Jenkins Feedback'"
+                        sh "git push https://${gitUsername}:${env.GIT_PASSWORD}@${git_repo} --tags"
+                    }
+                }
+            }
         
-        stage('4.3 Mutation Tests') {
-			steps {
-				echo "Mutation Tests"
-   			 }
-		} 
-        
-        stage('4.4 System Test') {
-			steps {
-				echo "System Test"
-   			 }
-		} 
-        stage('4.5. Manuel Test') {
-			steps {
-				echo "Manual Test"
-   			 }
-		} 
-        
-        stage('5. Feedback') {
-			steps {
-				echo "Feedback"
-   			 }
-		} 
-	}
+        }
+
+    }
 }
