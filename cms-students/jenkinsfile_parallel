@@ -21,23 +21,6 @@ def cmsHttp = 'http://127.0.0.1:1997/cms-students/'
 def email_from = 'notificationsystemisep@gmail.com'
 def email_to = '1150639@isep.ipp.pt'
 
-/*
-//Push tags to Bitbucket using a script 
-def pushBuildStatusTag(){
-                script {
-                    withCredentials([usernamePassword(credentialsId: '1fb50392-6260-431d-b1e6-ea6a12c9778c', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                        sh "git tag -a Build#${env.BUILD_NUMBER}-currentBuild.result -m 'Jenkins Feedback'"
-                        sh "git push https://bitbucket.org/1160929/odsoft-m1b_g1.git --tags"
-                    }
-                }
-}
-*/
-def pushBuildStatusTag(){
-                    sshagent(credentials: '1fb50392-6260-431d-b1e6-ea6a12c9778c') {
-                        sh "git tag -a Build#${env.BUILD_NUMBER}-currentBuild.result -m 'Jenkins Feedback'"
-                        sh "git push --tags"
-                    }
-}
 
 pipeline {
 	agent any
@@ -197,11 +180,10 @@ pipeline {
 
         stage('Email notification for manual test') {
 			steps {
-                emailext(
-                        from: email_from,
-                        to: email_to,
-                        subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for approval",
-                        body: "The job '${env.JOB_NAME}' is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue.");
+                            mail(from: 'notificationsystemisep@gmail.com',
+                            to: '1150639@isep.ipp.pt',
+                            subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for approval",
+                            body: "The job '${env.JOB_NAME}' is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue.");
             }
         }
 	
@@ -210,13 +192,19 @@ pipeline {
 				input 'Approve deploy?'
 			}
         }
-	}
-    post {
-        success {
-            pushBuildStatusTag()
+
+        stage('FeedBack'){
+        //Push tags to Bitbucket using a script 
+            steps{
+                script {
+                    withCredentials([usernamePassword(credentialsId: '1fb50392-6260-431d-b1e6-ea6a12c9778c', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        sh "git tag -a Build#${env.BUILD_NUMBER}-currentBuild.result -m 'Jenkins Feedback'"
+                        sh "git push https://bitbucket.org/1160929/odsoft-m1b_g1.git --tags"
+                    }
+                }
+            }
+        
         }
-        failure {
-            pushBuildStatusTag()
-        }
+
     }
 }
