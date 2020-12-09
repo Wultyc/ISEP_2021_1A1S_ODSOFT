@@ -5,7 +5,7 @@
 def credential_ID = 'db746efe-3c61-40e5-8071-c81f2763b723' //laptop jorge
 def gitCred = 'db746efe-3c61-40e5-8071-c81f2763b723'
 def git_repo = 'bitbucket.org/1160929/odsoft-m1b_g1.git'
-def gitUsername = "1150639"
+def gitUsername = "1160929"
 
 def warPath = 'build/libs/cms-students-1.0.war'
 def javadocPath = 'build/docs/javadoc/'
