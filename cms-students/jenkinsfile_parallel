@@ -24,7 +24,7 @@ def email_to = '1150639@isep.ipp.pt'
 //Push tags to Bitbucket using a script 
 def pushBuildStatusTag(){
                 script {
-                    withCredentials([usernamePassword(credentialsId: credential_ID, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                    withCredentials([usernamePassword(credentialsId: '1fb50392-6260-431d-b1e6-ea6a12c9778c', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         sh "git tag -a Build#${env.BUILD_NUMBER}-currentBuild.result -m 'Jenkins Feedback'"
                         sh "git push ${git_repo} --tags"
                     }
