@@ -60,7 +60,7 @@ Ao que se assemelha ao Job *War* este job também utiliza os artefactos (que con
 
 Depois é feita a geração do Javadoc e a sua consequente publicação. após isso é definido quais os jobs a serem executados após a execução deste job relativo ao **War** é utilizado um plug in (Join trigger) que permite fazer a ramificação e utilizar paralelismo para executar os testes (integration, pit mutation e unit).
 
--- **Figura relativa ao plugi in do join trigger** --
+-- **Figura relativa ao plug in do join trigger** --
 
 #### **Unit Tests**
 
@@ -86,9 +86,9 @@ De maneira semelhante ao que acontece nos unit tests, é feita a cópia dos arte
 Também em paralelo, é executado o projeto do jenkins chamado **Class-Assignment-PiTest**, que executa os Mutation Tests.
 No caso da pipeline sequencial, este passo é feito em e **pipeline5** e apenas começa quando o job anterior termina com sucesso.
 
-É executada a task pitests do gradle, e de seguida são publicados os seus Pit mutation reports através pit mutatioon plug in, configurada nas post build actions, como mostra a figura em baixo.
+É executada a task pitest do gradle, e de seguida são publicados os seus Pit mutation reports através pit mutation plug in, configurada nas post build actions, como mostra a figura em baixo.
 
--- ** PIT MUTATION TESTS IMAGE** --
+![Pipeline pitest](images/Report_Component_1/Pipeline_Seq_Pitest.JPG)
 
 #### Deployment
 
@@ -99,7 +99,7 @@ Inicialmente neste projeto são copiados os artefactos necessários, de momento 
 
 De seguida é executada uma post build action que é Deploy war to a container, utilizando o Deploy to container Plugin. A configuração deste deployment utiliza as credenciais necessárias do tomcat para fazer o deployment e a localização da instantância do mesmo.
 
---**Figura deste deployment**
+![Pipeline deploy](images/Report_Component_1/Tomcat_deploy.JPG)
 
 #### Smoke test 
 
@@ -119,7 +119,8 @@ Para isto foi utilizado o Editable E-mail notification para o envio do email.
 Já para a aprovação do utilizador, na pipeline paralela, é utilizada a opção post-build **Build Other projects (manual step)** que permite o utilizador executar manualmente a task identificada na pipeline view. Para a pipeline sequencial, instalou-se o Promoted build plugin que permite aceitar manualmente e iniciar o próximo job.
 
 --**Imagem do build other projects**--
---**Imagem do promoted build plugin**--
+![Pipeline aproval](images/Report_Component_1/Pipeline_manualTest1.JPG)
+![Pipeline manual aproval](images/Report_Component_1/Pipeline_manualTest2.JPG)
 
 #### Envio da tag para um repositório
 
@@ -127,7 +128,7 @@ Por último, esta task é apenas executada se o utilizador assim o permitir e ch
 
 Aqui é utilizado o Git Plugin e é utilizada a post build action git publisher que permite fazer o push de uma tag para o repositório remoto, tal como demonstra a imagem.
 
--- **imagem**--
+![Pipeline tag](images/Report_Component_1/Pipeline_tag.JPG)
 
 ### Pipeline Sequencial utilizando Jenkins File
 Nesta componente do projeto foi desenvolvida um pipeline utilizado o Jenkins File para fazer o Deploy da aplicação CMS Student
@@ -197,9 +198,10 @@ No final da execução, se o utilizador for à pagina do job além do histórico
 
 ## Conclusões
 
-Grupo de trabalho:
-Ana Rita Rodrigues 1191182
-Nuno Dinis 1161042
-Jorge Azevedo 1160929
-João Santos 1150639
+#### Grupo de trabalho:
+
+Ana Rita Rodrigues 1191182, 
+Nuno Dinis 1161042, 
+Jorge Azevedo 1160929, 
+João Santos 1150639.
 ![grupo](images/grupo.JPG)
