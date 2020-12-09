@@ -19,6 +19,14 @@ def cmsHttp = 'http://127.0.0.1:1997/cms-students/'
 
 def email = 'notificationsystemisep@gmail.com'
 
+//SSH Agent 
+def pushBuildStatusTa(){
+    sshagent (credentials: [credential_ID]) {
+        sh "git tag -a Build#${env.BUILD_NUMBER}"
+        sh "git push --tags"
+    }
+}
+
 pipeline {
 	agent any
 
