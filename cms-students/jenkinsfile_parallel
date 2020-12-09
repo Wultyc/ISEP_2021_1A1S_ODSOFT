@@ -2,7 +2,7 @@
 
 def credential_ID = '1fb50392-6260-431d-b1e6-ea6a12c9778c' //DeskTop
 //def credential_ID = 'a40dafd0-e2c0-4218-8eca-0f4eefc35f17' //LapTop
-def git_repo = 'https://bitbucket.org/1160929/odsoft-m1b_g1.git'
+def git_repo = 'bitbucket.org/1160929/odsoft-m1b_g1.git'
 
 def warPath = 'build/libs/cms-students-1.0.war'
 def javadocPath = 'build/docs/javadoc/'
@@ -34,7 +34,7 @@ pipeline {
         
         stage('Repository Checkout') {
 			steps {
-                git url: git_repo,
+                git url: "https://${git_repo}",
                         branch: 'master',
                         credentialsId: credential_ID
             }
@@ -199,7 +199,7 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: '1fb50392-6260-431d-b1e6-ea6a12c9778c', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         sh "git tag -a Build#${env.BUILD_NUMBER}-currentBuild.result -m 'Jenkins Feedback'"
-                        sh "git push https://bitbucket.org/1160929/odsoft-m1b_g1.git --tags"
+                        sh "git push https://1150639:${env.GIT_PASSWORD}@${git_repo} --tags"
                     }
                 }
             }
