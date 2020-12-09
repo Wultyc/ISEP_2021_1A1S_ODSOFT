@@ -27,6 +27,7 @@ def pushBuildStatusTag(){
                         sh "git push https://${gitUsername}:${env.GIT_PASSWORD}@${gitRepo} --tags"
                     }
 }
+}
 
 pipeline {
 	agent any
