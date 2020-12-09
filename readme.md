@@ -197,7 +197,7 @@ No final da execução, se o utilizador for à pagina do job além do histórico
 
 ## Conclusões
 
-
+Grupo de trabalho:
 Ana Rita Rodrigues 1191182
 Nuno Dinis 1161042
 Jorge Azevedo 1160929
