@@ -2,6 +2,7 @@
 
 def credential_ID = '1fb50392-6260-431d-b1e6-ea6a12c9778c' //DeskTop
 //def credential_ID = 'a40dafd0-e2c0-4218-8eca-0f4eefc35f17' //LapTop
+def git_repo = 'https://bitbucket.org/1160929/odsoft-m1b_g1.git'
 
 def warPath = 'build/libs/cms-students-1.0.war'
 def javadocPath = 'build/docs/javadoc/'
@@ -17,16 +18,19 @@ def artifactBuildPath = "build/libs/cms-students-1.0.war"
 def artifactDeployPath = "/opt/tomcat/webapps/cms-students.war" 
 def cmsHttp = 'http://127.0.0.1:1997/cms-students/'
 
-def email = 'notificationsystemisep@gmail.com'
+def email_from = 'notificationsystemisep@gmail.com'
+def email_to = '1150639isep.ipp.pt'
 
-//SSH Agent 
+//Push tags to Bitbucket using a script 
 def pushBuildStatusTag(){
+    steps{
                 script {
                     withCredentials([usernamePassword(credentialsId: credential_ID, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         sh "git tag -a Build#${env.BUILD_NUMBER}-currentBuild.result -m 'Jenkins Feedback'"
-                        sh "git push https://${gitUsername}:${env.GIT_PASSWORD}@${gitRepo} --tags"
+                        sh "git push ${git_repo} --tags"
                     }
-}
+                }
+        }
 }
 
 pipeline {
@@ -38,13 +42,15 @@ pipeline {
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL} [Build number: ${env.BUILD_NUMBER}] [Workspace: ${env.WORKSPACE}]"
 			}
         }
+        
         stage('Repository Checkout') {
 			steps {
-                git url: 'https://bitbucket.org/1160929/odsoft-m1b_g1.git',
+                git url: git_repo,
                         branch: 'master',
                         credentialsId: credential_ID
             }
         }
+        /*
         stage('War file') {
 			steps {
                 dir(cms2Path) {
@@ -150,7 +156,7 @@ pipeline {
 		        }
 		    }
         }
-    
+    */
         stage('Deploy to TomCat') {
 			steps{                
                 script{
@@ -185,8 +191,8 @@ pipeline {
         stage('Email notification for manual test') {
 			steps {
                 emailext(
-                        from: 'jonasg97@gmail.com',
-                        to: '1150639@isep.ipp.pt',
+                        from: email_from,
+                        to: email_to,
                         subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for approval",
                         body: "The job '${env.JOB_NAME}' is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue.");
             }
