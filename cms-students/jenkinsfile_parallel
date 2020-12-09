@@ -206,7 +206,7 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: credential_ID, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         sh "git tag ScriptedPipeline-Build-${BUILD_NUMBER}"
-                        sh "git push https://${gitUsername}:${env.GIT_PASSWORD}@${gitRepo} --tags"
+                        sh "git push https://${gitUsername}:${env.GIT_PASSWORD}@${git_repo} --tags"
                     }
                 }
             }
