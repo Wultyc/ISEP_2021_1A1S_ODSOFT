@@ -19,18 +19,16 @@ def artifactDeployPath = "/opt/tomcat/webapps/cms-students.war"
 def cmsHttp = 'http://127.0.0.1:1997/cms-students/'
 
 def email_from = 'notificationsystemisep@gmail.com'
-def email_to = '1150639isep.ipp.pt'
+def email_to = '1150639@isep.ipp.pt'
 
 //Push tags to Bitbucket using a script 
 def pushBuildStatusTag(){
-    steps{
                 script {
                     withCredentials([usernamePassword(credentialsId: credential_ID, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         sh "git tag -a Build#${env.BUILD_NUMBER}-currentBuild.result -m 'Jenkins Feedback'"
                         sh "git push ${git_repo} --tags"
                     }
                 }
-        }
 }
 
 pipeline {
