@@ -60,7 +60,7 @@ Ao que se assemelha ao Job *War* este job também utiliza os artefactos (que con
 
 Depois é feita a geração do Javadoc e a sua consequente publicação. após isso é definido quais os jobs a serem executados após a execução deste job relativo ao **War** é utilizado um plug in (Join trigger) que permite fazer a ramificação e utilizar paralelismo para executar os testes (integration, pit mutation e unit).
 
-![Post Build Checkout](images/Report_Component_2/jointrigger.JPG)
+![Join Trigger](images/Report_Component_2/jointrigger.JPG)
 
 #### **Unit Tests**
 
