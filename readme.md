@@ -17,6 +17,13 @@ A implementação teve por base a combinação de dois fatores:
 
 ### Pipeline sequencial utilizando Build Pipeline Plug-In
 
+Este componente teve como objetivo a implementação de uma pipeline sequencial no Jenkins usufruindo de um plugin -Build Pipeline plugin- que permite ver em tempo real a evolução da mesma. Esta pipeline é feita sem recurso a jenkinsfile, pois usa a interface do Jenkins para executar as diferentes tasks.
+
+Nesta pipeline, como já foi mencionado em cima, todos os jobs são executados de maneira sequencial, ou seja, o primeiro job é accionado o Build Now e quando termina com sucesso ele automaticamente começa o job seguinte.
+A seguinte imagem mostra a pipeline implementada e executada com sucesso usando o plugin.
+
+![Pipeline Sequencial Jenkins](images/Report_Component_1/Pipeline_Plugin_Sequencial1.JPG)
+
 ### Pipeline paralela utilizando Build Pipeline Plug-In
 
 Esta parte do Class Assignment teve como objectivo a implementação de uma pipeline no Jenkins utilizando um plug in. Este plug in foi o Build Pipeline, permitindo, sem a utilização de scripts, implementar uma pipeline com os objectivos suprarreferidos. 
@@ -27,7 +34,7 @@ Esta pipeline permitiu então executar uma pipeline com algumas tasks em paralel
 
 #### **Checkout e clean**
 
-O job referente a esta parte da pipeline é: **Class-Assignment-Checkout-clean**.
+Os jobs referentes a esta parte da pipeline são: **Class-Assignment-Checkout-clean** e **pipeline0**.
 
 A pipeline inicia com o checkout da branch do bitbucket onde o código fonte está guardado. Executa de igual forma a task clean. 
 
@@ -39,7 +46,7 @@ Após esta execução, e de forma a evitar a reutilização do workspace para ev
 
 De seguida, é executado outro job da pipeline, que faz o build e gera o ficheiro .war da aplicação. O código utilizado para este ficheiro ser gerado é o provenienete do último job, checkout, e do seu consequente armazenamento do artefactos. 
 
-O nome do job referente a esta parte é: **Class-Assignment-WAR**.
+Os nomes dos jobs referentes a esta parte são: **Class-Assignment-WAR** e **pipeline1**.
 
 Aqui simplesmente é executada a task .war do gradle, que gera o ficheiro. De seguida todos os ficheiros são armazenados, também como artefactos, para passar ao próximo passo, a geração do Javadoc.
 
@@ -47,17 +54,17 @@ Nas post-build actions, são armazenados os artefactos.
  
 #### **Javadoc**
 
-A geração do javadoc é feita no Job **Class-Assignment-Javadoc**.
+A geração do javadoc é feita nos Jobs **Class-Assignment-Javadoc** e **pipeline2**.
 
 Ao que se assemelha ao Job *War* este job também utiliza os artefactos (que contêm o código) do ultimo Job.
 
 Depois é feita a geração do Javadoc e a sua consequente publicação. após isso é definido quais os jobs a serem executados após a execução deste job relativo ao **War** é utilizado um plug in (Join trigger) que permite fazer a ramificação e utilizar paralelismo para executar os testes (integration, pit mutation e unit).
 
--- **Figura relativa ao plugi in do join trigger** --
+-- **Figura relativa ao plug in do join trigger** --
 
 #### **Unit Tests**
 
-A proxima task, a ser executada em paralelo com os integration e mutation tests, são os unit tests, no Job: ** Class-Assignment-Unit-Test**.
+A proxima task, a ser executada em paralelo com os integration e mutation tests, são os unit tests, no Job: ** Class-Assignment-Unit-Test**. No caso da pipeline sequencial, é apenas esta task a ser realizada, no job: **pipeline3**.
 
 É feita a cópia dos artefactos (todos os aretfactos gerados até ao javadoc) para o workspace relativo aos unit tests.
 
@@ -69,55 +76,59 @@ Neste caso não será necessário fazer trigger do próximo passo, uma vez que e
 
 #### **Integration tests**
 
-Paralelamente é executada a task integration tests, sendo o seu nome: **Class-Assignment-Integration-Test**
+Paralelamente é executada a task integration tests, sendo o seu nome: **Class-Assignment-Integration-Test**.
+No caso da pipeline sequencial, esta task tem o nome **pipeline4** e apenas começa quando a anterior termina com sucesso.
 
 De maneira semelhante ao que acontece nos unit tests, é feita a cópia dos artefactos e é executada a task integrationTest.
 
 #### **Mutation tests**
 
 Também em paralelo, é executado o projeto do jenkins chamado **Class-Assignment-PiTest**, que executa os Mutation Tests.
+No caso da pipeline sequencial, este passo é feito em e **pipeline5** e apenas começa quando o job anterior termina com sucesso.
 
-É executada a task pitests do gradle, e de seguida são publicados os seus Pit mutation reports através pit mutatioon plug in, configurada nas post build actions, como mostra a figura em baixo.
+É executada a task pitest do gradle, e de seguida são publicados os seus Pit mutation reports através pit mutation plug in, configurada nas post build actions, como mostra a figura em baixo.
 
--- ** PIT MUTATION TESTS IMAGE** --
+![Pipeline pitest](images/Report_Component_1/Pipeline_Seq_Pitest.JPG)
 
 #### Deployment
 
-De seguida, é feito o deployment para uma instancia de servidor do tomcat. Este processo pode ser acompnhado no projeto **Class-Assignment-System**.
+De seguida, é feito o deployment para uma instancia de servidor do tomcat. Este processo pode ser acompnhado no projeto **Class-Assignment-System** e **pipeline6**.
 
 Inicialmente neste projeto são copiados os artefactos necessários, de momento o único necessário será o ficheiro war, sendo este o unico a ser copiado para o workspace.
 
 
 De seguida é executada uma post build action que é Deploy war to a container, utilizando o Deploy to container Plugin. A configuração deste deployment utiliza as credenciais necessárias do tomcat para fazer o deployment e a localização da instantância do mesmo.
 
---**Figura deste deployment**
+![Pipeline deploy](images/Report_Component_1/Tomcat_deploy.JPG)
 
 #### Smoke test 
 
-Após o sucesso do projeto anterior, é executado o **Class-Assignment-SmokeTest**.
+Após o sucesso do projeto anterior, é executado o **Class-Assignment-SmokeTest** e **pipeline6.1**.
 
 Este consiste num simples curl que permite saber o estado do servidor depois do deployment, se este é acessível.
 
 #### Manual test and aproval
 
-Chegando a este projeto, **Class-Assignment-Manual-Test**, significa que todos os passos anteriores foram executados com sucesso.
+Chegando a este job, **Class-Assignment-Manual-Test** e **pipeline7**, significa que todos os passos anteriores foram executados com sucesso.
 
 Então neste ponto é enviado um email para um utilizador a pedir execução de testes para a posterior aceitação.
 Nesta configuração, para além do email, é definida que a proxima ação, o envio de uma tag para o repositorio, é feito com uma aprovação do utilizador. 
 
 Para isto foi utilizado o Editable E-mail notification para o envio do email.
 
-Já para a aprovação do utilizador é utilizada a opção post-build **Build Other projects (manual step)** que permite o utilizador executar manualmente a task identificada na pipeline view.
+Já para a aprovação do utilizador, na pipeline paralela, é utilizada a opção post-build **Build Other projects (manual step)** que permite o utilizador executar manualmente a task identificada na pipeline view. Para a pipeline sequencial, instalou-se o Promoted build plugin que permite aceitar manualmente e iniciar o próximo job.
 
 --**Imagem do build other projects**--
+![Pipeline aproval](images/Report_Component_1/Pipeline_manualTest1.JPG)
+![Pipeline manual aproval](images/Report_Component_1/Pipeline_manualTest2.JPG)
 
 #### Envio da tag para um repositório
 
-Por ultimo, esta task é apenas executada se o utilizador assim o permitir e chama-se **Class-Assignment-Build-Tag**.
+Por último, esta task é apenas executada se o utilizador assim o permitir e chama-se **Class-Assignment-Build-Tag** e **pipeline8**.
 
 Aqui é utilizado o Git Plugin e é utilizada a post build action git publisher que permite fazer o push de uma tag para o repositório remoto, tal como demonstra a imagem.
 
--- **imagem**--
+![Pipeline tag](images/Report_Component_1/Pipeline_tag.JPG)
 
 ### Pipeline Sequencial utilizando Jenkins File
 Nesta componente do projeto foi desenvolvida um pipeline utilizado o Jenkins File para fazer o Deploy da aplicação CMS Student
@@ -186,3 +197,11 @@ No final da execução, se o utilizador for à pagina do job além do histórico
 ### Pipeline Paralela utilizando Jenkins File
 
 ## Conclusões
+
+#### Grupo de trabalho:
+
+Ana Rita Rodrigues 1191182, 
+Nuno Dinis 1161042, 
+Jorge Azevedo 1160929, 
+João Santos 1150639.
+![grupo](images/grupo.JPG)
