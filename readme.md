@@ -284,8 +284,8 @@ Este codigo é executado para testar a conexão para ver se o servidor (TomCat) 
 
 ## Grupo de trabalho:
 
-Ana Rita Rodrigues 1191182, 
-Nuno Dinis 1161042, 
-Jorge Azevedo 1160929, 
-João Santos 1150639.
+Ana Rita Rodrigues 1191182,  
+Nuno Dinis 1161042,  
+Jorge Azevedo 1160929,  
+João Santos 1150639.  
 ![grupo](images/grupo.JPG)
