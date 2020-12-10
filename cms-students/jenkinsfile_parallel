@@ -24,8 +24,8 @@ def email_to = '1150639@isep.ipp.pt'
 def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms2/builds"
 def gitUsername = "1150639"
 def cmsHttp = 'http://127.0.0.1:1997/cms-students/'
-//def credential_ID = '1fb50392-6260-431d-b1e6-ea6a12c9778c' //DeskTop Joao
-def credential_ID = 'a40dafd0-e2c0-4218-8eca-0f4eefc35f17' //LapTop Joao
+def credential_ID = '1fb50392-6260-431d-b1e6-ea6a12c9778c' //DeskTop Joao
+//def credential_ID = 'a40dafd0-e2c0-4218-8eca-0f4eefc35f17' //LapTop Joao
 
 //  [Jorge]     [Jorge] [Jorge]     [Jorge]     [Jorge]
 //def email_to = '1160929@isep.ipp.pt'
@@ -78,88 +78,92 @@ pipeline {
                			 }
            		 }
         }
+
         stage('Run Tests'){
             parallel {
                 stage('Unit Tests') {
-			steps {
-                            dir(cms2Path) {
-					script {
-						sh 'gradle test -g gradle-user-home'
-						sh 'gradle jacocoTestReport -g gradle-user-home'
-						sh 'ls -la ' + unitTestResults // To show the contents on the log before publishing
-					}
+			        steps {
+                        dir(cms2Path) {
+					        script {
+						        sh 'gradle test -g gradle-user-home'
+						        sh 'gradle jacocoTestReport -g gradle-user-home'
+						        sh 'ls -la ' + unitTestResults // To show the contents on the log before publishing
+					        }
 					
-                                        junit unitTestResults + '/*.xml'
-					    publishHTML([
-							allowMissing         : false,
-							alwaysLinkToLastBuild: false,
-							keepAll              : false,
-							reportDir            : unitTestReport,
-							reportFiles          : 'index.html',
-							reportName           : 'Unit Test Coverage HTML Report',
-							reportTitles         : ''])
-				}
-            }
-        }
-
-        stage('Integration Tests') {
-			steps {
-				dir(cms2Path){
-                    script {
-                        sh 'gradle integrationTest -g gradle-user-home'
-                        sh'gradle jacocoIntegrationReport -g gradle-user-home'
-                        sh 'ls -la ' + integrationTestResults
-                        //Lista os conteodos dos resultados;
+                            junit unitTestResults + '/*.xml'
+					        
+                            publishHTML([
+							    allowMissing         : false,
+							    alwaysLinkToLastBuild: false,
+							    keepAll              : false,
+							    reportDir            : unitTestReport,
+							    reportFiles          : 'index.html',
+							    reportName           : 'Unit Test Coverage HTML Report',
+							    reportTitles         : ''])
+				        }
                     }
-		            jacoco buildOverBuild: true,
-		                    deltaBranchCoverage: '5',
-		                    deltaClassCoverage: '5',
-		                    deltaComplexityCoverage: '5',
-		                    deltaInstructionCoverage: '5',
-		                    deltaLineCoverage: '5',
-		                    deltaMethodCoverage: '5',
-		                    maximumBranchCoverage: '80',
-		                    maximumClassCoverage: '80',
-		                    maximumComplexityCoverage: '80',
-		                    maximumInstructionCoverage: '80',
-		                    maximumLineCoverage: '80',
-		                    maximumMethodCoverage: '80',
-		                    minimumBranchCoverage: '5',
-		                    minimumClassCoverage: '5',
-		                    minimumComplexityCoverage: '5',
-		                    minimumInstructionCoverage: '5',
-		                    minimumLineCoverage: '5',
-		                    minimumMethodCoverage: '5'
-		            publishHTML([
-		                    allowMissing         : false,
-		                    alwaysLinkToLastBuild: false,
-		                    keepAll              : false,
-		                    reportDir            : integrationTestResults,
-		                    reportFiles          : 'index.html',
-		                    reportName           : 'Integration Test Coverage HTML Report',
-		                    reportTitles         : ''])
-                            }
-   		}
-            } 
-        
-        stage('Mutation Tests') {
-			steps {
-		        dir(cms2Path) {
-		            script {
-		                sh 'gradle pitest -g gradle-user-home'
-		            }
+                }
 
-		            publishHTML([
-		                    allowMissing         : false,
-		                    alwaysLinkToLastBuild: false,
-		                    keepAll              : false,
-		                    reportDir            : mutationTestResults,
-		                    reportFiles          : 'index.html',
-		                    reportName           : 'Pit Mutation Test Coverage HTML Report',
-		                    reportTitles         : ''])
-		        }
-		    }
-            }
+                stage('Integration Tests') {
+			        steps {
+				        dir(cms2Path){
+                            script {
+                                sh 'gradle integrationTest -g gradle-user-home'
+                                sh'gradle jacocoIntegrationReport -g gradle-user-home'
+                                sh 'ls -la ' + integrationTestResults
+                                //Lista os conteodos dos resultados;
+                            }
+		            
+                            jacoco buildOverBuild: true,
+		                        deltaBranchCoverage: '5',
+		                        deltaClassCoverage: '5',
+		                        deltaComplexityCoverage: '5',
+		                        deltaInstructionCoverage: '5',
+		                        deltaLineCoverage: '5',
+		                        deltaMethodCoverage: '5',
+		                        maximumBranchCoverage: '80',
+		                        maximumClassCoverage: '80',
+		                        maximumComplexityCoverage: '80',
+		                        maximumInstructionCoverage: '80',
+		                        maximumLineCoverage: '80',
+		                        maximumMethodCoverage: '80',
+		                        minimumBranchCoverage: '5',
+		                        minimumClassCoverage: '5',
+		                        minimumComplexityCoverage: '5',
+		                        minimumInstructionCoverage: '5',
+		                        minimumLineCoverage: '5',
+		                        minimumMethodCoverage: '5'
+		            
+                            publishHTML([
+		                        allowMissing         : false,
+		                        alwaysLinkToLastBuild: false,
+		                        keepAll              : false,
+		                        reportDir            : integrationTestResults,
+		                        reportFiles          : 'index.html',
+		                        reportName           : 'Integration Test Coverage HTML Report',
+		                        reportTitles         : ''])
+                        }
+   		            }
+                } 
+        
+                stage('Mutation Tests') {
+			        steps {
+		                dir(cms2Path) {
+		                    script {
+		                        sh 'gradle pitest -g gradle-user-home'
+		                    }
+
+		                    publishHTML([
+		                        allowMissing         : false,
+		                        alwaysLinkToLastBuild: false,
+		                        keepAll              : false,
+		                        reportDir            : mutationTestResults,
+		                        reportFiles          : 'index.html',
+		                        reportName           : 'Pit Mutation Test Coverage HTML Report',
+		                        reportTitles         : ''])
+		                }
+		            }
+                }
             }
         }       
     
@@ -196,10 +200,10 @@ pipeline {
 
         stage('Email notification for manual test') {
 			steps {
-                            mail(from: email_from,
-                            to: email_to,
-                            subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for approval",
-                            body: "The job '${env.JOB_NAME}' is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue.");
+                mail(from: email_from,
+                to: email_to,
+                subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for approval",
+                body: "The job '${env.JOB_NAME}' is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue.");
             }
         }
 	
