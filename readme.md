@@ -20,25 +20,26 @@ A implementação teve por base a combinação de dois fatores:
 Este componente teve como objetivo a implementação de uma pipeline sequencial no Jenkins usufruindo de um plugin -Build Pipeline plugin- que permite ver em tempo real a evolução da mesma. Esta pipeline é feita sem recurso a jenkinsfile, pois usa a interface do Jenkins para executar as diferentes tasks.
 
 Nesta pipeline, como já foi mencionado em cima, todos os jobs são executados de maneira sequencial, ou seja, o primeiro job é accionado o Build Now e quando termina com sucesso ele automaticamente começa o job seguinte.
+
 A seguinte imagem mostra a pipeline implementada e executada com sucesso usando o plugin.
 
 ![Pipeline Sequencial Jenkins](images/Report_Component_1/Pipeline_Plugin_Sequencial1.JPG)
 
 ### Pipeline paralela utilizando Build Pipeline Plug-In
 
-Esta parte do Class Assignment teve como objectivo a implementação de uma pipeline no Jenkins utilizando um plug in. Este plug in foi o Build Pipeline, permitindo, sem a utilização de scripts, implementar uma pipeline com os objectivos suprarreferidos. 
+Esta parte do Class Assignment teve como objectivo a implementação de uma pipeline no Jenkins utilizando um plug in. Este plug in foi o Build Pipeline, permitindo, sem a utilização de scripts implementar a pipeline pretendida.
 
-Esta pipeline permitiu então executar uma pipeline com algumas tasks em paralelo, sendo estas as tasks de Unit, integration e mutation tests. Na seguinte imagem está representada a imagem da pipeline implementada e corrida com este plug in.
+Esta tarefa implementou uma alternativa para executar uma pipeline com algumas tasks em paralelo, sendo estas as tasks de Unit, Integration e Mutation tests. Na seguinte imagem está representada a imagem da pipeline implementada e corrida com este plug in.
 
 ![Pipeline Paralela Jenkins](images/Report_Component_2/Pipeline_Plugin_Paralel4.JPG)
 
 #### **Checkout e clean**
 
-Os jobs referentes a esta parte da pipeline são: **Class-Assignment-Checkout-clean** e **pipeline0**.
+Os projects referentes a esta parte da pipeline são: **Class-Assignment-Checkout-clean** e **pipeline0**.
 
-A pipeline inicia com o checkout da branch do bitbucket onde o código fonte está guardado. Executa de igual forma a task clean. 
+A pipeline inicia com o checkout da branch do bitbucket onde o código fonte está guardado. Executa de seguida a task clean. 
 
-Após esta execução, e de forma a evitar a reutilização do workspace para evitar futuros problemas devido a commits simultâneos, ou outro tipo de alterações a acontecer no Jenkins/Repositório remoto, é utilizado o Copy artifacts, para poder ser passado o código referente a este checkout ao próximo projeto do jenkins, neste caso o projeto relativo ao War.
+Após esta execução, e de forma a evitar a reutilização do workspace para evitar futuros problemas devido a commits simultâneos, ou outro tipo de alterações a acontecer no Jenkins/Repositório remoto, é utilizado o Copy artifacts, para poder ser passado o código referente a este checkout ao próximo projeto do jenkins, neste caso o projeto relativo ao War. É de notar que nestes passos iniciais, devido a dependências de todo o código, são copiados todos os ficheiros presentes no repositório remoto.
 
 ![Post Build Checkout](images/Report_Component_2/Post_Build_Checkout.JPG)
 
@@ -48,7 +49,7 @@ De seguida, é executado outro job da pipeline, que faz o build e gera o ficheir
 
 Os nomes dos jobs referentes a esta parte são: **Class-Assignment-WAR** e **pipeline1**.
 
-Aqui simplesmente é executada a task .war do gradle, que gera o ficheiro. De seguida todos os ficheiros são armazenados, também como artefactos, para passar ao próximo passo, a geração do Javadoc.
+Aqui simplesmente é executada a task war do gradle, que gera o ficheiro. De seguida todos os ficheiros são armazenados, também como artefactos, para passar ao próximo passo, a geração do Javadoc.
 
 Nas post-build actions, são armazenados os artefactos.
  
@@ -58,21 +59,19 @@ A geração do javadoc é feita nos Jobs **Class-Assignment-Javadoc** e **pipeli
 
 Ao que se assemelha ao Job *War* este job também utiliza os artefactos (que contêm o código) do ultimo Job.
 
-Depois é feita a geração do Javadoc e a sua consequente publicação. após isso é definido quais os jobs a serem executados após a execução deste job relativo ao **War** é utilizado um plug in (Join trigger) que permite fazer a ramificação e utilizar paralelismo para executar os testes (integration, pit mutation e unit).
+Depois é feita a geração do Javadoc e a sua consequente publicação. Após isso é definido quais os jobs a serem executados após o build bem sucedido deste job relativo ao **War**. Nesta etapa, para a pipeline em paralelo é utilizado um plug in (Join trigger) que permite fazer a ramificação e utilizar paralelismo para executar os testes (integration, pit mutation e unit). Com isto, o objetivo será optimizar o tempo de execução da pipeline, uma vez que estas tasks são independentes umas das outras são executadas em paralelo, não causando atrasos na execução da pipeline, ao contrário do que poderia acontecer na pipeline sequencial.
 
--- **Figura relativa ao plug in do join trigger** --
+![Join Trigger](images/Report_Component_2/jointrigger.png)
 
 #### **Unit Tests**
 
-A proxima task, a ser executada em paralelo com os integration e mutation tests, são os unit tests, no Job: ** Class-Assignment-Unit-Test**. No caso da pipeline sequencial, é apenas esta task a ser realizada, no job: **pipeline3**.
+A proxima task, a ser executada em paralelo com os integration e mutation tests, são os unit tests, no Job: **Class-Assignment-Unit-Test**. No caso da pipeline sequencial, é apenas esta task a ser realizada, no job: **pipeline3**.
 
 É feita a cópia dos artefactos (todos os aretfactos gerados até ao javadoc) para o workspace relativo aos unit tests.
 
 Estes tests são executados utilizando o comando gradle *test* e são publicados a cobertura e os resultados dos testes utilizando os respectivos plug ins, tanto do jacoco como do html publish report.
 
-Neste caso não será necessário fazer trigger do próximo passo, uma vez que este trigger é feito a partir do plug in *'Join Trigger'*, configurado no ultimo Job.
-
--- **imagem referente aos post build actions**
+Neste caso não será necessário fazer trigger do próximo passo, uma vez que este trigger é feito a partir do plug in *Join Trigger*, configurado no último Job.
 
 #### **Integration tests**
 
@@ -97,7 +96,12 @@ De seguida, é feito o deployment para uma instancia de servidor do tomcat. Este
 Inicialmente neste projeto são copiados os artefactos necessários, de momento o único necessário será o ficheiro war, sendo este o unico a ser copiado para o workspace.
 
 
-De seguida é executada uma post build action que é Deploy war to a container, utilizando o Deploy to container Plugin. A configuração deste deployment utiliza as credenciais necessárias do tomcat para fazer o deployment e a localização da instantância do mesmo.
+De seguida é executada uma post build action que é Deploy war to a container, utilizando o Deploy to container Plugin. A configuração deste deployment utiliza as credenciais necessárias do tomcat para fazer o deployment e a localização da instantância do mesmo. Na seguinte imagem é possível verificar este mesmo passo.
+
+![Pipeline deployment](images/Report_Component_2/deployment.png)
+
+Foi necessário também neste passo fazer uma configuração ao servidor tomcat para possibilitar efetuar o deployment. Foi necessário fazer algumas configurações de utilizadores de modo a serem utilizadas tal como é visto na imagem acima. Estas configurações foram feitas no ficheiro *tomcat-users.xml* presente na pasta *conf* relativa ao tomcat.
+Na seguinte imagem é possível verificar a aplicação na lista de aplicações da instância de servidor do Tomcat.
 
 ![Pipeline deploy](images/Report_Component_1/Tomcat_deploy.JPG)
 
@@ -116,9 +120,12 @@ Nesta configuração, para além do email, é definida que a proxima ação, o e
 
 Para isto foi utilizado o Editable E-mail notification para o envio do email.
 
-Já para a aprovação do utilizador, na pipeline paralela, é utilizada a opção post-build **Build Other projects (manual step)** que permite o utilizador executar manualmente a task identificada na pipeline view. Para a pipeline sequencial, instalou-se o Promoted build plugin que permite aceitar manualmente e iniciar o próximo job.
+Já para a aprovação do utilizador, na pipeline paralela, é utilizada a opção post-build **Build Other projects (manual step)** que permite o utilizador executar manualmente a task identificada na pipeline view. 
 
---**Imagem do build other projects**--
+![Pipeline aproval](images/Report_Component_2/manualstep.png)
+
+Para a pipeline sequencial, instalou-se o Promoted build plugin que permite aceitar manualmente e iniciar o próximo job.
+
 ![Pipeline aproval](images/Report_Component_1/Pipeline_manualTest1.JPG)
 ![Pipeline manual aproval](images/Report_Component_1/Pipeline_manualTest2.JPG)
 

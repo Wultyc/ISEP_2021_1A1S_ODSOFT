@@ -15,24 +15,24 @@ def mutationTestResults = 'build/reports/pitest'
 
 def jenkinsArchiveFolder = "archive"
 def artifactBuildPath = "build/libs/cms-students-1.0.war"
-def artifactDeployPath = "/opt/tomcat/webapps/cms-students.war" 
+def artifactDeployPath = "/opt/tomcat/webapps/cms-students-spp.war" 
 
 // Just Choose One Of The Conf Above!
 
 //       [João]   [João]   [João]   [João]  [João]
-def email_to = '1150639@isep.ipp.pt'
-def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms2/builds"
-def gitUsername = "1150639"
-def cmsHttp = 'http://127.0.0.1:1997/cms-students/'
-def credential_ID = '1fb50392-6260-431d-b1e6-ea6a12c9778c' //DeskTop Joao
+//def email_to = '1150639@isep.ipp.pt'
+//def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms2/builds"
+//def gitUsername = "1150639"
+//def cmsHttp = 'http://127.0.0.1:1997/cms-students-spp/'
+//def credential_ID = '1fb50392-6260-431d-b1e6-ea6a12c9778c' //DeskTop Joao
 //def credential_ID = 'a40dafd0-e2c0-4218-8eca-0f4eefc35f17' //LapTop Joao
 
 //  [Jorge]     [Jorge] [Jorge]     [Jorge]     [Jorge]
-//def email_to = '1160929@isep.ipp.pt'
-//def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms-student-parallel-pipeline/builds/"
-//def gitUsername = "1160929"
-//def credential_ID = 'db746efe-3c61-40e5-8071-c81f2763b723' //laptop jorge
-//def cmsHttp = 'http://127.0.0.1:8080/cms-students/'
+def email_to = '1160929@isep.ipp.pt'
+def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms-student-parallel-pipeline/builds/"
+def gitUsername = "1160929"
+def credential_ID = 'db746efe-3c61-40e5-8071-c81f2763b723' //laptop jorge
+def cmsHttp = 'http://127.0.0.1:8080/cms-students-spp/'
 
 
 pipeline {
