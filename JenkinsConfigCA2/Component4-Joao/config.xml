@@ -1,0 +1,248 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.40">
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.7.2"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.7.2">
+      <jobProperties/>
+      <triggers/>
+      <parameters/>
+      <options/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+  </actions>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.84">
+    <script>#!/usr/bin/env groovy 
+
+//General Conf for the pipeline
+def git_repo = &apos;bitbucket.org/1160929/odsoft-m1b_g1.git&apos;
+def email_from = &apos;notificationsystemisep@gmail.com&apos;
+
+def warPath = &apos;build/libs/cms-students-1.0.war&apos;
+def javadocPath = &apos;build/docs/javadoc/&apos;
+def cms2Path = &apos;cms-students/&apos;
+
+def unitTestResults = &apos;build/test-results/test&apos;
+def unitTestReport = &apos;build/reports/test&apos;
+def integrationTestResults = &apos;build/test-results/integrationTest&apos;
+def mutationTestResults = &apos;build/reports/pitest&apos;
+
+def jenkinsArchiveFolder = &quot;archive&quot;
+def artifactBuildPath = &quot;build/libs/cms-students-1.0.war&quot;
+def artifactDeployPath = &quot;/opt/tomcat/webapps/cms-students.war&quot; 
+
+// Just Choose One Of The Conf Above!
+
+//       [João]   [João]   [João]   [João]  [João]
+def email_to = &apos;1150639@isep.ipp.pt&apos;
+def jenkinsBuildFolder = &quot;/var/lib/jenkins/jobs/cms2/builds&quot;
+def gitUsername = &quot;Joao123&quot;
+def cmsHttp = &apos;http://127.0.0.1:1997/cms-students/&apos;
+def credential_ID = &apos;1fb50392-6260-431d-b1e6-ea6a12c9778c&apos; //DeskTop Joao
+//def credential_ID = &apos;a40dafd0-e2c0-4218-8eca-0f4eefc35f17&apos; //LapTop Joao
+
+//  [Jorge]     [Jorge] [Jorge]     [Jorge]     [Jorge]
+//def email_to = &apos;1160929@isep.ipp.pt&apos;
+//def jenkinsBuildFolder = &quot;/var/lib/jenkins/jobs/cms-student-parallel-pipeline/builds/&quot;
+//def gitUsername = &quot;1160929&quot;
+//def credential_ID = &apos;db746efe-3c61-40e5-8071-c81f2763b723&apos; //laptop jorge
+//def cmsHttp = &apos;http://127.0.0.1:8080/cms-students/&apos;
+
+
+pipeline {
+	agent any
+
+	stages {
+	    stage(&apos;Start&apos;) {
+			steps{
+                echo &quot;Running ${env.BUILD_ID} on ${env.JENKINS_URL} [Build number: ${env.BUILD_NUMBER}] [Workspace: ${env.WORKSPACE}]&quot;
+			}
+        }
+        
+        stage(&apos;Repository Checkout&apos;) {
+			steps {
+                git url: &quot;https://${git_repo}&quot;,
+                        branch: &apos;master&apos;,
+                        credentialsId: credential_ID
+            }
+        }
+        
+        stage(&apos;War file&apos;) {
+			steps {
+                dir(cms2Path) {
+                    script {
+                        sh &apos;gradle clean build -g gradle-user-home&apos;
+                    }
+
+                    archiveArtifacts warPath
+                }
+            }
+        }
+
+
+        stage(&apos;Javadoc&apos;) {
+			steps {
+               			 dir(cms2Path) {
+                   			 script {
+                       		    sh &apos;gradle javadoc -g gradle-user-home&apos;
+                   			 }
+					        step $class: &apos;JavadocArchiver&apos;,
+                            javadocDir: javadocPath,
+                            keepAll: false
+               			 }
+           		 }
+        }
+
+        stage(&apos;Run Tests&apos;){
+            parallel {
+                stage(&apos;Unit Tests&apos;) {
+			        steps {
+                        dir(cms2Path) {
+					        script {
+						        sh &apos;gradle test -g gradle-user-home&apos;
+						        sh &apos;gradle jacocoTestReport -g gradle-user-home&apos;
+						        sh &apos;ls -la &apos; + unitTestResults // To show the contents on the log before publishing
+					        }
+					
+                            junit unitTestResults + &apos;/*.xml&apos;
+					        
+                            publishHTML([
+							    allowMissing         : false,
+							    alwaysLinkToLastBuild: false,
+							    keepAll              : false,
+							    reportDir            : unitTestReport,
+							    reportFiles          : &apos;index.html&apos;,
+							    reportName           : &apos;Unit Test Coverage HTML Report&apos;,
+							    reportTitles         : &apos;&apos;])
+				        }
+                    }
+                }
+
+                stage(&apos;Integration Tests&apos;) {
+			        steps {
+				        dir(cms2Path){
+                            script {
+                                sh &apos;gradle integrationTest -g gradle-user-home&apos;
+                                sh&apos;gradle jacocoIntegrationReport -g gradle-user-home&apos;
+                                sh &apos;ls -la &apos; + integrationTestResults
+                                //Lista os conteodos dos resultados;
+                            }
+		            
+                            jacoco buildOverBuild: true,
+		                        deltaBranchCoverage: &apos;5&apos;,
+		                        deltaClassCoverage: &apos;5&apos;,
+		                        deltaComplexityCoverage: &apos;5&apos;,
+		                        deltaInstructionCoverage: &apos;5&apos;,
+		                        deltaLineCoverage: &apos;5&apos;,
+		                        deltaMethodCoverage: &apos;5&apos;,
+		                        maximumBranchCoverage: &apos;80&apos;,
+		                        maximumClassCoverage: &apos;80&apos;,
+		                        maximumComplexityCoverage: &apos;80&apos;,
+		                        maximumInstructionCoverage: &apos;80&apos;,
+		                        maximumLineCoverage: &apos;80&apos;,
+		                        maximumMethodCoverage: &apos;80&apos;,
+		                        minimumBranchCoverage: &apos;5&apos;,
+		                        minimumClassCoverage: &apos;5&apos;,
+		                        minimumComplexityCoverage: &apos;5&apos;,
+		                        minimumInstructionCoverage: &apos;5&apos;,
+		                        minimumLineCoverage: &apos;5&apos;,
+		                        minimumMethodCoverage: &apos;5&apos;
+		            
+                            publishHTML([
+		                        allowMissing         : false,
+		                        alwaysLinkToLastBuild: false,
+		                        keepAll              : false,
+		                        reportDir            : integrationTestResults,
+		                        reportFiles          : &apos;index.html&apos;,
+		                        reportName           : &apos;Integration Test Coverage HTML Report&apos;,
+		                        reportTitles         : &apos;&apos;])
+                        }
+   		            }
+                } 
+        
+                stage(&apos;Mutation Tests&apos;) {
+			        steps {
+		                dir(cms2Path) {
+		                    script {
+		                        sh &apos;gradle pitest -g gradle-user-home&apos;
+		                    }
+
+		                    publishHTML([
+		                        allowMissing         : false,
+		                        alwaysLinkToLastBuild: false,
+		                        keepAll              : false,
+		                        reportDir            : mutationTestResults,
+		                        reportFiles          : &apos;index.html&apos;,
+		                        reportName           : &apos;Pit Mutation Test Coverage HTML Report&apos;,
+		                        reportTitles         : &apos;&apos;])
+		                }
+		            }
+                }
+            }
+        }       
+    
+        stage(&apos;Deploy to TomCat&apos;) {
+			steps{                
+                script{
+                	sh &apos;ls -la *&apos;
+                    sh &quot;cp ${jenkinsBuildFolder}/${env.BUILD_NUMBER}/${jenkinsArchiveFolder}/${artifactBuildPath} ${artifactDeployPath}&quot;
+                }
+			}
+        }
+
+	    stage(&apos;Smoke test&apos;) {
+			steps {
+                echo &apos;Waiting 10 seconds before Smoke Test...&apos;
+                sleep(
+                        time: 10,
+                        unit: &quot;SECONDS&quot;
+                )
+                script {
+                    def response = sh(
+                            returnStdout: true,
+                            script: &apos;curl --write-out &quot;%{http_code}&quot; --silent --output /dev/null &apos; + cmsHttp
+                    )
+                    if (response == &quot;200&quot;) {
+                        echo &apos;CMS is up! (HTTP 200)&apos;
+                        return true
+                    } else {
+                        error(&quot;Error executing smoke test! Response code: &quot; + response)
+                    }
+                }
+            }
+        }
+
+        stage(&apos;Email notification for manual test&apos;) {
+			steps {
+                mail(from: email_from,
+                to: email_to,
+                subject: &quot;Job &apos;${env.JOB_NAME}&apos; (${env.BUILD_NUMBER}) is waiting for approval&quot;,
+                body: &quot;The job &apos;${env.JOB_NAME}&apos; is currently building and it&apos;s on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue.&quot;);
+            }
+        }
+	
+        stage(&apos;Manual Approve&apos;) {
+			steps{
+				input &apos;Approve deploy?&apos;
+			}
+        }
+
+        stage(&apos;FeedBack&apos;){
+			steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: credential_ID, passwordVariable: &apos;GIT_PASSWORD&apos;, usernameVariable: &apos;GIT_USERNAME&apos;)]) {
+                        sh &quot;git tag ScriptedPipeline-Build-${BUILD_NUMBER}&quot;
+                        sh &quot;git push https://${gitUsername}:${env.GIT_PASSWORD}@${git_repo} --tags&quot;
+                    }
+                }
+            }
+        }
+
+    }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
