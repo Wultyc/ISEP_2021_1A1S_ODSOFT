@@ -19,8 +19,8 @@ def mutationTestResults = 'build/reports/pitest'
 def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms-student-seq-pipeline/builds"
 def jenkinsArchiveFolder = "archive"
 def artifactBuildPath = "build/libs/cms-students-1.0.war" 
-def artifactDeployPath = "/opt/tomcat/webapps/cms-students.war" 
-def cmsHttp = 'http://127.0.0.1:8080/cms-students/'
+def artifactDeployPath = "/opt/tomcat/webapps/cms-students-sps.war" 
+def cmsHttp = 'http://127.0.0.1:8080/cms-students-sps/'
 
 pipeline {
     agent any

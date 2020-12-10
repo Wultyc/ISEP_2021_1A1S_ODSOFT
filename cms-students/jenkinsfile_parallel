@@ -15,7 +15,7 @@ def mutationTestResults = 'build/reports/pitest'
 
 def jenkinsArchiveFolder = "archive"
 def artifactBuildPath = "build/libs/cms-students-1.0.war"
-def artifactDeployPath = "/opt/tomcat/webapps/cms-students.war" 
+def artifactDeployPath = "/opt/tomcat/webapps/cms-students-spp.war" 
 
 // Just Choose One Of The Conf Above!
 
@@ -23,7 +23,7 @@ def artifactDeployPath = "/opt/tomcat/webapps/cms-students.war"
 def email_to = '1150639@isep.ipp.pt'
 def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms2/builds"
 def gitUsername = "1150639"
-def cmsHttp = 'http://127.0.0.1:1997/cms-students/'
+def cmsHttp = 'http://127.0.0.1:1997/cms-students-spp/'
 def credential_ID = '1fb50392-6260-431d-b1e6-ea6a12c9778c' //DeskTop Joao
 //def credential_ID = 'a40dafd0-e2c0-4218-8eca-0f4eefc35f17' //LapTop Joao
 
