@@ -29,7 +29,7 @@ Já relativamente a scripted pipelines, a importação da mesma é feita atravé
 ### Sequencial VS Paralelo
 O facto de executar várias tasks ao mesmo tempo ajuda na melhoria dos tempos de execução da pipeline. Nestes testes atigiu-se aproximadamente 25% de ganho em tempo nas pipelines paralelas face às sequenciais. No entanto este processo exige que existam mais runners disponiveis para que as tarefas possam ser paralelizadas o que obriga a que exista uma máquina (ou cluster) com maior poder computacional e pode atrasar outras execução. Além disto os logs apresentados estão misturados o que pode dificultar o debug.
 
-![exemplo de logs na scripted pipeline paralela](images/Report_Component_4/Parallel_Example_Build.png)
+![exemplo de logs na scripted pipeline paralela](./images/Report_Component_4/Parallel_Example_Build.png)
 
 ### Plugin VS Scripted
 Neste ponto as scripted pipelines assumem uma ligeria vantagem face às pipelines construidas com plugins correspondentes (aprox. 5%), principalmente devido ao facto destas ultimas basearem-se em pequenos jobs executado um após o outro enquanto as primeiras formam apenas um job.
