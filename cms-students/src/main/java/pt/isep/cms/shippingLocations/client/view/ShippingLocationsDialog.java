@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package pt.isep.cms.warehouses.client.view;
+package pt.isep.cms.shippingLocations.client.view;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.i18n.client.Constants;
 import pt.isep.cms.client.ShowcaseConstants;
-import pt.isep.cms.warehouses.client.presenter.EditWarehousePresenter;
+import pt.isep.cms.shippingLocations.client.presenter.EditShippingLocationPresenter;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DecoratorPanel;
@@ -31,9 +31,9 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
- * Dialog Box for Adding and Updating Warehouses.
+ * Dialog Box for Adding and Updating ShippingLocations.
  */
-public class WarehousesDialog implements EditWarehousePresenter.Display {
+public class ShippingLocationsDialog implements EditShippingLocationPresenter.Display {
 	
 	public enum Type {
 		ADD,
@@ -45,9 +45,9 @@ public class WarehousesDialog implements EditWarehousePresenter.Display {
 	 */
 	public static interface CwConstants extends Constants {
 		
-		String cwAddWarehouseDialogCaption();
+		String cwAddShippingLocationDialogCaption();
 		
-		String cwUpdateWarehouseDialogCaption();
+		String cwUpdateShippingLocationDialogCaption();
 				
 //		String cwDialogBoxClose();
 //
@@ -74,19 +74,13 @@ public class WarehousesDialog implements EditWarehousePresenter.Display {
 
 	// Widgets
 	private final TextBox name;
-	private final TextBox totalCap;
-	private final TextBox location;
 	private final FlexTable detailsTable;
 	private final Button saveButton;
 	private final Button cancelButton;
 
 	private void initDetailsTable() {
-		detailsTable.setWidget(0, 0, new Label("Warehouse Name"));
+		detailsTable.setWidget(0, 0, new Label("ShippingLocation Name"));
 		detailsTable.setWidget(0, 1, name);
-		detailsTable.setWidget(1, 0, new Label("Total Capacity"));
-		detailsTable.setWidget(1, 1, totalCap);
-		/*detailsTable.setWidget(2, 0, new Label("Location"));
-		detailsTable.setWidget(2, 1, location);*/
 		name.setFocus(true);
 	}
 
@@ -99,7 +93,7 @@ public class WarehousesDialog implements EditWarehousePresenter.Display {
 	 * @param constants
 	 *            the constants
 	 */
-	public WarehousesDialog(ShowcaseConstants constants, Type type) {
+	public ShippingLocationsDialog(ShowcaseConstants constants, Type type) {
 		// super(constants.cwDialogBoxName(), constants.cwDialogBoxDescription());
 
 		this.constants = constants;
@@ -113,16 +107,15 @@ public class WarehousesDialog implements EditWarehousePresenter.Display {
 		VerticalPanel contentDetailsPanel = new VerticalPanel();
 		contentDetailsPanel.setWidth("100%");
 
-		// Create the warehouses list
+		// Create the shippingLocations list
 		//
 		detailsTable = new FlexTable();
 		detailsTable.setCellSpacing(0);
 		detailsTable.setWidth("100%");
-		detailsTable.addStyleName("warehouses-ListContainer");
-		detailsTable.getColumnFormatter().addStyleName(1, "add-warehouse-input");
+		detailsTable.addStyleName("shippingLocations-ListContainer");
+		detailsTable.getColumnFormatter().addStyleName(1, "add-shippingLocation-input");
 		name = new TextBox();
-		totalCap = new TextBox();
-		location = new TextBox();
+		
 		initDetailsTable();
 		contentDetailsPanel.add(detailsTable);
 
@@ -137,9 +130,9 @@ public class WarehousesDialog implements EditWarehousePresenter.Display {
 		dialogBox = new DialogBox();
 		dialogBox.ensureDebugId("cwDialogBox");
 		if (type==Type.ADD)
-			dialogBox.setText(constants.cwAddWarehouseDialogCaption());
+			dialogBox.setText(constants.cwAddShippingLocationDialogCaption());
 		else 
-			dialogBox.setText(constants.cwUpdateWarehouseDialogCaption());
+			dialogBox.setText(constants.cwUpdateShippingLocationDialogCaption());
 			
 		dialogBox.add(contentDetailsDecorator);
 
@@ -176,19 +169,7 @@ public class WarehousesDialog implements EditWarehousePresenter.Display {
 		// return null;
 	}
 
-	@Override
-	public HasValue<String> getTotalCap() {
-		// TODO Auto-generated method stub
-		return totalCap;
-		// return null;
-	}
-
-	/*@Override
-	public HasValue<String> getLocation() {
-		// TODO Auto-generated method stub
-		return location;
-		// return null;
-	}*/
+	
 
 	@Override
 	public void show() {
