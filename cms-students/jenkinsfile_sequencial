@@ -16,7 +16,7 @@ def unitTestResults = 'build/test-results/test'
 def integrationTestResults = 'build/test-results/integrationTest'
 def mutationTestResults = 'build/reports/pitest'
 
-def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms-student-seq-pipeline/builds"
+def jenkinsBuildFolder = "/var/lib/jenkins/jobs/SequencialPipelineCA2/builds"
 def jenkinsArchiveFolder = "archive"
 def artifactBuildPath = "build/libs/cms-students-1.0.war" 
 def artifactDeployPath = "/opt/tomcat/webapps/cms-students-sps.war" 
