@@ -25,6 +25,17 @@ import pt.isep.cms.warehouses.client.CwWarehouses;
 import pt.isep.cms.warehouses.client.view.WarehousesDialog;
 import pt.isep.cms.warehouses.client.WarehousesController;
 
+import pt.isep.cms.shippingLocations.client.CwShippingLocations;
+import pt.isep.cms.shippingLocations.client.view.ShippingLocationsDialog;
+import pt.isep.cms.shippingLocations.client.ShippingLocationsController;
+
+import pt.isep.cms.products.client.CwProducts;
+import pt.isep.cms.products.client.view.ProductsDialog;
+import pt.isep.cms.products.client.ProductsController;
+
+import pt.isep.cms.batches.client.CwBatches;
+import pt.isep.cms.batches.client.view.BatchesDialog;
+import pt.isep.cms.batches.client.BatchesController;
 
 /**
  * Constants used throughout the showcase.
@@ -35,7 +46,16 @@ ContactsDialog.CwConstants,
 ContactsController.CwConstants, 
 CwWarehouses.CwConstants, 
 WarehousesDialog.CwConstants, 
-WarehousesController.CwConstants {
+WarehousesController.CwConstants,
+CwShippingLocations.CwConstants, 
+ShippingLocationsDialog.CwConstants, 
+ShippingLocationsController.CwConstants,
+CwBatches.CwConstants, 
+BatchesDialog.CwConstants, 
+BatchesController.CwConstants,
+CwProducts.CwConstants, 
+ProductsDialog.CwConstants, 
+ProductsController.CwConstants{
 
   /**
    * The path to source code for examples, raw files, and style definitions.

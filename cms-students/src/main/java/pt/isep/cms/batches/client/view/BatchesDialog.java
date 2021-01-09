@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package pt.isep.cms.warehouses.client.view;
+package pt.isep.cms.batches.client.view;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.i18n.client.Constants;
 import pt.isep.cms.client.ShowcaseConstants;
-import pt.isep.cms.warehouses.client.presenter.EditWarehousePresenter;
+import pt.isep.cms.batches.client.presenter.EditBatchePresenter;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DecoratorPanel;
@@ -31,9 +31,9 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
- * Dialog Box for Adding and Updating Warehouses.
+ * Dialog Box for Adding and Updating Batches.
  */
-public class WarehousesDialog implements EditWarehousePresenter.Display {
+public class BatchesDialog implements EditBatchePresenter.Display {
 	
 	public enum Type {
 		ADD,
@@ -45,9 +45,9 @@ public class WarehousesDialog implements EditWarehousePresenter.Display {
 	 */
 	public static interface CwConstants extends Constants {
 		
-		String cwAddWarehouseDialogCaption();
+		String cwAddBatcheDialogCaption();
 		
-		String cwUpdateWarehouseDialogCaption();
+		String cwUpdateBatcheDialogCaption();
 				
 //		String cwDialogBoxClose();
 //
@@ -74,19 +74,19 @@ public class WarehousesDialog implements EditWarehousePresenter.Display {
 
 	// Widgets
 	private final TextBox name;
-	private final TextBox totalCap;
-	private final TextBox location;
+	private final TextBox descrip;
+	private final TextBox manDate;
 	private final FlexTable detailsTable;
 	private final Button saveButton;
 	private final Button cancelButton;
 
 	private void initDetailsTable() {
-		detailsTable.setWidget(0, 0, new Label("Warehouse Name"));
+		detailsTable.setWidget(0, 0, new Label("Batche Name"));
 		detailsTable.setWidget(0, 1, name);
-		detailsTable.setWidget(1, 0, new Label("Total Capacity"));
-		detailsTable.setWidget(1, 1, totalCap);
-		/*detailsTable.setWidget(2, 0, new Label("Location"));
-		detailsTable.setWidget(2, 1, location);*/
+		detailsTable.setWidget(1, 0, new Label("Description"));
+		detailsTable.setWidget(1, 1, descrip);
+		detailsTable.setWidget(2, 0, new Label("Manufacturing date"));
+		detailsTable.setWidget(2, 1, manDate);
 		name.setFocus(true);
 	}
 
@@ -99,7 +99,7 @@ public class WarehousesDialog implements EditWarehousePresenter.Display {
 	 * @param constants
 	 *            the constants
 	 */
-	public WarehousesDialog(ShowcaseConstants constants, Type type) {
+	public BatchesDialog(ShowcaseConstants constants, Type type) {
 		// super(constants.cwDialogBoxName(), constants.cwDialogBoxDescription());
 
 		this.constants = constants;
@@ -113,16 +113,16 @@ public class WarehousesDialog implements EditWarehousePresenter.Display {
 		VerticalPanel contentDetailsPanel = new VerticalPanel();
 		contentDetailsPanel.setWidth("100%");
 
-		// Create the warehouses list
+		// Create the batches list
 		//
 		detailsTable = new FlexTable();
 		detailsTable.setCellSpacing(0);
 		detailsTable.setWidth("100%");
-		detailsTable.addStyleName("warehouses-ListContainer");
-		detailsTable.getColumnFormatter().addStyleName(1, "add-warehouse-input");
+		detailsTable.addStyleName("batches-ListContainer");
+		detailsTable.getColumnFormatter().addStyleName(1, "add-batche-input");
 		name = new TextBox();
-		totalCap = new TextBox();
-		location = new TextBox();
+		descrip = new TextBox();
+		manDate = new TextBox();
 		initDetailsTable();
 		contentDetailsPanel.add(detailsTable);
 
@@ -137,9 +137,9 @@ public class WarehousesDialog implements EditWarehousePresenter.Display {
 		dialogBox = new DialogBox();
 		dialogBox.ensureDebugId("cwDialogBox");
 		if (type==Type.ADD)
-			dialogBox.setText(constants.cwAddWarehouseDialogCaption());
+			dialogBox.setText(constants.cwAddBatcheDialogCaption());
 		else 
-			dialogBox.setText(constants.cwUpdateWarehouseDialogCaption());
+			dialogBox.setText(constants.cwUpdateBatcheDialogCaption());
 			
 		dialogBox.add(contentDetailsDecorator);
 
@@ -177,18 +177,18 @@ public class WarehousesDialog implements EditWarehousePresenter.Display {
 	}
 
 	@Override
-	public HasValue<String> getTotalCap() {
+	public HasValue<String> getDescrip() {
 		// TODO Auto-generated method stub
-		return totalCap;
+		return descrip;
 		// return null;
 	}
 
-	/*@Override
-	public HasValue<String> getLocation() {
+	@Override
+	public HasValue<String> getManDate() {
 		// TODO Auto-generated method stub
-		return location;
+		return manDate;
 		// return null;
-	}*/
+	}
 
 	@Override
 	public void show() {

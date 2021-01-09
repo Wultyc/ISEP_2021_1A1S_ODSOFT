@@ -19,8 +19,8 @@ public class WarehousesServiceImpl extends RemoteServiceServlet implements
   private final String[] warehousesTotalCapData = new String[] {
       "5000", "2000", "3000"};
   
-  private final String[] warehousesLocationData = new String[] {
-      "Porto", "Lisboa", "Braganca"};
+ /* private final String[] warehousesLocationData = new String[] {
+      "Porto", "Lisboa", "Braganca"};*/
       
   private final HashMap<String, Warehouse> warehouses = new HashMap<String, Warehouse>();
 
@@ -31,8 +31,8 @@ public class WarehousesServiceImpl extends RemoteServiceServlet implements
   private void initWarehouses() {
     // TODO: Create a real UID for each warehouse
     //
-    for (int i = 0; i < warehousesNameData.length && i < warehousesTotalCapData.length && i < warehousesLocationData.length; ++i) {
-      Warehouse warehouse = new Warehouse(String.valueOf(i), warehousesNameData[i], warehousesTotalCapData[i], warehousesLocationData[i]);
+    for (int i = 0; i < warehousesNameData.length && i < warehousesTotalCapData.length/* && i < warehousesLocationData.length*/; ++i) {
+      Warehouse warehouse = new Warehouse(String.valueOf(i), warehousesNameData[i], warehousesTotalCapData[i]/*, warehousesLocationData[i]*/);
       warehouses.put(warehouse.getId(), warehouse); 
     }
   }

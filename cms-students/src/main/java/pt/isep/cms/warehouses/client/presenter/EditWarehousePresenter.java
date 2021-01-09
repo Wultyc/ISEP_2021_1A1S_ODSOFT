@@ -23,7 +23,7 @@ public class EditWarehousePresenter implements Presenter {
 
 		HasValue<String> getTotalCap();
 
-		HasValue<String> getLocation();
+		//HasValue<String> getLocation();
 
 		void show();
 
@@ -54,7 +54,7 @@ public class EditWarehousePresenter implements Presenter {
 				warehouse = result;
 				EditWarehousePresenter.this.display.getName().setValue(warehouse.getName());
 				EditWarehousePresenter.this.display.getTotalCap().setValue(warehouse.getTotalCap());
-				EditWarehousePresenter.this.display.getLocation().setValue(warehouse.getLocation());
+				//EditWarehousePresenter.this.display.getLocation().setValue(warehouse.getLocation());
 			}
 
 			public void onFailure(Throwable caught) {
@@ -87,7 +87,7 @@ public class EditWarehousePresenter implements Presenter {
 	private void doSave() {
 		warehouse.setName(display.getName().getValue());
 		warehouse.setTotalCap(display.getTotalCap().getValue());
-		warehouse.setLocation(display.getLocation().getValue());
+		//warehouse.setLocation(display.getLocation().getValue());
 
 		if (warehouse.getId() == null) {
 			// Adding new warehouse

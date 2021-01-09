@@ -57,4 +57,15 @@
   <source path="warehouses/client" />
   <source path="warehouses/shared" />
   
+  <!-- Specify the paths for translatable code source for ShippingLocations  -->
+  <source path="shippingLocations/client" />
+  <source path="shippingLocations/shared" />
+  
+    <!-- Specify the paths for translatable code source for Products  -->
+  <source path="products/client" />
+  <source path="products/shared" />
+  
+      <!-- Specify the paths for translatable code source for Batches  -->
+  <source path="batches/client" />
+  <source path="batches/shared" />
 </module>
