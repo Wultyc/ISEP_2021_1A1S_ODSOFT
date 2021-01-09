@@ -192,7 +192,11 @@ Na eventualidade de ser identificado um problema que requeira uma correção rá
 
 ## Pipeline
 ### Esquema da Pipeline
-(Imagem ilustrativa do esquema da pipeline)
+Após a analise inicial, o grupo definiu o seguinte esboço para a pipeline CI/CD
+![Primeiro Esboço da Pipeline do Projeto](./images/Project_Pipeline_SK1.jpg)
+
+No final do projeto, o aspeto da pipeline CI/CD é o seguinte
+(Imagem da pipeline no fim)
 
 ### Separação dos ambientes de desenvolvimento e produção
 Em ambientes corporativos onde existe o real objetivo de disponibilizar software para clientes finais existe de facto a necessidade de ter uma pipeline especifica para cada ambiente, no entanto o grupo entende que esse é um cenário demasiado complexo para o projeto a ser desenvolvido e por isso propõe a seguinte solução: O ficheiro jenkins fica na pasta cms-students (à semelhança do que acontece com os ficheiros equivalentes para o segundo class assignment). No servidor Jenkins existirão dois *jobs*, um para o ambiente de desenvolvimento e um para o ambiente de produção. Os *jobs* fazem checkout do *Jenkins File* da branch correspondente. Desta forma é garantido que o ficheiro que define os passos da pipeline está coerente com o código que está a ser trabalhado.
