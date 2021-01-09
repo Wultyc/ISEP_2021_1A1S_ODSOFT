@@ -2,7 +2,7 @@
 
 def projectName = 'cms-student-seq-pipeline'
 
-def gitCred = 'db746efe-3c61-40e5-8071-c81f2763b723'
+def gitCred = 'bitbucket-creds'
 def gitRepo = 'bitbucket.org/1160929/odsoft-m1b_g1.git'
 def gitBranch = 'master'
 def gitUsername = "1160929"
