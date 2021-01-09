@@ -32,7 +32,7 @@ def email_to = '1160929@isep.ipp.pt'
 def jenkinsBuildFolder = "/var/lib/jenkins/jobs/SequencialPipelineCA2/builds/"
 def gitUsername = "1160929"
 def credential_ID = 'bitbucket-creds' //laptop jorge
-def cmsHttp = 'http://127.0.0.1:8080/cms-students-spp/'
+def cmsHttp = 'http://127.0.0.1:8091/cms-students-spp/'
 
 
 pipeline {
