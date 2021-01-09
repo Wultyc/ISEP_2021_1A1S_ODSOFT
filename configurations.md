@@ -5,18 +5,40 @@ Neste ficheiro estão descritas as configurações das aplicações e serviços 
 | Aplicação    | Porta |
 |--------------|-------|
 | Jenkins      | 8090  |
-| TomCat Local | 8091  |
+| Tomcat Local | 8091  |
 
-## Configuração do serviço de email do Jenkins
+## Configuração de credenciais do Jenkins
 Para configurar o envio de emails do Jenkins, é utilizada uma conta de Gmail
 
-| Email           | Password |
-|-----------------|----------|
-| email@gamil.com | ******** |
+| ID              | Username                         | Password |
+|-----------------|----------------------------------|----------|
+| bitbucket-creds | (email de cada dev)              | •••••••• |
+| n/a             | notificationsystemisep@gmail.com | •••••••• |
 
-A configuração no Jenkins utiliza os seguintes parâmetros
+## Configurar o Jenkins
+### GIT
+Para configurar o GIT, deve ser feita a seguinte configuração na página **Configurar Sistema** dentro de **Gerir o Jenkins** na secção **GIT**
+O valores a ser colocados variam consoante o propósito. O dados apresentados são fictícios
+![](./images/config_git.png)
 
-| Serviço      | URL          | Porta |
-|--------------|--------------|-------|
-| Jenkins      | Jenkins      | 8090  |
-| TomCat Local | TomCat Local | 8091  |
+De seguida deve aceder à página **Configuração Global** e na secção **GIT** configurar o acesso ao git na máquina local
+![](./images/config_git_2.png)
+
+### JDK
+Para configurar o JDK, deve ser feita a seguinte configuração na página **Configurar Sistema** dentro de **Configuração Global** na secção **JDK**
+O valores a ser colocados variam consoante o sistema.
+![](./images/config_jdk.png)
+
+### Gradle
+Para configurar o Gradle, deve ser feita a seguinte configuração na página **Configurar Sistema** dentro de **Configuração Global** na secção **Gradle**
+O valores a ser colocados variam consoante o sistema.
+![](./images/config_gradle.png)
+
+### Email
+Para configurar o envio de email, deve ser feita a seguinte configuração na página **Configurar Sistema** dentro de **Gerir o Jenkins** na secção **Extended E-mail Notification**
+
+| Serviço      | URL                 | Porta | SSL   |
+|--------------|---------------------|-------|-------|
+| SMTP         | smtp.gmail.com      | 465   | Yes   |
+
+![](./images/config_email.png)
