@@ -12,7 +12,7 @@ Para configurar o envio de emails do Jenkins, é utilizada uma conta de Gmail
 
 | ID              | Username                         | Password |
 |-----------------|----------------------------------|----------|
-| bitbucket-creds | (email de cada dev)              | •••••••• |
+| bitbucket-creds | (username do bitbucket)          | •••••••• |
 | n/a             | notificationsystemisep@gmail.com | •••••••• |
 
 ## Configurar o Jenkins
