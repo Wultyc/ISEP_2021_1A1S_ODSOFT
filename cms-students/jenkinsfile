@@ -1,12 +1,11 @@
 #!/usr/bin/env groovy 
 
-def projectName = 'cms-student-seq-pipeline'
+def isProd = findIfItsProd(env.BRANCH_NAME)
 
 //Git configs 
 def gitCred = 'bitbucket-creds'
 def gitRepo = 'bitbucket.org/1160929/odsoft-m1b_g1.git'
-def gitBranch = 'master'
-def gitUsername = "1160929"
+def gitBranch = env.BRANCH_NAME
 
 //Project configs
 def cmsPath = 'cms-students'
@@ -28,20 +27,23 @@ def artifactBuildPath = "build/libs/cms-students-1.0.war"
 def artifactDeployPath = "/opt/tomcat/webapps/cms-students-sps.war" 
 def cmsHttp = 'http://127.0.0.1:8091/cms-students-sps/'
 
+//Email
+def emailRecipient = '1150639@isep.ipp.pt,1160929@isep.ipp.pt,1161042@isep.ipp.pt,1191182@isep.ipp.pt'
+
 pipeline {
     agent any
 
 	stages {
 	    stage('Start Pipeline') {
 			steps{
-                echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL} [Build number: ${env.BUILD_NUMBER}] [Workspace: ${env.WORKSPACE}]"
+                echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL} [Build number: ${env.BUILD_NUMBER}] [Workspace: ${env.WORKSPACE}] [Environment: ${isProd ? 'Production':'Development'}]"
 			}
         }
 	    stage('Checkout') {
 			steps {
                 git url: "https://${gitRepo}",
-                        branch: gitBranch,
-                        credentialsId: gitCred
+                	branch: gitBranch,
+                	credentialsId: gitCred
             }
         }
 	    stage('Build War file') {
@@ -67,117 +69,134 @@ pipeline {
                 }
             }
         }
-	    stage('Unit test') {
-			steps {
-				dir(cmsPath) {
-					script {
-						sh 'gradle clean test'
-						sh 'gradle jacocoTestReport'
-						sh 'ls -la ' + unitTestResults // To show the contents on the log before publishing
+		stage('Check Code Quality'){
+            parallel {
+                stage('FindBugs') {
+                    steps{
+                        echo "FindBugs"
+                    }
+                }
+                stage('Checkstyle') {
+                    steps{
+                        echo "Checkstyle"
+                    }
+                }
+            }
+        }
+		stage('Run Tests'){
+            parallel {
+				stage('Unit test') {
+					steps {
+						dir(cmsPath) {
+							script {
+								sh 'gradle clean test'
+								sh 'gradle jacocoTestReport'
+								sh 'ls -la ' + unitTestResults // To show the contents on the log before publishing
+							}
+							junit unitTestResults + '/*.xml'
+							publishHTML([
+									allowMissing         : false,
+									alwaysLinkToLastBuild: false,
+									keepAll              : false,
+									reportDir            : unitTestReport,
+									reportFiles          : 'index.html',
+									reportName           : 'Unit Test Coverage HTML Report',
+									reportTitles         : ''])
+						}
 					}
-					junit unitTestResults + '/*.xml'
-					publishHTML([
-							allowMissing         : false,
-							alwaysLinkToLastBuild: false,
-							keepAll              : false,
-							reportDir            : unitTestReport,
-							reportFiles          : 'index.html',
-							reportName           : 'Unit Test Coverage HTML Report',
-							reportTitles         : ''])
+				}
+				stage('Integration test') {
+					steps {
+						dir(cmsPath) {
+							script {
+								sh 'gradle clean integrationTest'
+								sh 'gradle jacocoIntegrationReport'
+								sh 'ls -la ' + integrationTestResults
+								// To show the contents on the log before publishing
+							}
+							jacoco buildOverBuild: true,
+									deltaBranchCoverage: '5',
+									deltaClassCoverage: '5',
+									deltaComplexityCoverage: '5',
+									deltaInstructionCoverage: '5',
+									deltaLineCoverage: '5',
+									deltaMethodCoverage: '5',
+									maximumBranchCoverage: '80',
+									maximumClassCoverage: '80',
+									maximumComplexityCoverage: '80',
+									maximumInstructionCoverage: '80',
+									maximumLineCoverage: '80',
+									maximumMethodCoverage: '80',
+									minimumBranchCoverage: '5',
+									minimumClassCoverage: '5',
+									minimumComplexityCoverage: '5',
+									minimumInstructionCoverage: '5',
+									minimumLineCoverage: '5',
+									minimumMethodCoverage: '5'
+							publishHTML([
+									allowMissing         : false,
+									alwaysLinkToLastBuild: false,
+									keepAll              : false,
+									reportDir            : integrationTestResults,
+									reportFiles          : 'index.html',
+									reportName           : 'Integration Test Coverage HTML Report',
+									reportTitles         : ''])
+						}
+					}
+				}
+				stage('Mutation Test') {
+					steps {
+						dir(cmsPath) {
+							script {
+								sh 'gradle clean pitest'
+							}
+							publishHTML([
+									allowMissing         : false,
+									alwaysLinkToLastBuild: false,
+									keepAll              : false,
+									reportDir            : mutationTestResults,
+									reportFiles          : 'index.html',
+									reportName           : 'Pit Mutation Test Coverage HTML Report',
+									reportTitles         : ''])
+						}
+					}
 				}
 			}
-        }
-	    stage('Integration test') {
-			steps {
-		        dir(cmsPath) {
-		            script {
-		                sh 'gradle clean integrationTest'
-		                sh 'gradle jacocoIntegrationReport'
-		                sh 'ls -la ' + integrationTestResults
-		                // To show the contents on the log before publishing
-		            }
-		            jacoco buildOverBuild: true,
-		                    deltaBranchCoverage: '5',
-		                    deltaClassCoverage: '5',
-		                    deltaComplexityCoverage: '5',
-		                    deltaInstructionCoverage: '5',
-		                    deltaLineCoverage: '5',
-		                    deltaMethodCoverage: '5',
-		                    maximumBranchCoverage: '80',
-		                    maximumClassCoverage: '80',
-		                    maximumComplexityCoverage: '80',
-		                    maximumInstructionCoverage: '80',
-		                    maximumLineCoverage: '80',
-		                    maximumMethodCoverage: '80',
-		                    minimumBranchCoverage: '5',
-		                    minimumClassCoverage: '5',
-		                    minimumComplexityCoverage: '5',
-		                    minimumInstructionCoverage: '5',
-		                    minimumLineCoverage: '5',
-		                    minimumMethodCoverage: '5'
-		            publishHTML([
-		                    allowMissing         : false,
-		                    alwaysLinkToLastBuild: false,
-		                    keepAll              : false,
-		                    reportDir            : integrationTestResults,
-		                    reportFiles          : 'index.html',
-		                    reportName           : 'Integration Test Coverage HTML Report',
-		                    reportTitles         : ''])
-		        }
-		    }
-        }
-	    stage('Mutation Test') {
-			steps {
-		        dir(cmsPath) {
-		            script {
-		                sh 'gradle clean pitest'
-		            }
-		            publishHTML([
-		                    allowMissing         : false,
-		                    alwaysLinkToLastBuild: false,
-		                    keepAll              : false,
-		                    reportDir            : mutationTestResults,
-		                    reportFiles          : 'index.html',
-		                    reportName           : 'Pit Mutation Test Coverage HTML Report',
-		                    reportTitles         : ''])
-		        }
-		    }
-        }
-	    stage('Deploy') {
-			steps{                
-                script{
-                	sh 'ls -la *'
-                	sh "cp ${jenkinsBuildFolder}/${env.BUILD_NUMBER}/${jenkinsArchiveFolder}/${artifactBuildPath} ${artifactDeployPath}"
-                }
+		}
+		stage('Build & Run Docker Image') {
+			steps{
+				echo "Build Docker Image"
 			}
-        }
-	    stage('Smoke test') {
-			steps {
-                echo 'Waiting 10 seconds before Smoke Test...'
-                sleep(
-                        time: 10,
-                        unit: "SECONDS"
-                )
-                script {
-                    def response = sh(
-                            returnStdout: true,
-                            script: 'curl --write-out "%{http_code}" --silent --output /dev/null ' + cmsHttp
-                    )
-                    if (response == "200") {
-                        echo 'CMS is up! (HTTP 200)'
-                        return true
-                    } else {
-                        error("Error executing smoke test! Response code: " + response)
+			steps{
+				echo "Run Docker Image"
+			}
+		}
+	    stage('TOP STAGE'){
+            parallel {
+                stage('Acceptance Tests with Cucumber') {
+                    steps{
+                        echo "Acceptance Tests with Cucumber"
+                    }
+                }
+                stage('Acceptance Tests with Selenium') {
+                    steps{
+                        echo "Acceptance Tests with Selenium"
+                    }
+                }
+                stage('Smoke Test') {
+                    steps{
+                        echo "Smoke Test"
                     }
                 }
             }
         }
 	    stage('Send invite email') {
 			steps {
-                mail(from: 'notificationsystemisep@gmail.com',
-                        to: '1160929@isep.ipp.pt',
-                        subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for approval",
-                        body: "The job '${env.JOB_NAME}' is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue.");
+                sendEmail(
+					emailRecipient
+					"Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for approval",
+					"The job '${env.JOB_NAME}' is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue."
+					)
             }
         }
 	    stage('Manual Approve') {
@@ -185,16 +204,76 @@ pipeline {
 				input 'Approve deploy?'
 			}
         }
-        
-	    stage('Push tag to bitbucket') {
+		stage('Generate PDF Report') {
+			steps{
+				echo "Generate PDF Report"
+			}
+		}
+		stage('Generate Moodle Submission File') {
+			steps{
+				echo "Generate Moodle Submission File"
+			}
+		}
+		stage('Push tag to bitbucket') {
 			steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                        sh "git tag ScriptedPipeline-Build-${BUILD_NUMBER}"
-                        sh "git push https://${gitUsername}:${env.GIT_PASSWORD}@${gitRepo} --tags"
+				sendTagToBitbucket(gitCred,"Success-Build-${BUILD_NUMBER}");
+			}
+		}
+	    stage('Deploy to Production'){
+            parallel {
+                stage('Deploy contatainers') {
+                    steps{
+                        echo "Deploy contatainers"
+                    }
+                }
+                stage('Update Database Schema') {
+                    steps{
+                        echo "Update Database Schema"
                     }
                 }
             }
         }
 	}
+	
+	post {
+        failure {
+            sendTagToBitbucket(gitCred,"Failed-Build-${BUILD_NUMBER}");
+
+			sendEmail(
+				emailRecipient
+				"Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) failled",
+				"The job '${env.JOB_NAME}' failled. Please go to ${env.BUILD_URL}. to for more details."
+				)
+        }
+    }
+}
+
+def sendTagToBitbucket(gitCred, message){
+	script {
+		withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+			sh "git tag ${message}"
+			sh "git push https://${env.GIT_USERNAME}:${env.GIT_PASSWORD}@${gitRepo} --tags"
+		}
+	}
+}
+
+def sendEmail(recipients, subject, message){
+	mail(
+		from: 'notificationsystemisep@gmail.com',
+		to: recipients,
+		subject: subject,
+		body: message
+	);
+}
+
+def isToRunStage(boolean isProd, boolean runFlag){
+	return isProd || runFlag
+}
+
+def findIfItsProd(branch) {
+  if (branch == 'master') {
+    return true
+  } else {
+    return false
+ }
 }
