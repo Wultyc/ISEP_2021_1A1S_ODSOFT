@@ -72,7 +72,7 @@ pipeline {
 			steps {
                 dir(cmsPath) {
                     script {
-                        sh 'gradle clean javadoc'
+                        sh 'gradle javadoc'
                     }
                     step $class: 'JavadocArchiver',
                             javadocDir: javadocPath,
@@ -117,7 +117,7 @@ pipeline {
 					steps {
 						dir(cmsPath) {
 							script {
-								sh 'gradle clean test'
+								sh 'gradle test'
 								sh 'gradle jacocoTestReport'
 								sh 'ls -la ' + unitTestResults // To show the contents on the log before publishing
 							}
@@ -142,7 +142,7 @@ pipeline {
 					steps {
 						dir(cmsPath) {
 							script {
-								sh 'gradle clean integrationTest'
+								sh 'gradle integrationTest'
 								sh 'gradle jacocoIntegrationReport'
 								sh 'ls -la ' + integrationTestResults
 								// To show the contents on the log before publishing
@@ -186,7 +186,7 @@ pipeline {
 					steps {
 						dir(cmsPath) {
 							script {
-								sh 'gradle clean pitest'
+								sh 'gradle pitest'
 							}
 							publishHTML([
 									allowMissing         : false,
