@@ -45,13 +45,9 @@ pipeline {
     agent any
 
 	stages {
-	    stage('Start Pipeline') {
+	    stage('Repository Checkout') {
 			steps{
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL} [Build number: ${env.BUILD_NUMBER}] [Workspace: ${env.WORKSPACE}] [Environment: ${isProd ? 'Production':'Development'}]"
-			}
-        }
-	    stage('Checkout') {
-			steps {
                 git url: "https://${gitRepo}",
                 	branch: gitBranch,
                 	credentialsId: gitCred
@@ -236,7 +232,7 @@ pipeline {
                 }
             }
         }
-	    stage('Send invite email') {
+	    stage('Manual approval') {
 			when{
 				expression{
 					isToRunStage(isProd, enable_send_email)
@@ -246,19 +242,10 @@ pipeline {
 				mail to: emailRecipient,
 					 subject: "Job ${env.JOB_NAME} (${env.BUILD_NUMBER}) is waiting for approval",
 					 body: "The job ${env.JOB_NAME} is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue."
-            }
-        }
-	    stage('Manual Approve') {
-			when{
-				expression{
-					isToRunStage(isProd, enable_send_email)
-				}
-			}
-			steps{
 				input 'Approve deploy?'
 			}
         }
-		stage('Generate PDF Report') {
+		stage('Generate PDF Report and Moodle Submission File') {
 			when{
 				expression{
 					isToRunStage(isProd, enable_generate_pdf_and_zip)
@@ -266,15 +253,6 @@ pipeline {
 			}
 			steps{
 				echo "Generate PDF Report"
-			}
-		}
-		stage('Generate Moodle Submission File') {
-			when{
-				expression{
-					isToRunStage(isProd, enable_generate_pdf_and_zip)
-				}
-			}
-			steps{
 				echo "Generate Moodle Submission File"
 			}
 		}
@@ -306,10 +284,14 @@ pipeline {
 	
 	post {
 		success {
-			sendTagToBitbucket(gitCred, gitRepo,"Success-Build-${BUILD_NUMBER}");
+			withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+				sendTagToBitbucket(gitCred, gitRepo,"Success-${gitBranch}-Build-${BUILD_NUMBER}-${GIT_USERNAME}");
+			}
 		}
         failure {
-            sendTagToBitbucket(gitCred, gitRepo,"Failed-Build-${BUILD_NUMBER}");
+			withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+				sendTagToBitbucket(gitCred, gitRepo,"Failed-${gitBranch}-Build-${BUILD_NUMBER}-${GIT_USERNAME}");
+			}
 
 			mail to: emailRecipient,
 				 subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) failled",
