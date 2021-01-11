@@ -284,10 +284,14 @@ pipeline {
 	
 	post {
 		success {
-			sendTagToBitbucket(gitCred, gitRepo,"Success-Build-${BUILD_NUMBER}-${gitBranch}");
+			withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+				sendTagToBitbucket(gitCred, gitRepo,"Success-${gitBranch}-Build-${BUILD_NUMBER}-${GIT_USERNAME}");
+			}
 		}
         failure {
-            sendTagToBitbucket(gitCred, gitRepo,"Failed-Build-${BUILD_NUMBER}-${gitBranch}");
+			withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+				sendTagToBitbucket(gitCred, gitRepo,"Failed-${gitBranch}-Build-${BUILD_NUMBER}-${GIT_USERNAME}");
+			}
 
 			mail to: emailRecipient,
 				 subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) failled",
