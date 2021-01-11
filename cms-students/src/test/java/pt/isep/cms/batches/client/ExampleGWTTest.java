@@ -35,9 +35,9 @@ public class ExampleGWTTest extends GWTTestCase {
 
 	public void testBatcheSort() {
 		ArrayList<BatcheDetails> batcheDetails = new ArrayList<BatcheDetails>();
-		batcheDetails.add(new BatcheDetails("0", "c_contact"));
-		batcheDetails.add(new BatcheDetails("1", "b_contact"));
-		batcheDetails.add(new BatcheDetails("2", "a_contact"));
+		batcheDetails.add(new BatcheDetails("0", "c_batche"));
+		batcheDetails.add(new BatcheDetails("1", "b_batche"));
+		batcheDetails.add(new BatcheDetails("2", "a_batche"));
 		batchesPresenter.setBatcheDetails(batcheDetails);
 		batchesPresenter.sortBatcheDetails();
 		assertTrue(batchesPresenter.getBatcheDetail(0).getDisplayName().equals("a_batche"));

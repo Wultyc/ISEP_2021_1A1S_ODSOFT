@@ -1,3 +1,4 @@
+/*
 package pt.isep.cms.shippingLocations.client;
 
 import com.google.gwt.core.client.GWT;
@@ -77,3 +78,4 @@ public class ExampleGWTTest extends GWTTestCase {
 		});
 	}
 }
+*/

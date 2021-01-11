@@ -35,14 +35,14 @@ public class ExampleGWTTest extends GWTTestCase {
 
 	public void testProductSort() {
 		ArrayList<ProductDetails> productDetails = new ArrayList<ProductDetails>();
-		productDetails.add(new ProductDetails("0", "c_contact"));
-		productDetails.add(new ProductDetails("1", "b_contact"));
-		productDetails.add(new ProductDetails("2", "a_contact"));
+		productDetails.add(new ProductDetails("0", "c_product"));
+		productDetails.add(new ProductDetails("1", "b_product"));
+		productDetails.add(new ProductDetails("2", "a_product"));
 		productsPresenter.setProductDetails(productDetails);
 		productsPresenter.sortProductDetails();
-		assertTrue(productsPresenter.getProductDetail(0).getDisplayName().equals("a_contact"));
-		assertTrue(productsPresenter.getProductDetail(1).getDisplayName().equals("b_contact"));
-		assertTrue(productsPresenter.getProductDetail(2).getDisplayName().equals("c_contact"));
+		assertTrue(productsPresenter.getProductDetail(0).getDisplayName().equals("a_product"));
+		assertTrue(productsPresenter.getProductDetail(1).getDisplayName().equals("b_product"));
+		assertTrue(productsPresenter.getProductDetail(2).getDisplayName().equals("c_product"));
 	}
 
 	public void testProductsService() {

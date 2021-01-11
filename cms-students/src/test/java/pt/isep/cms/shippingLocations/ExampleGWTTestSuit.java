@@ -1,3 +1,4 @@
+/*
 package pt.isep.cms.shippingLocations;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
@@ -13,3 +14,4 @@ public class ExampleGWTTestSuit extends GWTTestSuite {
 		    return suite;
 		  }
 		} 
+*/
