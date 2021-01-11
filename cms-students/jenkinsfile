@@ -284,10 +284,10 @@ pipeline {
 	
 	post {
 		success {
-			sendTagToBitbucket(gitCred, gitRepo,"Success-Build-${BUILD_NUMBER}");
+			sendTagToBitbucket(gitCred, gitRepo,"Success-Build-${BUILD_NUMBER}-${gitBranch}");
 		}
         failure {
-            sendTagToBitbucket(gitCred, gitRepo,"Failed-Build-${BUILD_NUMBER}");
+            sendTagToBitbucket(gitCred, gitRepo,"Failed-Build-${BUILD_NUMBER}-${gitBranch}");
 
 			mail to: emailRecipient,
 				 subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) failled",
