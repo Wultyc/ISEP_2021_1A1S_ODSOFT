@@ -2,6 +2,17 @@
 
 def isProd = findIfItsProd(env.BRANCH_NAME)
 
+//enable steps in dev
+def enable_cq_checkstyle = true
+def enable_cq_findbugs = true
+def enable_test_unit = true
+def enable_test_intg = false
+def enable_test_pitm = false
+def enable_test_acc_cucumber = true
+def enable_test_acc_selenium = true
+def enable_send_email = false
+def enable_generate_pdf_and_zip = true
+
 //Git configs 
 def gitCred = 'bitbucket-creds'
 def gitRepo = 'bitbucket.org/1160929/odsoft-m1b_g1.git'
@@ -34,13 +45,9 @@ pipeline {
     agent any
 
 	stages {
-	    stage('Start Pipeline') {
+	    stage('Repository Checkout') {
 			steps{
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL} [Build number: ${env.BUILD_NUMBER}] [Workspace: ${env.WORKSPACE}] [Environment: ${isProd ? 'Production':'Development'}]"
-			}
-        }
-	    stage('Checkout') {
-			steps {
                 git url: "https://${gitRepo}",
                 	branch: gitBranch,
                 	credentialsId: gitCred
@@ -61,7 +68,7 @@ pipeline {
 			steps {
                 dir(cmsPath) {
                     script {
-                        sh 'gradle clean javadoc'
+                        sh 'gradle javadoc'
                     }
                     step $class: 'JavadocArchiver',
                             javadocDir: javadocPath,
@@ -70,13 +77,24 @@ pipeline {
             }
         }
 		stage('Check Code Quality'){
+			failFast true
             parallel {
                 stage('FindBugs') {
+					when{
+						expression{
+							isToRunStage(isProd, enable_cq_findbugs)
+						}
+					}
                     steps{
                         echo "FindBugs"
                     }
                 }
                 stage('Checkstyle') {
+					when{
+						expression{
+							isToRunStage(isProd, enable_cq_checkstyle)
+						}
+					}
                     steps{
                         echo "Checkstyle"
                     }
@@ -84,12 +102,18 @@ pipeline {
             }
         }
 		stage('Run Tests'){
+			failFast true
             parallel {
 				stage('Unit test') {
+					when{
+						expression{
+							isToRunStage(isProd, enable_test_unit)
+						}
+					}
 					steps {
 						dir(cmsPath) {
 							script {
-								sh 'gradle clean test'
+								sh 'gradle test'
 								sh 'gradle jacocoTestReport'
 								sh 'ls -la ' + unitTestResults // To show the contents on the log before publishing
 							}
@@ -106,10 +130,15 @@ pipeline {
 					}
 				}
 				stage('Integration test') {
+					when{
+						expression{
+							isToRunStage(isProd, enable_test_intg)
+						}
+					}
 					steps {
 						dir(cmsPath) {
 							script {
-								sh 'gradle clean integrationTest'
+								sh 'gradle integrationTest'
 								sh 'gradle jacocoIntegrationReport'
 								sh 'ls -la ' + integrationTestResults
 								// To show the contents on the log before publishing
@@ -145,10 +174,15 @@ pipeline {
 					}
 				}
 				stage('Mutation Test') {
+					when{
+						expression{
+							isToRunStage(isProd, enable_test_pitm)
+						}
+					}
 					steps {
 						dir(cmsPath) {
 							script {
-								sh 'gradle clean pitest'
+								sh 'gradle pitest'
 							}
 							publishHTML([
 									allowMissing         : false,
@@ -166,19 +200,27 @@ pipeline {
 		stage('Build & Run Docker Image') {
 			steps{
 				echo "Build Docker Image"
-			}
-			steps{
 				echo "Run Docker Image"
 			}
 		}
-	    stage('TOP STAGE'){
+	    stage('Acceptance Tests'){
             parallel {
                 stage('Acceptance Tests with Cucumber') {
+					when{
+						expression{
+							isToRunStage(isProd, enable_test_acc_cucumber)
+						}
+					}
                     steps{
                         echo "Acceptance Tests with Cucumber"
                     }
                 }
                 stage('Acceptance Tests with Selenium') {
+					when{
+						expression{
+							isToRunStage(isProd, enable_test_acc_selenium)
+						}
+					}
                     steps{
                         echo "Acceptance Tests with Selenium"
                     }
@@ -190,43 +232,48 @@ pipeline {
                 }
             }
         }
-	    stage('Send invite email') {
+	    stage('Manual approval') {
+			when{
+				expression{
+					isToRunStage(isProd, enable_send_email)
+				}
+			}
 			steps {
-                sendEmail(
-					emailRecipient
-					"Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for approval",
-					"The job '${env.JOB_NAME}' is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue."
-					)
-            }
-        }
-	    stage('Manual Approve') {
-			steps{
+				mail to: emailRecipient,
+					 subject: "Job ${env.JOB_NAME} (${env.BUILD_NUMBER}) is waiting for approval",
+					 body: "The job ${env.JOB_NAME} is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue."
 				input 'Approve deploy?'
 			}
         }
-		stage('Generate PDF Report') {
+		stage('Generate PDF Report and Moodle Submission File') {
+			when{
+				expression{
+					isToRunStage(isProd, enable_generate_pdf_and_zip)
+				}
+			}
 			steps{
 				echo "Generate PDF Report"
-			}
-		}
-		stage('Generate Moodle Submission File') {
-			steps{
 				echo "Generate Moodle Submission File"
-			}
-		}
-		stage('Push tag to bitbucket') {
-			steps {
-				sendTagToBitbucket(gitCred,"Success-Build-${BUILD_NUMBER}");
 			}
 		}
 	    stage('Deploy to Production'){
             parallel {
                 stage('Deploy contatainers') {
+					when{
+						expression{
+							isProd
+						}
+					}
                     steps{
                         echo "Deploy contatainers"
                     }
                 }
                 stage('Update Database Schema') {
+					when{
+						expression{
+							isProd
+						}
+					}
                     steps{
                         echo "Update Database Schema"
                     }
@@ -236,34 +283,30 @@ pipeline {
 	}
 	
 	post {
+		success {
+			withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+				sendTagToBitbucket(gitCred, gitRepo,"Success-${gitBranch}-Build-${BUILD_NUMBER}-${GIT_USERNAME}");
+			}
+		}
         failure {
-            sendTagToBitbucket(gitCred,"Failed-Build-${BUILD_NUMBER}");
+			withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+				sendTagToBitbucket(gitCred, gitRepo,"Failed-${gitBranch}-Build-${BUILD_NUMBER}-${GIT_USERNAME}");
+			}
 
-			sendEmail(
-				emailRecipient
-				"Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) failled",
-				"The job '${env.JOB_NAME}' failled. Please go to ${env.BUILD_URL}. to for more details."
-				)
+			mail to: emailRecipient,
+				 subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) failled",
+				 body: "The job '${env.JOB_NAME}' failled. Please go to ${env.BUILD_URL}. to for more details."
         }
     }
 }
 
-def sendTagToBitbucket(gitCred, message){
+def sendTagToBitbucket(gitCred, gitRepo, message){
 	script {
 		withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
 			sh "git tag ${message}"
 			sh "git push https://${env.GIT_USERNAME}:${env.GIT_PASSWORD}@${gitRepo} --tags"
 		}
 	}
-}
-
-def sendEmail(recipients, subject, message){
-	mail(
-		from: 'notificationsystemisep@gmail.com',
-		to: recipients,
-		subject: subject,
-		body: message
-	);
 }
 
 def isToRunStage(boolean isProd, boolean runFlag){
