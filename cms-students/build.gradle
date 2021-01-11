@@ -172,6 +172,7 @@ findbugs {
     ignoreFailures = true
     toolVersion = '3.0.1'
     excludeFilter = file("config/findbugs/excludeFilter.xml")
+    //reportsDir = file("$project.buildDir/reports/findbugs")
     effort = "max"
 	reportLevel  = "low"
 	sourceSets=[]
@@ -179,7 +180,7 @@ findbugs {
 
 tasks.withType(FindBugs) {
     reports {
-        xml.enabled true
+        xml.enabled false
         html.enabled true
 		html.stylesheet resources.text.fromFile('config/xsl/checkstyle-simple-find-bugs.xsl')
     }
