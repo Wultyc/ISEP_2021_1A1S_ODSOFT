@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy 
 
-def isProd = findIfItsProd(env.BRANCH_NAME)
+def isProd = findIfItsProd(env.GIT_BRANCH)
 
 //enable steps in dev
 def enable_cq_checkstyle = true
