@@ -48,6 +48,7 @@ pipeline {
 	    stage('Repository Checkout') {
 			steps{
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL} [Build number: ${env.BUILD_NUMBER}] [Workspace: ${env.WORKSPACE}] [Environment: ${isProd ? 'Production':'Development'}]"
+				echo "Checkpu from ${gitBranch}"
                 git url: "https://${gitRepo}",
                 	branch: gitBranch,
                 	credentialsId: gitCred
