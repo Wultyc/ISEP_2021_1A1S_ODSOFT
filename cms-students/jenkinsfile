@@ -16,7 +16,7 @@ def enable_generate_pdf_and_zip = true
 //Git configs 
 def gitCred = 'bitbucket-creds'
 def gitRepo = 'bitbucket.org/1160929/odsoft-m1b_g1.git'
-def gitBranch = env.BRANCH_NAME //env.GIT_BRANCH
+def gitBranch = env.GIT_BRANCH //env.GIT_BRANCH
 
 //Project configs
 def cmsPath = 'cms-students'
