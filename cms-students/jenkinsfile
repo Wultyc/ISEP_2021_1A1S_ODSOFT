@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy 
 
-def isProd = findIfItsProd(env.BRANCH_NAME)
+def isProd = findIfItsProd(scm.branches[0].name)
 
 //enable steps in dev
 def enable_cq_checkstyle = true
@@ -16,7 +16,7 @@ def enable_generate_pdf_and_zip = true
 //Git configs 
 def gitCred = 'bitbucket-creds'
 def gitRepo = 'bitbucket.org/1160929/odsoft-m1b_g1.git'
-def gitBranch = env.BRANCH_NAME
+def gitBranch = scm.branches[0].name
 
 //Project configs
 def cmsPath = 'cms-students'
@@ -48,6 +48,7 @@ pipeline {
 	    stage('Repository Checkout') {
 			steps{
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL} [Build number: ${env.BUILD_NUMBER}] [Workspace: ${env.WORKSPACE}] [Environment: ${isProd ? 'Production':'Development'}]"
+				echo "Checkout from ${gitBranch}"
                 git url: "https://${gitRepo}",
                 	branch: gitBranch,
                 	credentialsId: gitCred

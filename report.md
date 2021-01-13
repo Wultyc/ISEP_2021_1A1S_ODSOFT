@@ -19,7 +19,7 @@ Para integrar este plugin no projeto GWT foi necessário introduzir no ficheiro 
    > compile 'com.puppycrawl.tools:checkstyle:8.27'
     
 3. Adicionar umas configurações relativas ao checkstyle
-
+     
    > checkstyle {
     
    >     configFile = rootProject.file('config/checkstyle/checkstyle.xml') //root do config file do checkstyle
@@ -34,6 +34,7 @@ Para integrar este plugin no projeto GWT foi necessário introduzir no ficheiro 
    > }
    
    > //executa o checkstyle nos arquivos de origem Java de produção
+   
    > checkstyleMain {
    
    >     source ='src/main/java'
@@ -41,6 +42,7 @@ Para integrar este plugin no projeto GWT foi necessário introduzir no ficheiro 
    > }
    
    > //executa o checkstyle nos arquivos de origem Java de teste
+   
    > checkstyleTest {
    
    >     source ='src/test/java'
@@ -49,7 +51,7 @@ Para integrar este plugin no projeto GWT foi necessário introduzir no ficheiro 
 
 
 4. Adicionar a task do Checkstyle
-
+   
    > tasks.withType(Checkstyle) {
     
    >     reports {
