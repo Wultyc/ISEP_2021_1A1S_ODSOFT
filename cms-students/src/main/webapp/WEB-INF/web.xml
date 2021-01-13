@@ -14,7 +14,7 @@
   
   <servlet-mapping>
     <servlet-name>contactsServiceServlet</servlet-name>
-    <url-pattern>/cms-students/showcase/contactsService</url-pattern>
+    <url-pattern>/showcase/contactsService</url-pattern>
   </servlet-mapping>
 
 	<!-- Servlets for the Warehouses -->
@@ -25,7 +25,7 @@
   
   <servlet-mapping>
     <servlet-name>warehousesServiceServlet</servlet-name>
-    <url-pattern>/cms-students/showcase/warehousesService</url-pattern>
+    <url-pattern>/showcase/warehousesService</url-pattern>
   </servlet-mapping>
   
   	<!-- Servlets for the Batches -->
@@ -36,7 +36,7 @@
   
   <servlet-mapping>
     <servlet-name>batchesServiceServlet</servlet-name>
-    <url-pattern>/cms-students/showcase/batchesService</url-pattern>
+    <url-pattern>/showcase/batchesService</url-pattern>
   </servlet-mapping>
   
   	<!-- Servlets for the ShippingLocations -->
@@ -47,7 +47,7 @@
   
   <servlet-mapping>
     <servlet-name>shippingLocationsServiceServlet</servlet-name>
-    <url-pattern>/cms-students/showcase/shippingLocationsService</url-pattern>
+    <url-pattern>/showcase/shippingLocationsService</url-pattern>
   </servlet-mapping>
   
   	<!-- Servlets for the Products -->
@@ -58,6 +58,6 @@
   
   <servlet-mapping>
     <servlet-name>productsServiceServlet</servlet-name>
-    <url-pattern>/cms-students/showcase/productsService</url-pattern>
+    <url-pattern>/showcase/productsService</url-pattern>
   </servlet-mapping>
 </web-app>
