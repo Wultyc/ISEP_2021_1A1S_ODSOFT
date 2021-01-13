@@ -14,7 +14,7 @@
   
   <servlet-mapping>
     <servlet-name>contactsServiceServlet</servlet-name>
-    <url-pattern>/showcase/contactsService</url-pattern>
+    <url-pattern>/cms-students/showcase/contactsService</url-pattern>
   </servlet-mapping>
 
 	<!-- Servlets for the Warehouses -->
@@ -25,6 +25,39 @@
   
   <servlet-mapping>
     <servlet-name>warehousesServiceServlet</servlet-name>
-    <url-pattern>/showcase/warehousesService</url-pattern>
+    <url-pattern>/cms-students/showcase/warehousesService</url-pattern>
+  </servlet-mapping>
+  
+  	<!-- Servlets for the Batches -->
+  <servlet>
+    <servlet-name>batchesServiceServlet</servlet-name>
+    <servlet-class>pt.isep.cms.batches.server.BatchesServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>batchesServiceServlet</servlet-name>
+    <url-pattern>/cms-students/showcase/batchesService</url-pattern>
+  </servlet-mapping>
+  
+  	<!-- Servlets for the ShippingLocations -->
+  <servlet>
+    <servlet-name>shippingLocationsServiceServlet</servlet-name>
+    <servlet-class>pt.isep.cms.shippingLocations.server.ShippingLocationsServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>shippingLocationsServiceServlet</servlet-name>
+    <url-pattern>/cms-students/showcase/shippingLocationsService</url-pattern>
+  </servlet-mapping>
+  
+  	<!-- Servlets for the Products -->
+  <servlet>
+    <servlet-name>productsServiceServlet</servlet-name>
+    <servlet-class>pt.isep.cms.products.server.ProductsServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>productsServiceServlet</servlet-name>
+    <url-pattern>/cms-students/showcase/productsService</url-pattern>
   </servlet-mapping>
 </web-app>

@@ -16,11 +16,11 @@ public class BatchesServiceImpl extends RemoteServiceServlet implements
   private static final String[] batchesNameData = new String[] {
       "Batche X", "Batche Y", "Batche Z"};
   
-  private final String[] batchesTotalCapData = new String[] {
-      "5000", "2000", "3000"};
+  private final String[] batchesDescripData = new String[] {
+      "abc", "2abc", "3abc"};
   
-  private final String[] batchesLocationData = new String[] {
-      "Porto", "Lisboa", "Braganca"};
+  private final String[] batchesManDateData = new String[] {
+      "2-10-2020", "5-7-2019", "23-1-2020"};
       
   private final HashMap<String, Batche> batches = new HashMap<String, Batche>();
 
@@ -31,8 +31,8 @@ public class BatchesServiceImpl extends RemoteServiceServlet implements
   private void initBatches() {
     // TODO: Create a real UID for each batche
     //
-    for (int i = 0; i < batchesNameData.length && i < batchesTotalCapData.length && i < batchesLocationData.length; ++i) {
-      Batche batche = new Batche(String.valueOf(i), batchesNameData[i], batchesTotalCapData[i], batchesLocationData[i]);
+    for (int i = 0; i < batchesNameData.length && i < batchesDescripData.length && i < batchesManDateData.length; ++i) {
+      Batche batche = new Batche(String.valueOf(i), batchesNameData[i], batchesDescripData[i], batchesManDateData[i]);
       batches.put(batche.getId(), batche); 
     }
   }
