@@ -28,6 +28,27 @@ dependencies {
  	testCompile 'org.easymock:easymock:2.5.2'
 	testCompile 'com.google.gwt:gwt-dev:2.8.1'
 	compile 'com.puppycrawl.tools:checkstyle:8.27'
+	
+	
+	testCompile 'io.cucumber:cucumber-java:2.1.0'
+    	testCompile 'io.cucumber:cucumber-junit:2.1.0'
+
+    	testCompile 'junit:junit:4.12'
+
+    	testCompile 'info.cukes:cucumber-junit:1.2.5'
+    	testCompile 'info.cukes:cucumber-java:1.2.5'
+    	// testCompile 'info.cukes:gherkin:2.12.2'
+
+   	 compile 'io.cucumber:cucumber-java:2.1.0'
+    	// selenium
+   	 compile 'org.seleniumhq.selenium:selenium-java:3.7.1'
+    	compile('org.seleniumhq.selenium:selenium-remote-driver:3.7.1')
+    	compile('org.seleniumhq.selenium:selenium-server:3.7.1')
+    	compile('org.seleniumhq.selenium:selenium-firefox-driver:3.7.1')
+
+    	//compile 'org.seleniumhq.selenium:selenium-server:2.+'
+    	//compile 'org.seleniumhq.selenium:firefox-driver:2.+'
+    	//compile 'org.seleniumhq.selenium:selenium-remote-driver:2.+'
 
 }
 
@@ -185,4 +206,37 @@ tasks.withType(FindBugs) {
 		html.stylesheet resources.text.fromFile('config/xsl/checkstyle-simple-find-bugs.xsl')
     }
 }
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testRuntime
+    }
+}
+
+//Atenção !!! Cumcuber vs Selenium
+task cucumber() {
+    dependsOn assemble, compileTestJava
+    doLast {
+        javaexec {
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--glue', 'gradle.cucumber', 'src/test/java/features']
+            systemProperties = ['Headless': 'true' ]
+        }
+    }
+}
+
+task selenium() {
+    dependsOn assemble, compileTestJava
+    doLast {
+        javaexec {
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--glue', 'gradle.selenium', 'src/test/java/features']
+            systemProperties = ['Headless': 'true' ]
+        }
+    }
+}
+
+
 
