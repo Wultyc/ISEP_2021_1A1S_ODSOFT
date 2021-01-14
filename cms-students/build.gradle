@@ -165,6 +165,13 @@ checkstyle {
 	sourceSets = []
 }
 
+checkstyleMain {
+    source ='src/main/java'
+}
+checkstyleTest {
+    source ='src/test/java'
+}
+
 
 tasks.withType(Checkstyle) {
     reports {

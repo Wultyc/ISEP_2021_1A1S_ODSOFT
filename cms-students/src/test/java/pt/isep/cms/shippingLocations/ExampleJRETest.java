@@ -35,4 +35,6 @@ public class ExampleJRETest extends TestCase {
 		assertTrue(shippingLocationsPresenter.getShippingLocationDetail(1).getDisplayName().equals("b_shippingLocation"));
 		assertTrue(shippingLocationsPresenter.getShippingLocationDetail(2).getDisplayName().equals("c_shippingLocation"));
 	}
+	
+	
 }
