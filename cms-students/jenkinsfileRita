@@ -87,8 +87,8 @@ pipeline {
 						}
 					}
                     steps{
-                        //echo "FindBugs"
-                        bat 'gradle findbugsMain'
+                        echo "FindBugs"
+                        //bat 'gradle findbugsMain'
                     }
                 }
                 stage('Checkstyle') {
