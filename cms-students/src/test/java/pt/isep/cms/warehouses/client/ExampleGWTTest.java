@@ -5,6 +5,8 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
+
+
 import pt.isep.cms.warehouses.client.WarehousesService;
 import pt.isep.cms.warehouses.client.WarehousesServiceAsync;
 import pt.isep.cms.warehouses.client.presenter.WarehousesPresenter;
@@ -75,5 +77,89 @@ public class ExampleGWTTest extends GWTTestCase {
 				finishTest();
 			}
 		});
+	}
+	
+	public void testUpdateWarehouse() {
+		// Create the service that we will test.
+				WarehousesServiceAsync warehousesService = GWT.create(WarehousesService.class);
+				ServiceDefTarget target = (ServiceDefTarget) warehousesService;
+				target.setServiceEntryPoint(GWT.getModuleBaseURL() + "warehouses/warehousesService");
+
+				// Since RPC calls are asynchronous, we will need to wait for a response
+				// after this test method returns. This line tells the test runner to wait
+				// up to 10 seconds before timing out.
+				delayTestFinish(10000);
+
+				// fail("Ainda nao implementado");
+		
+				// Post a warehouse
+				warehousesService.addWarehouse(new Warehouse(null, "Arm1", "500"), new AsyncCallback<Warehouse>() {
+					public void onFailure(Throwable caught) {
+						// The request resulted in an unexpected error.
+						fail("Request failure: " + caught.getMessage());
+					}
+
+					public void onSuccess(Warehouse result) {
+						assertTrue(result != null);
+						// Get warehouse by id
+						warehousesService.getWarehouse("2", new AsyncCallback<Warehouse>() {
+							public void onFailure(Throwable caught) {
+								// The request resulted in an unexpected error.
+								fail("Request failure: " + caught.getMessage());
+							}
+
+							public void onSuccess(Warehouse result) {
+								// change warehouse attributes
+								
+								result.setName("Awarehouse");
+								result.setTotalCap("250");
+								
+	
+								// put (update product)
+								warehousesService.updateWarehouse(result, new AsyncCallback<Warehouse>() {
+									public void onFailure(Throwable caught) {
+										// The request resulted in an unexpected error.
+										fail("Request failure: " + caught.getMessage());
+									}
+
+									public void onSuccess(Warehouse result) {
+										// just ensure the update was successful
+										assertTrue(result != null);
+
+										// get again to check if update worked
+										warehousesService.getWarehouse(result.getId(), new AsyncCallback<Warehouse>() {
+											public void onFailure(Throwable caught) {
+												// The request resulted in an unexpected error.
+												fail("Request failure: " + caught.getMessage());
+											}
+
+											public void onSuccess(Warehouse result) {
+												assertTrue(result != null);
+												// checking if changes are equal to expected
+												assertEquals("Awarehouse", result.getName());
+												assertEquals("250", result.getTotalCap());
+												
+												
+												warehousesService.deleteWarehouse(result.getId(), new AsyncCallback<Boolean>() {
+													public void onFailure(Throwable caught) {
+														// The request resulted in an unexpected error.
+														fail("Request failure: " + caught.getMessage());
+													}
+													public void onSuccess(Boolean result) {
+														assertTrue(result);
+														// Now that we have received a response, we need to tell the test runner
+														// that the test is complete. You must call finishTest() after an
+														// asynchronous test finishes successfully, or the test will time out.
+														finishTest();
+													}
+												});
+											}
+										});
+									}
+								});
+							}
+						});
+					}
+				});
 	}
 }

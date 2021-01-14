@@ -12,6 +12,7 @@ import pt.isep.cms.shippingLocations.client.view.ShippingLocationsView;
 import pt.isep.cms.shippingLocations.shared.ShippingLocation;
 import pt.isep.cms.shippingLocations.shared.ShippingLocationDetails;
 
+
 // Nao se pode usar o easymock com testes GWT pois este usar reflection e o GWT não consegue "transpile"....
 //import static org.easymock.EasyMock.createStrictMock;
 
@@ -76,4 +77,6 @@ public class ExampleGWTTest extends GWTTestCase {
 			}
 		});
 	}
+	
+	
 }
