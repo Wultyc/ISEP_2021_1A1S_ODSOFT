@@ -77,10 +77,10 @@ pipeline {
                 }
             }
         }
-		stage('Check Code Quality and Publish Reports'){
+		stage('Check Code Quality'){
 			failFast true
             parallel {
-                stage('FindBugs') {
+                stage('FindBugs + HTMLReport') {
 					when{
 						expression{
 							isToRunStage(isProd, enable_cq_findbugs)
@@ -96,7 +96,7 @@ pipeline {
                        }
                     }
                 }
-                stage('Checkstyle') {
+                stage('Checkstyle + HTMLReport') {
 					when{
 						expression{
 							isToRunStage(isProd, enable_cq_checkstyle)
@@ -150,7 +150,7 @@ pipeline {
 					steps {
 						dir(cmsPath) {
 							script {
-								runCmd('gradle integrationTest')
+								runCmd('gradle cleanIntegrationTest integrationTest')
 								runCmd('gradle jacocoIntegrationReport')
 								// To show the contents on the log before publishing
 							}
