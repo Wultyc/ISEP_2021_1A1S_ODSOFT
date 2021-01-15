@@ -1,5 +1,13 @@
 version: "3"
 services:
+    #CMS Students
+    cms:
+        build: .
+        container_name: cms_students_app
+        ports:
+          - 8080:8080
+        networks:
+          - default
     #MySQL Service
     db:
         image: mysql:5.7.32
@@ -13,7 +21,11 @@ services:
             MYSQL_ROOT_PASSWORD: 9MAojmPlOb3e
             MYSQL_USER: application
             MYSQL_PASSWORD: app_pw
+        networks:
+          - default
         volumes:
            - odsoft_db_data:/var/lib/mysql
 volumes:
     odsoft_db_data:
+networks:
+    default:
