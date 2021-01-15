@@ -58,7 +58,7 @@ pipeline {
 			steps {
                 dir(cmsPath) {
                     script {
-                        sh 'gradle war'
+                        runCmd('gradle war')
                     }
 
                     archiveArtifacts warPath
@@ -320,4 +320,12 @@ def findIfItsProd(branch) {
   } else {
     return false
  }
+}
+
+def runCmd(String cmd){
+	if(isUnix()){
+		sh cmd
+	} else {
+		bat cmd
+	}
 }
