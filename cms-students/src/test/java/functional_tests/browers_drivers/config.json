@@ -1,0 +1,22 @@
+{
+  "browsers": [
+	{
+	  "name": "firefox",
+	  "versions": [
+		{
+		  "version": 71.0,
+		  "driver": "drivers/geckodriver"
+		}
+	  ]
+	},
+	{
+	  "name": "chrome",
+	  "versions": [
+		{
+		  "version": 79.0,
+		  "driver": "drivers/chromedriver"
+		}
+	  ]
+	}
+  ]
+}

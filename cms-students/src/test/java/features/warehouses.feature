@@ -1,5 +1,4 @@
 Feature: Warehouse Test
-  As a user I should able to create/edit/remove a warehouse into the Site.
 
   Scenario: Create Warehouse
     Given Navigate to Warehouse page

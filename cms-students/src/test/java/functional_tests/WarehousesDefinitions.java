@@ -1,80 +1,98 @@
-package gradle.selenium;
+package functional_tests;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
+import org.eclipse.jetty.util.component.ContainerLifeCycle;
+import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.GeckoDriverService;
 
-import cucumber.api.Scenario;
-import cucumber.api.java.And;
-import cucumber.api.java.en.Then;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
-import cucumber.runtime.ScenarioImpl;
-import env.DriverUtil;
-import info.seleniumcucumber.methods.BaseTest;
-import info.seleniumcucumber.methods.TestCaseFailed;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
-public class PredefinedStepDefinitions implements BaseTest {
-	
-    //Drivers
-    protected WebDriver driver = DriverUtil.getDefaultDriver();
-	
+public class WarehousesDefinitions {
+
+	 WebDriver driver;
+	 String url = "http://localhost:8080/showcase/contactsService";
+/**
+	//URL
+
+
+	public WarehousesDefinitions() {
+
+		driver = DriverUtil.loadDriver();
+
+		if (driver == null) driver = new HtmlUnitDriver();
+	}
 
     //Create Warehouse
 
-	//Step to navigate to specified URL
-	@Given("^I navigate to \"([^\"]*)\"$")
-	public void navigate_to(String link) throws Exception
-	{
-		navigationObj.navigateTo(link);
+	@Given("^Navigate to Warehouse page$")
+	public void navigate_to_Warehouse_page() throws Throwable {
+		driver.get(url);
+		Thread.sleep(1000);
+	}
+**/
+@Given("^Navigate to Warehouse page$")
+public void navigate_to_Warehouse_page() throws Throwable {
+	driver = new FirefoxDriver();
+	driver.manage().window().maximize();
+	driver.get(url);
+}
+
+
+
+	@When("^I click to add Warehouse$")
+	public void click_to_add_Warehouse() throws Throwable {
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		driver.findElement(By.id("contacts_addButton")).click();
 	}
 
-	// click on web element
-	@When("^I click on element having (.+) \"(.*?)\"$")
-	public void click(String type,String accessName) throws Exception
-	{
-		miscmethodObj.validateLocator(type);
-		clickObj.click(type, accessName);
+	//Warehouse Name
+	//Total Capacity
+	@And("^I fill the Warehouse fields$")
+	public void fill_Warehouse_fields() throws Throwable {
+		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+		driver.findElement(By.id("contacts_dialog_textbox_firstName")).sendKeys("Warehouse_X");
+		driver.findElement(By.id("contacts_dialog_textbox_lastName")).sendKeys("Capacity_Y");
 	}
 
-
-	// click on web element
-	@And("^I click on element having (.+) \"(.*?)\"$")
-	public void click(String type,String accessName) throws Exception
-	{
-		miscmethodObj.validateLocator(type);
-		clickObj.click(type, accessName);
-	}
-	// click on web element
-	@And("^I click on element having (.+) \"(.*?)\"$")
-	public void click(String type,String accessName) throws Exception
-	{
-		miscmethodObj.validateLocator(type);
-		clickObj.click(type, accessName);
+	@And("^I click to save Warehouse$")
+	public void click_to_save_Warehouse() throws Throwable {
+		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+		driver.findElement(By.id("contacts_dialog_saveButton")).click();
 	}
 
-	// click on web element
-	@And("^I click on element having (.+) \"(.*?)\"$")
-	public void click(String type,String accessName) throws Exception
-	{
-		miscmethodObj.validateLocator(type);
-		clickObj.click(type, accessName);
-	}
-
-
-	// click on web element
-	@Then("^I click on element having (.+) \"(.*?)\"$")
-	public void click(String type,String accessName) throws Exception
-	{
-		miscmethodObj.validateLocator(type);
-		clickObj.click(type, accessName);
+	@Then("^Save Warehouse$")
+	public void save_Warehouse() throws Throwable {
+		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+		List<WebElement> list = driver.findElements(By.id("contacts_contactsTable"));
+		Assert.assertTrue(this.findWarehouse(list, "FirstName LastName"));
 	}
 
 
-	public final void tearDown() {
-		DriverUtil.closeDriver();
+
+	private boolean findWarehouse(List<WebElement> list, String text) {
+		for (WebElement element : list) {
+
+			List<WebElement> td = element.findElements(By.tagName("td"));
+			for (WebElement l : td) {
+				System.out.println(l.getText());
+				if (l.getText().contains(text)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
+
 }
