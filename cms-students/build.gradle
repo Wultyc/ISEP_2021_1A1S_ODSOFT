@@ -21,6 +21,17 @@ version = '1.0'
  
 repositories { 
 	mavenCentral() 
+
+    maven {
+        url 'https://dl.google.com/dl/android/maven2'
+    }
+
+    flatDir { dirs "lib" }
+    jcenter()
+}
+
+configurations {
+   moreLibs
 }
 
 dependencies {
@@ -29,6 +40,28 @@ dependencies {
 	testCompile 'com.google.gwt:gwt-dev:2.8.1'
 	compile 'com.puppycrawl.tools:checkstyle:8.27'
 
+
+    // implementation module(":compile:1.0") {
+    //     dependency ":compile-transitive-1.0@jar"
+    //     dependency ":providedCompile-transitive:1.0@jar"
+    // }
+    // providedCompile "javax.servlet:servlet-api:2.5"
+    // providedCompile module(":providedCompile:1.0") {
+    //     dependency ":providedCompile-transitive:1.0@jar"
+    // }
+    // runtimeOnly ":runtime:1.0"
+    // providedRuntime ":providedRuntime:1.0@jar"
+    // testImplementation "junit:junit:4.13"
+    // moreLibs ":otherLib:1.0"
+}
+
+war {
+    from 'src/main' // adds a file-set to the root of the archive
+    webInf { from 'src/main/webapp/WEB-INF' } // adds a file-set to the WEB-INF dir.
+    // classpath fileTree('additionalLibs') // adds a file-set to the WEB-INF/lib dir.
+    // classpath configurations.moreLibs // adds a configuration to the WEB-INF/lib dir.
+    webXml = file('src/main/webapp/WEB-INF/web.xml') // copies a file to WEB-INF/web.xml
+    classpath configurations.compile
 }
 
 
@@ -144,6 +177,13 @@ checkstyle {
 	sourceSets = []
 }
 
+checkstyleMain {
+    source ='src/main/java'
+}
+checkstyleTest {
+    source ='src/test/java'
+}
+
 
 tasks.withType(Checkstyle) {
     reports {
@@ -185,4 +225,3 @@ tasks.withType(FindBugs) {
 		html.stylesheet resources.text.fromFile('config/xsl/checkstyle-simple-find-bugs.xsl')
     }
 }
-
