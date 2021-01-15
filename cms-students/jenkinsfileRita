@@ -6,7 +6,7 @@ def isProd = findIfItsProd(scm.branches[0].name)
 def enable_cq_checkstyle = true
 def enable_cq_findbugs = true
 def enable_test_unit = true
-def enable_test_intg = false
+def enable_test_intg = true
 def enable_test_pitm = false
 def enable_test_acc_cucumber = true
 def enable_test_acc_selenium = true
@@ -58,7 +58,7 @@ pipeline {
 			steps {
                 dir(cmsPath) {
                     script {
-                        runCmd('gradle war')
+                        bat 'gradle clean war'
                     }
 
                     archiveArtifacts warPath
@@ -69,7 +69,7 @@ pipeline {
 			steps {
                 dir(cmsPath) {
                     script {
-                        runCmd('gradle javadoc')
+                        bat 'gradle javadoc'
                     }
                     step $class: 'JavadocArchiver',
                             javadocDir: javadocPath,
@@ -88,6 +88,7 @@ pipeline {
 					}
                     steps{
                         echo "FindBugs"
+                        //bat 'gradle findbugsMain'
                     }
                 }
                 stage('Checkstyle') {
@@ -97,7 +98,8 @@ pipeline {
 						}
 					}
                     steps{
-                        echo "Checkstyle"
+                        //echo "Checkstyle"
+                        bat 'gradle checkstyleMain'
                     }
                 }
             }
@@ -114,8 +116,9 @@ pipeline {
 					steps {
 						dir(cmsPath) {
 							script {
-								runCmd('gradle test')
-								runCmd('gradle jacocoTestReport')
+								bat 'gradle test'
+								bat 'gradle jacocoTestReport'
+								//sh 'ls -la ' + unitTestResults // To show the contents on the log before publishing
 							}
 							junit unitTestResults + '/*.xml'
 							publishHTML([
@@ -138,8 +141,9 @@ pipeline {
 					steps {
 						dir(cmsPath) {
 							script {
-								runCmd('gradle integrationTest')
-								runCmd('gradle jacocoIntegrationReport')
+								bat 'gradle integrationTest'
+								bat 'gradle jacocoIntegrationReport'
+								//sh 'ls -la ' + integrationTestResults
 								// To show the contents on the log before publishing
 							}
 							jacoco buildOverBuild: true,
@@ -181,7 +185,7 @@ pipeline {
 					steps {
 						dir(cmsPath) {
 							script {
-								runCmd('gradle pitest')
+								bat 'gradle pitest'
 							}
 							publishHTML([
 									allowMissing         : false,
@@ -302,8 +306,8 @@ pipeline {
 def sendTagToBitbucket(gitCred, gitRepo, message){
 	script {
 		withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-			runCmd("git tag ${message}")
-			runCmd("git push https://${env.GIT_USERNAME}:${env.GIT_PASSWORD}@${gitRepo} --tags")
+			sh "git tag ${message}"
+			sh "git push https://${env.GIT_USERNAME}:${env.GIT_PASSWORD}@${gitRepo} --tags"
 		}
 	}
 }
@@ -318,12 +322,4 @@ def findIfItsProd(branch) {
   } else {
     return false
  }
-}
-
-def runCmd(String cmd){
-	if(isUnix()){
-		sh cmd
-	} else {
-		bat cmd
-	}
 }
