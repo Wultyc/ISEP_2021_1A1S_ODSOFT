@@ -88,9 +88,9 @@ pipeline {
 					}
                     steps{
                         echo "FindBugs"
-                        script {
+                        /*script {
                         runCmd('gradle findbugsMain')
-                        }
+                        }*/
                     }
                 }
                 stage('Checkstyle') {
