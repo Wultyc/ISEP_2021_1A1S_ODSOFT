@@ -88,9 +88,11 @@ pipeline {
 					}
                     steps{
                         echo "FindBugs"
-                        /*script {
+                        dir(cmsPath) {
+                        script {
                         runCmd('gradle findbugsMain')
-                        }*/
+                        }
+                       }
                     }
                 }
                 stage('Checkstyle') {
@@ -101,10 +103,12 @@ pipeline {
 					}
                     steps{
                         echo "Checkstyle"
+                        dir(cmsPath) {
                         script {
                         runCmd('gradle checkstyleMain')
                         }
                         //publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'build/reports/checkstyle', reportFiles: 'main.html', reportName: 'Checkstyle Report', reportTitles: ''])
+                  	  }
                     }
                 }
             }
