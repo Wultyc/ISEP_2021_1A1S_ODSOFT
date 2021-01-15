@@ -58,7 +58,7 @@ pipeline {
 			steps {
                 dir(cmsPath) {
                     script {
-                        sh 'gradle clean war'
+                        runCmd('gradle war')
                     }
 
                     archiveArtifacts warPath
@@ -69,7 +69,7 @@ pipeline {
 			steps {
                 dir(cmsPath) {
                     script {
-                        sh 'gradle javadoc'
+                        runCmd('gradle javadoc')
                     }
                     step $class: 'JavadocArchiver',
                             javadocDir: javadocPath,
@@ -114,9 +114,8 @@ pipeline {
 					steps {
 						dir(cmsPath) {
 							script {
-								sh 'gradle test'
-								sh 'gradle jacocoTestReport'
-								sh 'ls -la ' + unitTestResults // To show the contents on the log before publishing
+								runCmd('gradle test')
+								runCmd('gradle jacocoTestReport')
 							}
 							junit unitTestResults + '/*.xml'
 							publishHTML([
@@ -139,9 +138,8 @@ pipeline {
 					steps {
 						dir(cmsPath) {
 							script {
-								sh 'gradle integrationTest'
-								sh 'gradle jacocoIntegrationReport'
-								sh 'ls -la ' + integrationTestResults
+								runCmd('gradle integrationTest')
+								runCmd('gradle jacocoIntegrationReport')
 								// To show the contents on the log before publishing
 							}
 							jacoco buildOverBuild: true,
@@ -183,7 +181,7 @@ pipeline {
 					steps {
 						dir(cmsPath) {
 							script {
-								sh 'gradle pitest'
+								runCmd('gradle pitest')
 							}
 							publishHTML([
 									allowMissing         : false,
@@ -304,8 +302,8 @@ pipeline {
 def sendTagToBitbucket(gitCred, gitRepo, message){
 	script {
 		withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-			sh "git tag ${message}"
-			sh "git push https://${env.GIT_USERNAME}:${env.GIT_PASSWORD}@${gitRepo} --tags"
+			runCmd("git tag ${message}")
+			runCmd("git push https://${env.GIT_USERNAME}:${env.GIT_PASSWORD}@${gitRepo} --tags")
 		}
 	}
 }
@@ -320,4 +318,12 @@ def findIfItsProd(branch) {
   } else {
     return false
  }
+}
+
+def runCmd(String cmd){
+	if(isUnix()){
+		sh cmd
+	} else {
+		bat cmd
+	}
 }
