@@ -77,7 +77,7 @@ pipeline {
                 }
             }
         }
-		stage('Check Code Quality'){
+		stage('Check Code Quality and Publish Reports'){
 			failFast true
             parallel {
                 stage('FindBugs') {
@@ -92,6 +92,7 @@ pipeline {
                         script {
                         runCmd('gradle findbugsMain')
                         }
+                        publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'build/reports/findbugs', reportFiles: 'main.html', reportName: 'Findbugs Report', reportTitles: ''])
                        }
                     }
                 }
@@ -107,7 +108,7 @@ pipeline {
                         script {
                         runCmd('gradle checkstyleMain')
                         }
-                        //publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'build/reports/checkstyle', reportFiles: 'main.html', reportName: 'Checkstyle Report', reportTitles: ''])
+                        publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'build/reports/checkstyle', reportFiles: 'main.html', reportName: 'Checkstyle Report', reportTitles: ''])
                   	  }
                     }
                 }
