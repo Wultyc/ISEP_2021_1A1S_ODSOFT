@@ -48,8 +48,21 @@ public class WarehousesServiceImpl extends RemoteServiceServlet implements
   }
   
   public Warehouse addWarehouse(Warehouse warehouse) {
+    try {
+      PreparedStatement ps = connection.prepareStatement(
+              "insert into WAREHOUSE values (null,?,?)"
+      );
+      ps.setString(1, warehouse.getName());
+      ps.setString(2, warehouse.getTotalCap());
 
-    return warehouse;
+      ps.executeUpdate();
+
+      return warehouse;
+    } catch (SQLException sqle) {
+      System.out.println("Error while creating teacher");
+      sqle.printStackTrace();
+    }
+    return null;
   }
 
   public Warehouse updateWarehouse(Warehouse warehouse) {
