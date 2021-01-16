@@ -68,7 +68,7 @@ public class BatchesServiceImpl extends RemoteServiceServlet implements
       ps.setString(1, batche.getName());
       ps.setString(2, batche.getDescrip());
       ps.setString(3, batche.getManDate());
-      ps.setInt(4, 2/*Integer.parseInt(batche.getWarehouse().id)*/);
+      ps.setInt(4, Integer.parseInt(batche.getWarehouse().id));
 
       ps.executeUpdate();
 
