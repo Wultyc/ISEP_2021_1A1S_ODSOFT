@@ -17,7 +17,7 @@ import pt.isep.cms.seleniumcucumber.SeleniumCucumber;
 
 public class WarehousesDefinitions implements SeleniumCucumber {
 
-	////Driver
+	///Driver
 	 WebDriver driver;
 	 //URL for Warehouse Page
 	 String url = "http://localhost:8091/cms-students-1.0/#!CwWarehouses";
@@ -94,7 +94,7 @@ public class WarehousesDefinitions implements SeleniumCucumber {
 	public void i_click_to_edit_Warehouse() {
 		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
 		List<WebElement> list = driver.findElements(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody"));
-		definitionObj.editWarehouse(list, "Warehouse_X_Testing: Capacity_Y_Testing");
+		definitionObj.edit(list, "Warehouse_X_Testing: Capacity_Y_Testing");
 
 	}
 
@@ -110,7 +110,7 @@ public class WarehousesDefinitions implements SeleniumCucumber {
 	@Then("^Edit Warehouse$")
 	public void edit_Warehouse() {
 		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-		List<WebElement> list = driver.findElements(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody"));
+		List<WebElement> list = driver.findElements(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td/table"));
 		Assert.assertTrue(definitionObj.find(list, "Warehouse_X_Testing_Edit: Capacity_Y_Testing_Edit"));
 		definitionObj.delete(list, "Warehouse_X_Testing_Edit: Capacity_Y_Testing_Edit");
 		driver.findElement(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[1]/td/table/tbody/tr/td[2]/button")).click();

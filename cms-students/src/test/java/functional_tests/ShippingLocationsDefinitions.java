@@ -92,7 +92,7 @@ public class ShippingLocationsDefinitions implements SeleniumCucumber {
     public void i_click_to_edit_Shipping_Location() {
         driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         List<WebElement> list = driver.findElements(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody"));
-        definitionObj.editWarehouse(list, "Shipping_Location_X_Testing");
+        definitionObj.edit(list, "Shipping_Location_X_Testing");
 
     }
 
@@ -107,7 +107,7 @@ public class ShippingLocationsDefinitions implements SeleniumCucumber {
     @Then("^Edit Shipping Location$")
     public void edit_Shipping_Location() {
         driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-        List<WebElement> list = driver.findElements(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody"));
+        List<WebElement> list = driver.findElements(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td/table"));
         Assert.assertTrue(definitionObj.find(list, "Shipping_Location_X_Testing_Edit"));
         definitionObj.delete(list, "Shipping_Location_X_Testing_Edit");
         driver.findElement(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[1]/td/table/tbody/tr/td[2]/button")).click();
