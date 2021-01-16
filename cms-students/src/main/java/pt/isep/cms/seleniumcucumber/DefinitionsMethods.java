@@ -5,11 +5,11 @@ import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
-public class WarehousesMethods {
+public class DefinitionsMethods {
 
 
 
-    public boolean findWarehouse(List<WebElement> list, String text) {
+    public boolean find(List<WebElement> list, String text) {
         for (WebElement l : list) {
             //System.out.println(l.getText());
             if (l.getText().contains(text)) {
@@ -19,7 +19,7 @@ public class WarehousesMethods {
         return false;
     }
 
-    public void deleteWarehouse(List<WebElement> list, String name) {
+    public void delete(List<WebElement> list, String name) {
         WebElement checkBox = this.findCheckBox(list, name);
         checkBox.click();
 
@@ -55,5 +55,13 @@ public class WarehousesMethods {
             }
         }
         return false;
+    }
+
+    public void printList(List<WebElement> list){
+        int count = 0;
+        for (WebElement element : list) {
+            count++;
+            System.out.println("\nElemento nº" + count + " ----> " + element.getText());
+        }
     }
 }
