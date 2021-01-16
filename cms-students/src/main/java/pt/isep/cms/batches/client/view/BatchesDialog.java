@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import pt.isep.cms.warehouses.shared.Warehouse;
 
 import java.util.Date;
 
@@ -78,6 +79,7 @@ public class BatchesDialog implements EditBatchePresenter.Display {
 	private final TextBox name;
 	private final TextBox descrip;
 	private final TextBox manDate;
+	private final TextBox warehouse;
 	private final FlexTable detailsTable;
 	private final Button saveButton;
 	private final Button cancelButton;
@@ -89,6 +91,8 @@ public class BatchesDialog implements EditBatchePresenter.Display {
 		detailsTable.setWidget(1, 1, descrip);
 		detailsTable.setWidget(2, 0, new Label("Manufacturing date"));
 		detailsTable.setWidget(2, 1, manDate);
+		detailsTable.setWidget(3, 0, new Label("Warehouse"));
+		detailsTable.setWidget(3, 1, warehouse);
 		name.setFocus(true);
 	}
 
@@ -125,6 +129,7 @@ public class BatchesDialog implements EditBatchePresenter.Display {
 		name = new TextBox();
 		descrip = new TextBox();
 		manDate = new TextBox();
+		warehouse = new TextBox();
 		initDetailsTable();
 		contentDetailsPanel.add(detailsTable);
 
@@ -189,6 +194,13 @@ public class BatchesDialog implements EditBatchePresenter.Display {
 	public HasValue <String> getManDate() {
 		// TODO Auto-generated method stub
 		return manDate;
+		// return null;
+	}
+
+	@Override
+	public HasValue <String> getWarehouse() {
+		// TODO Auto-generated method stub
+		return warehouse;
 		// return null;
 	}
 

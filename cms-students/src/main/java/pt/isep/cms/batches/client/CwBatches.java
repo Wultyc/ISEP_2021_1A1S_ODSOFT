@@ -28,6 +28,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 import pt.isep.cms.client.ContentWidget;
 import pt.isep.cms.client.ShowcaseConstants;
+import pt.isep.cms.warehouses.client.WarehousesService;
+import pt.isep.cms.warehouses.client.WarehousesServiceAsync;
 
 /**
  * Main Content Widget for Batches.
@@ -70,12 +72,13 @@ public class CwBatches extends ContentWidget {
 	public Widget onInitialize() {
 		// The service should be created on GWT module loading
 		BatchesServiceAsync rpcService = GWT.create(BatchesService.class);
+		WarehousesServiceAsync warService = GWT.create(WarehousesService.class);
 
 		// Should setup the Presenter Panel for the Batches....
 		VerticalPanel vPanel = new VerticalPanel();
 
 		HandlerManager eventBus = new HandlerManager(null);
-		BatchesController appViewer = new BatchesController(rpcService, eventBus, this.globalConstants);
+		BatchesController appViewer = new BatchesController(rpcService, warService, eventBus, this.globalConstants);
 		appViewer.go(vPanel);
 
 		// Return the panel
