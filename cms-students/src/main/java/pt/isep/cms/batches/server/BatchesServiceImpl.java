@@ -60,12 +60,12 @@ public class BatchesServiceImpl extends RemoteServiceServlet implements
   public Batche addBatche(Batche batche) {
     try {
       PreparedStatement ps = connection.prepareStatement(
-              "insert into PRODUCT values (null,?,?, ?, ?)"
+              "insert into BATCH values (null,?,?, ?, ?)"
       );
       ps.setString(1, batche.getName());
       ps.setString(2, batche.getDescrip());
       ps.setDate(3, (java.sql.Date) batche.getManDate());
-      ps.setInt(4, Integer.parseInt(batche.getWarehouse().id));
+      ps.setInt(4, 2/*Integer.parseInt(batche.getWarehouse().id)*/);
 
       ps.executeUpdate();
 
@@ -123,7 +123,7 @@ public class BatchesServiceImpl extends RemoteServiceServlet implements
     ArrayList<BatcheDetails> batcheDetails = new ArrayList<BatcheDetails>();
     try {
       PreparedStatement ps = connection.prepareStatement(
-              "select *  from PRODUCTS"
+              "select *  from BATCH"
       );
       ResultSet rSet = ps.executeQuery();
 
