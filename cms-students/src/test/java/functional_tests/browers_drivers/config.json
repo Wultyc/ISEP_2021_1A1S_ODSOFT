@@ -4,8 +4,8 @@
 	  "name": "firefox",
 	  "versions": [
 		{
-		  "version": 71.0,
-		  "driver": "drivers/geckodriver"
+		  "version": 82.0,
+		  "driver": "browsers_drivers/geckodriver"
 		}
 	  ]
 	},
@@ -13,8 +13,8 @@
 	  "name": "chrome",
 	  "versions": [
 		{
-		  "version": 79.0,
-		  "driver": "drivers/chromedriver"
+		  "version": 83.0,
+		  "driver": "browsers_drivers/chromedriver"
 		}
 	  ]
 	}
