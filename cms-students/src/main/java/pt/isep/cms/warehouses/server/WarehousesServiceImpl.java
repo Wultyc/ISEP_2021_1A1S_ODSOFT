@@ -59,30 +59,51 @@ public class WarehousesServiceImpl extends RemoteServiceServlet implements
 
       return warehouse;
     } catch (SQLException sqle) {
-      System.out.println("Error while creating teacher");
+      System.out.println("Error while creating warehouse");
       sqle.printStackTrace();
     }
     return null;
   }
 
   public Warehouse updateWarehouse(Warehouse warehouse) {
-	  String lid=warehouse.getId();
-    warehouses.remove(warehouse.getId());
-    warehouses.put(warehouse.getId(), warehouse); 
-    return warehouse;
+    try {
+      PreparedStatement ps = connection.prepareStatement(
+              "update WAREHOUSE set name=? ,totalCapacity=? where id=?"
+      );
+      ps.setString(1, warehouse.getName());
+      ps.setInt(2, Integer.parseInt(warehouse.getTotalCap()));
+      ps.setInt(3, Integer.parseInt(warehouse.getId()));
+
+      ps.executeUpdate();
+
+      return warehouse;
+    } catch (SQLException sqle) {
+      System.out.println("Error while updating warehouse");
+      sqle.printStackTrace();
+    }
+    return null;
   }
 
   public Boolean deleteWarehouse(String id) {
-    warehouses.remove(id);
-    return true;
+    try {
+      PreparedStatement ps = connection.prepareStatement(
+              "delete from WAREHOUSE where id=?"
+      );
+      ps.setInt(1, Integer.parseInt(id));
+
+      return ps.executeUpdate() != 0;
+    } catch (SQLException sqle) {
+      System.out.println("Error while deleting warehouse");
+      sqle.printStackTrace();
+    }
+    return null;
   }
   
   public ArrayList<WarehouseDetails> deleteWarehouses(ArrayList<String> ids) {
 
-    for (int i = 0; i < ids.size(); ++i) {
-      deleteWarehouse(ids.get(i));
+    for (String id : ids) {
+      deleteWarehouse(id);
     }
-    
     return getWarehouseDetails();
   }
   
