@@ -44,7 +44,7 @@ public class BatchesServiceImpl extends RemoteServiceServlet implements
         Integer id = rSet.getInt("id");
         String name = rSet.getString("name");
         String description = rSet.getString("description");
-        Date mandDate = rSet.getDate("mandDate");
+        String mandDate = rSet.getString("mandDate");
         Integer warehouseId = rSet.getInt("wareId");
 
         Warehouse warehouse = warehousesService.getWarehouse(warehouseId.toString());
@@ -59,12 +59,15 @@ public class BatchesServiceImpl extends RemoteServiceServlet implements
   
   public Batche addBatche(Batche batche) {
     try {
+      System.out.println(batche.getName());
+
+
       PreparedStatement ps = connection.prepareStatement(
               "insert into BATCH values (null,?,?, ?, ?)"
       );
       ps.setString(1, batche.getName());
       ps.setString(2, batche.getDescrip());
-      ps.setDate(3, (java.sql.Date) batche.getManDate());
+      ps.setString(3, batche.getManDate());
       ps.setInt(4, 2/*Integer.parseInt(batche.getWarehouse().id)*/);
 
       ps.executeUpdate();
@@ -84,7 +87,9 @@ public class BatchesServiceImpl extends RemoteServiceServlet implements
       );
       ps.setString(1, batch.getName());
       ps.setString(2, batch.getDescrip());
-      ps.setDate(3, (java.sql.Date) batch.getManDate());
+      ps.setString(3, batch.getManDate());
+
+      System.out.println(ps);
 
       ps.executeUpdate();
 
@@ -131,7 +136,7 @@ public class BatchesServiceImpl extends RemoteServiceServlet implements
         Integer id = rSet.getInt("id");
         String name = rSet.getString("name");
         String description = rSet.getString("description");
-        Date mandDate = rSet.getDate("mandDate");
+        String mandDate = rSet.getString("mandDate");
         Integer warehouseId = rSet.getInt("wareId");
 
         Warehouse warehouse = warehousesService.getWarehouse(warehouseId.toString());
@@ -158,7 +163,7 @@ public class BatchesServiceImpl extends RemoteServiceServlet implements
       while (rSet.next()) {
         String name = rSet.getString("name");
         String description = rSet.getString("description");
-        Date mandDate = rSet.getDate("mandDate");
+        String mandDate = rSet.getString("mandDate");
         Integer warehouseId = rSet.getInt("wareId");
 
         Warehouse warehouse = warehousesService.getWarehouse(warehouseId.toString());

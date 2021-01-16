@@ -93,13 +93,10 @@ public class EditBatchePresenter implements Presenter {
 	}
 
 	private void doSave() {
-			String string = display.getManDate().getValue();
-			DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("YYYY/MM/DD");
-			Date date = dateTimeFormat.parse(string);
 
 			batche.setName(display.getName().getValue());
 			batche.setDescrip(display.getDescrip().getValue());
-			batche.setManDate(date);
+			batche.setManDate(display.getManDate().getValue());
 
 
 		// SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yy");

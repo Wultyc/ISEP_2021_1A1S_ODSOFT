@@ -93,7 +93,7 @@ public class ExampleGWTTest extends GWTTestCase {
 		// fail("Ainda nao implementado");
 		
 		// Post a batche
-		batchesService.addBatche(new Batche(null, "abc", "descrip1", "12-12-2020"), new AsyncCallback<Batche>() {
+		batchesService.addBatche(new Batche(2, "abc", "descrip1", "12-12-2020"), new AsyncCallback<Batche>() {
 					public void onFailure(Throwable caught) {
 						// The request resulted in an unexpected error.
 						fail("Request failure: " + caught.getMessage());
