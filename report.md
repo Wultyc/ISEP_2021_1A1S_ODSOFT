@@ -145,6 +145,14 @@ Para integrar este plugin no projeto GWT foi necessário introduzir no ficheiro 
    > }
     
     
+# Pipeline
+Adicionar a imagem do formato final da pipeline e justificar os motivos para a atualização
 
+# Disponibilidação das aplicações em containers
+Excplicar que para o ambiente de desenvolvimento foi usado o docker compose para facilitar a a orquestração dos containers
+(?) e que em prod vamos usar o K8S
+
+# Tasks do gradle
+Para facilitar o desenvolvimento da aplicação e tendo em conta que havia a necessidade de colocar as creds da DB na classe java e que o URL da BD muda quando estamos no Docker (porque os containers estão numa network interna do docker) foram criadas algumas tasks novas no gradle para subir estes containers
 
 
