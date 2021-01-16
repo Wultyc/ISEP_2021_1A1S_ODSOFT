@@ -61,7 +61,7 @@ public class ProductsServiceImpl extends RemoteServiceServlet implements
       ps.setString(1, product.getName());
       ps.setString(2, product.getDescrip());
       ps.setInt(3, Integer.parseInt(product.getPrice()));
-      ps.setInt(4, Integer.parseInt(product.getBatch().id));
+      ps.setInt(4, 1/*Integer.parseInt(product.getBatch().id)*/);
 
 
       ps.executeUpdate();
@@ -122,7 +122,7 @@ public class ProductsServiceImpl extends RemoteServiceServlet implements
     ArrayList<ProductDetails> productDetails = new ArrayList<ProductDetails>();
     try {
       PreparedStatement ps = connection.prepareStatement(
-              "select *  from PRODUCTS"
+              "select *  from PRODUCT"
       );
       ResultSet rs = ps.executeQuery();
 
