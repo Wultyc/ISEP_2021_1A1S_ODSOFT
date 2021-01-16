@@ -58,7 +58,7 @@ pipeline {
 			steps {
                 dir(cmsPath) {
                     script {
-                        runCmd('gradle war')
+                        runCmd('gradle clean war')
                     }
 
                     archiveArtifacts warPath
