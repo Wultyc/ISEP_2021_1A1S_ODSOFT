@@ -150,7 +150,7 @@ pipeline {
 					steps {
 						dir(cmsPath) {
 							script {
-								runCmd('gradle integrationTest')
+								runCmd('gradlew.bat integrationTest')
 								runCmd('gradle jacocoIntegrationReport')
 								// To show the contents on the log before publishing
 							}
