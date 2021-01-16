@@ -150,8 +150,8 @@ pipeline {
 					steps {
 						dir(cmsPath) {
 							script {
-								runCmd('gradle cleanIntegrationTest integrationTest')
-								//runCmd('gradle jacocoIntegrationReport')
+								runCmd('gradle integrationTest')
+								runCmd('gradle jacocoIntegrationReport')
 								// To show the contents on the log before publishing
 							}
 							jacoco buildOverBuild: true,
