@@ -23,6 +23,6 @@ Feature: Warehouse Test
     And I fill the Warehouse fields
     And I click to save Warehouse
     When I click to edit Warehouse
-    And Edit Warehouse
-    And Click to save Warehouse
-    Then Save Warehouse
+    And Edit Warehouse fields
+    And I click to save Warehouse
+    Then Edit Warehouse

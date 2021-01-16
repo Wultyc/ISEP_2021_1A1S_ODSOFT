@@ -42,4 +42,18 @@ public class WarehousesMethods {
         return null;
     }
 
+    public boolean editWarehouse(List<WebElement> list, String name) {
+        for (WebElement element : list) {
+
+            List<WebElement> td = element.findElements(By.tagName("td"));
+            for (WebElement checkBox : td) {
+                if (checkBox.getText().contains(name)) {
+                    checkBox.click();
+                    return true;
+                }
+
+            }
+        }
+        return false;
+    }
 }
