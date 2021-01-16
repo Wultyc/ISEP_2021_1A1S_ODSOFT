@@ -65,7 +65,7 @@ pipeline {
                 }
             }
         }
-	   /* stage('Javadoc') {
+	    stage('Javadoc') {
 			steps {
                 dir(cmsPath) {
                     script {
@@ -76,7 +76,7 @@ pipeline {
                             keepAll: false
                 }
             }
-        }*/
+        }
 		stage('Check Code Quality'){
 			failFast true
             parallel {
@@ -114,49 +114,6 @@ pipeline {
                 }
             }
         }
-        stage('Integration test') {
-					when{
-						expression{
-							isToRunStage(isProd, enable_test_intg)
-						}
-					}
-					steps {
-						dir(cmsPath) {
-							script {
-								runCmd('gradle integrationTest')
-								runCmd('gradle jacocoIntegrationReport')
-								// To show the contents on the log before publishing
-							}
-							jacoco buildOverBuild: true,
-									deltaBranchCoverage: '5',
-									deltaClassCoverage: '5',
-									deltaComplexityCoverage: '5',
-									deltaInstructionCoverage: '5',
-									deltaLineCoverage: '5',
-									deltaMethodCoverage: '5',
-									maximumBranchCoverage: '80',
-									maximumClassCoverage: '80',
-									maximumComplexityCoverage: '80',
-									maximumInstructionCoverage: '80',
-									maximumLineCoverage: '80',
-									maximumMethodCoverage: '80',
-									minimumBranchCoverage: '5',
-									minimumClassCoverage: '5',
-									minimumComplexityCoverage: '5',
-									minimumInstructionCoverage: '5',
-									minimumLineCoverage: '5',
-									minimumMethodCoverage: '5'
-							publishHTML([
-									allowMissing         : false,
-									alwaysLinkToLastBuild: false,
-									keepAll              : false,
-									reportDir            : integrationTestResults,
-									reportFiles          : 'index.html',
-									reportName           : 'Integration Test Coverage HTML Report',
-									reportTitles         : ''])
-						}
-					}
-				}
 		stage('Run Tests'){
 			failFast true
             parallel {
@@ -184,7 +141,7 @@ pipeline {
 						}
 					}
 				}
-				/*stage('Integration test') {
+				stage('Integration test') {
 					when{
 						expression{
 							isToRunStage(isProd, enable_test_intg)
@@ -226,7 +183,7 @@ pipeline {
 									reportTitles         : ''])
 						}
 					}
-				}*/
+				}
 				stage('Mutation Test') {
 					when{
 						expression{
