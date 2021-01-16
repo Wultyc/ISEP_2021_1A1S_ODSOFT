@@ -3,15 +3,15 @@
 def isProd = findIfItsProd(scm.branches[0].name)
 
 //enable steps in dev
-def enable_cq_checkstyle = true
-def enable_cq_findbugs = true
-def enable_test_unit = true
+def enable_cq_checkstyle = false
+def enable_cq_findbugs = false
+def enable_test_unit = false
 def enable_test_intg = true
 def enable_test_pitm = false
-def enable_test_acc_cucumber = true
-def enable_test_acc_selenium = true
+def enable_test_acc_cucumber = false
+def enable_test_acc_selenium = false
 def enable_send_email = false
-def enable_generate_pdf_and_zip = true
+def enable_generate_pdf_and_zip = false
 
 //Git configs 
 def gitCred = 'bitbucket-creds'
@@ -54,7 +54,7 @@ pipeline {
                 	credentialsId: gitCred
             }
         }
-	    stage('Build War file') {
+	   /* stage('Build War file') {
 			steps {
                 dir(cmsPath) {
                     script {
@@ -64,8 +64,8 @@ pipeline {
                     archiveArtifacts warPath
                 }
             }
-        }
-	    stage('Javadoc') {
+        }*/
+	   /* stage('Javadoc') {
 			steps {
                 dir(cmsPath) {
                     script {
@@ -76,7 +76,7 @@ pipeline {
                             keepAll: false
                 }
             }
-        }
+        }*/
 		stage('Check Code Quality'){
 			failFast true
             parallel {
@@ -150,8 +150,8 @@ pipeline {
 					steps {
 						dir(cmsPath) {
 							script {
-								runCmd('gradle integrationTest')
-								runCmd('gradle jacocoIntegrationReport')
+								runCmd('gradle cleanIntegrationTest integrationTest')
+								//runCmd('gradle jacocoIntegrationReport')
 								// To show the contents on the log before publishing
 							}
 							jacoco buildOverBuild: true,
