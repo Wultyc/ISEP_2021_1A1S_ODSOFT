@@ -66,16 +66,17 @@ war {
 }
 
 
+task renderPlantUml(type: RenderPlantUmlTask){
+	println "RenderPlantUml Executed! "
+}
+
 javadoc {
     source = sourceSets.main.allJava
     options.addStringOption("sourcepath", "$projectDir/src/main/java")
     options.overview = "src/main/javadoc/overview.html" // relative to source root
     
 }
-
-task renderPlantUml(type: RenderPlantUmlTask){
-	println "RenderPlantUml Executed! "
-}
+javadoc.dependsOn(renderPlantUml)
 
 // If we woant to use the default ant build inside gradle
 // ant.importBuild "build.xml"
@@ -165,7 +166,6 @@ pitest {
 	outputFormats = ['XML','HTML']
 }
 
-javadoc.dependsOn(renderPlantUml)
 
 
 // Checkstyle
@@ -226,3 +226,16 @@ tasks.withType(FindBugs) {
 		html.stylesheet resources.text.fromFile('config/xsl/checkstyle-simple-find-bugs.xsl')
     }
 }
+
+task deleteAppContainer(type: Exec) {
+	commandLine 'docker', 'container', 'rm', '-f', 'cms_students_app'
+}
+task deleteDBContainer(type: Exec) {
+	commandLine 'docker', 'container', 'rm', '-f', 'odsoft_db'
+}
+task deleteContainers() {}
+deleteContainers.dependsOn(deleteAppContainer,deleteDBContainer)
+task cmsRun(type: Exec) {
+	commandLine 'docker-compose', 'up', '--build'
+}
+cmsRun.dependsOn(deleteContainers,clean,war)
