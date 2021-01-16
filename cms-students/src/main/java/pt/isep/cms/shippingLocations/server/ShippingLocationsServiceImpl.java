@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import pt.isep.cms.shippingLocations.client.ShippingLocationsService;
+import pt.isep.cms.shippingLocations.client.*;
 import pt.isep.cms.shippingLocations.shared.ShippingLocation;
-import pt.isep.cms.shippingLocations.shared.ShippingLocationDetails;
+import pt.isep.cms.shippingLocations.shared.*;
 
 @SuppressWarnings("serial")
 public class ShippingLocationsServiceImpl extends RemoteServiceServlet implements

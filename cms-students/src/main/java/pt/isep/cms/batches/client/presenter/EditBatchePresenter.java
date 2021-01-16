@@ -4,14 +4,22 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.TextBox;
 import pt.isep.cms.batches.client.BatchesServiceAsync;
 import pt.isep.cms.batches.client.event.BatcheUpdatedEvent;
 import pt.isep.cms.batches.client.event.EditBatcheCancelledEvent;
 import pt.isep.cms.batches.shared.Batche;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class EditBatchePresenter implements Presenter {
 	public interface Display {
@@ -54,7 +62,7 @@ public class EditBatchePresenter implements Presenter {
 				batche = result;
 				EditBatchePresenter.this.display.getName().setValue(batche.getName());
 				EditBatchePresenter.this.display.getDescrip().setValue(batche.getDescrip());
-				EditBatchePresenter.this.display.getManDate().setValue(batche.getManDate());
+				EditBatchePresenter.this.display.getManDate().setValue(batche.getManDate().toString());
 			}
 
 			public void onFailure(Throwable caught) {
@@ -85,9 +93,18 @@ public class EditBatchePresenter implements Presenter {
 	}
 
 	private void doSave() {
-		batche.setName(display.getName().getValue());
-		batche.setDescrip(display.getDescrip().getValue());
-		batche.setManDate(display.getManDate().getValue());
+			String string = display.getManDate().getValue();
+			DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("YYYY/MM/DD");
+			Date date = dateTimeFormat.parse(string);
+
+			batche.setName(display.getName().getValue());
+			batche.setDescrip(display.getDescrip().getValue());
+			batche.setManDate(date);
+
+
+		// SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yy");
+		// String date = df2.format(display.getManDate().getValue());
+
 
 		if (batche.getId() == null) {
 			// Adding new batche

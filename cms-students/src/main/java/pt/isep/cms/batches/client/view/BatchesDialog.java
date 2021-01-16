@@ -30,6 +30,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import java.util.Date;
+
 /**
  * Dialog Box for Adding and Updating Batches.
  */
@@ -184,7 +186,7 @@ public class BatchesDialog implements EditBatchePresenter.Display {
 	}
 
 	@Override
-	public HasValue<String> getManDate() {
+	public HasValue <String> getManDate() {
 		// TODO Auto-generated method stub
 		return manDate;
 		// return null;

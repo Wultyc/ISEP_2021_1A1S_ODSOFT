@@ -7,6 +7,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 
 
+import pt.isep.cms.batches.shared.Batche;
 import pt.isep.cms.products.client.ProductsService;
 import pt.isep.cms.products.client.ProductsServiceAsync;
 import pt.isep.cms.products.client.presenter.ProductsPresenter;
@@ -93,7 +94,7 @@ public class ExampleGWTTest extends GWTTestCase {
 		// fail("Ainda nao implementado");
 		
 		// Post a product
-		productsService.addProduct(new Product(null, "Prod1", "BoaDescrip", "100"), new AsyncCallback<Product>() {
+		productsService.addProduct(new Product(null, "Prod1", "BoaDescrip", "100", new Batche(null, null, null, null, null, null), new AsyncCallback<Product>() {
 					public void onFailure(Throwable caught) {
 						// The request resulted in an unexpected error.
 						fail("Request failure: " + caught.getMessage());
