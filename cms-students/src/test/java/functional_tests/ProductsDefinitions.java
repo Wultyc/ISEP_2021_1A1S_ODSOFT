@@ -56,7 +56,7 @@ public class ProductsDefinitions implements SeleniumCucumber {
     }
 
     @And("^I click to save Product$")
-    public void click_to_save_Warehouse() {
+    public void click_to_save_Product() {
         driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         driver.findElement(By.xpath("/html/body/div[6]/div/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td[1]/button")).click();
     }

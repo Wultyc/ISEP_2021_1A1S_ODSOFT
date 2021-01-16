@@ -19,10 +19,10 @@ public class ShippingLocationsDefinitions implements SeleniumCucumber {
 
     ////Driver
     WebDriver driver;
-    //URL for Warehouse Page
+    //URL for Shipping Location Page
     String url = "http://127.0.0.1:8091/cms-students-1.0/#!CwShippingLocations";
 
-    //Warehouses Definitions Classe
+    //Shipping Location Definitions Classe
     public ShippingLocationsDefinitions() {
 
         driver = DriverUtil.loadDriver();
