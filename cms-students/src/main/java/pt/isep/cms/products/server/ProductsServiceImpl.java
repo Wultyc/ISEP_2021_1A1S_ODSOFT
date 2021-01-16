@@ -3,26 +3,26 @@ package pt.isep.cms.products.server;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
+import pt.isep.cms.DBConnection.DBConnection;
+import pt.isep.cms.batches.server.BatchesServiceImpl;
+import pt.isep.cms.batches.shared.Batche;
 import pt.isep.cms.products.client.ProductsService;
 import pt.isep.cms.products.shared.Product;
 import pt.isep.cms.products.shared.ProductDetails;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 @SuppressWarnings("serial")
 public class ProductsServiceImpl extends RemoteServiceServlet implements
     ProductsService {
-
-  private static final String[] productsNameData = new String[] {
-      "Product X", "Product Y", "Product Z"};
-  
-  private final String[] productsDescrip = new String[] {
-      "5000", "2000", "3000"};
-  
-  private final String[] productsPrice = new String[] {
-      "10", "20", "30"};
       
   private final HashMap<String, Product> products = new HashMap<String, Product>();
+  private Connection connection = new DBConnection().getConnection();
+  public BatchesServiceImpl batchesService = new BatchesServiceImpl();
 
   public ProductsServiceImpl() {
     initProducts();
@@ -31,52 +31,143 @@ public class ProductsServiceImpl extends RemoteServiceServlet implements
   private void initProducts() {
     // TODO: Create a real UID for each product
     //
-    for (int i = 0; i < productsNameData.length && i < productsDescrip.length && i < productsPrice.length; ++i) {
-      Product product = new Product(String.valueOf(i), productsNameData[i], productsDescrip[i], productsPrice[i]);
-      products.put(product.getId(), product); 
+    try {
+      PreparedStatement ps = connection.prepareStatement(
+              "select *  from PRODUCT"
+      );
+      ResultSet rSet = ps.executeQuery();
+      while (rSet.next()) {
+        Integer id = rSet.getInt("id");
+        String name = rSet.getString("name");
+        String description = rSet.getString("description");
+        Integer price = rSet.getInt("price");
+        Integer batchId = rSet.getInt("batchId");
+
+        Batche batch = batchesService.getBatche(batchId.toString());
+
+        products.put(id.toString(), new Product(id.toString(), name, description, price.toString(), batch));
+      }
+    } catch (SQLException sqle) {
+      System.out.println("Database error while getting warehouses");
+      sqle.printStackTrace();
     }
   }
   
   public Product addProduct(Product product) {
-    product.setId(String.valueOf(products.size()));
-    products.put(product.getId(), product); 
-    return product;
+    try {
+      PreparedStatement ps = connection.prepareStatement(
+              "insert into PRODUCT values (null,?,?, ?, ?)"
+      );
+      ps.setString(1, product.getName());
+      ps.setString(2, product.getDescrip());
+      ps.setInt(3, Integer.parseInt(product.getPrice()));
+      ps.setInt(4, Integer.parseInt(product.getBatch().id));
+
+
+      ps.executeUpdate();
+
+      return product;
+    } catch (SQLException sqle) {
+      System.out.println("Error while creating warehouse");
+      sqle.printStackTrace();
+    }
+    return null;
   }
 
   public Product updateProduct(Product product) {
-	  String lid=product.getId();
-    products.remove(product.getId());
-    products.put(product.getId(), product); 
-    return product;
+    try {
+      PreparedStatement ps = connection.prepareStatement(
+              "update PRODUCT set name=? ,description=?, price=? where id=?"
+      );
+      ps.setString(1, product.getName());
+      ps.setString(2, product.getDescrip());
+      ps.setInt(3, Integer.parseInt(product.getPrice()));
+      ps.setInt(4, Integer.parseInt(product.getId()));
+
+      ps.executeUpdate();
+
+      return product;
+    } catch (SQLException sqle) {
+      System.out.println("Error while updating warehouse");
+      sqle.printStackTrace();
+    }
+    return null;
   }
 
   public Boolean deleteProduct(String id) {
-    products.remove(id);
-    return true;
+    try {
+      PreparedStatement ps = connection.prepareStatement(
+              "delete from PRODUCT where id=?"
+      );
+      ps.setInt(1, Integer.parseInt(id));
+
+      return ps.executeUpdate() != 0;
+    } catch (SQLException sqle) {
+      System.out.println("Error while deleting product");
+      sqle.printStackTrace();
+    }
+    return null;
   }
   
   public ArrayList<ProductDetails> deleteProducts(ArrayList<String> ids) {
 
-    for (int i = 0; i < ids.size(); ++i) {
-      deleteProduct(ids.get(i));
+    for (String id : ids) {
+      deleteProduct(id);
     }
-    
     return getProductDetails();
   }
   
   public ArrayList<ProductDetails> getProductDetails() {
+
     ArrayList<ProductDetails> productDetails = new ArrayList<ProductDetails>();
-    
-    Iterator<String> it = products.keySet().iterator();
-    while(it.hasNext()) { 
-      Product product = products.get(it.next());          
-      productDetails.add(product.getLightWeightProduct());
+    try {
+      PreparedStatement ps = connection.prepareStatement(
+              "select *  from PRODUCTS"
+      );
+      ResultSet rs = ps.executeQuery();
+
+      while (rs.next()) {
+        Integer id = rs.getInt("id");
+        String name = rs.getString("name");
+        String description = rs.getString("description");
+        Integer price = rs.getInt("price");
+        Integer batchId = rs.getInt("batchId");
+
+        Batche batch = batchesService.getBatche(batchId.toString());
+        Product product = new Product(id.toString(), name, description, price.toString(), batch);
+        productDetails.add(
+                new ProductDetails(id.toString(), product.getFullDetails())
+        );
+      }
+    } catch (SQLException sqle) {
+      System.out.println("Database error while getting Warehouses");
+      sqle.printStackTrace();
     }
-    
     return productDetails;
   }
 
   public Product getProduct(String id) {
+    try {
+      PreparedStatement ps = connection.prepareStatement(
+              "select *  from PRODUCT where id=?"
+      );
+      ps.setString(1, id);
+      ResultSet rSet = ps.executeQuery();
+      while (rSet.next()) {
+        String name = rSet.getString("name");
+        String description = rSet.getString("description");
+        Integer price = rSet.getInt("price");
+        Integer batchId = rSet.getInt("batchId");
+
+        Batche batch = batchesService.getBatche(batchId.toString());
+
+        products.put(id, new Product(id.toString(), name, description, price.toString(), batch));
+      }
+    } catch (SQLException sqle) {
+      System.out.println("Database error while retrieving teacher");
+      sqle.printStackTrace();
+    }
     return products.get(id);
+
   }
 }
