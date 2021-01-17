@@ -2,10 +2,7 @@ package pt.isep.cms.shippingLocations.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 import pt.isep.cms.DBConnection.DBConnection;
@@ -65,24 +62,25 @@ public class ShippingLocationsServiceImpl extends RemoteServiceServlet implement
   public ShippingLocation addShippingLocation(ShippingLocation shippingLocation) {
     try {
       PreparedStatement ps = connection.prepareStatement(
-              "insert into SHIPPING_LOCATION values (null,?)"
+              "insert into SHIPPING_LOCATION values (null,?)", Statement.RETURN_GENERATED_KEYS
       );
       ps.setString(1, shippingLocation.getName());
       ps.executeUpdate();
       ResultSet rs_key = ps.getGeneratedKeys();
-
       List<String> warehouseList = Arrays.asList(shippingLocation.getWarehouses().split(","));
       Iterator iterator = warehouseList.iterator();
       while (iterator.hasNext()) {
+        System.out.println(iterator.next().toString());
         PreparedStatement ps2 = connection.prepareStatement(
                 "inset into WAREHOUSE_LOCATION values (null,?,?)"
         );
+
                 ps2.setString(1, iterator.next().toString());
                 ps2.setString(2, rs_key.getString(1));
       }
       return shippingLocation;
     } catch (SQLException sqle) {
-      System.out.println("Error while creating warehouse");
+      System.out.println("Error while creating shipping location");
       sqle.printStackTrace();
     }
     return null;

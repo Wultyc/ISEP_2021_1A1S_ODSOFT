@@ -21,6 +21,8 @@ public class EditShippingLocationPresenter implements Presenter {
 
 		HasValue<String> getName();
 
+		HasValue<String> getWarehouse();
+
 		void show();
 
 		void hide();
@@ -80,7 +82,7 @@ public class EditShippingLocationPresenter implements Presenter {
 
 	private void doSave() {
 		shippingLocation.setName(display.getName().getValue());
-		
+		shippingLocation.setWarehouses(display.getName().getValue());
 
 		if (shippingLocation.getId() == null) {
 			// Adding new shippingLocation
