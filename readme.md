@@ -207,8 +207,31 @@ O ficheiro Jenkins conta ainda ainda com a possibilidade de desativar a execuç�
 ## Organização das configurações das aplicações
 De modo a manter uma total sintonia no grupo face às configurações das diferentes aplicações, o grupo decidiu criar um ficheiro de [configurações](./configurations.md) para manter uma lista atualizada de todas as configurações necessárias para executar o projeto, desde as configurações básicas do Jenkins até às portas onde as aplicações finais estarão à escuta aguardando pedidos.
 
+## Persistência e novas funcionalidades
+Foram adicionados novos componentes ao projeto cms, que permitem guardar produtos, batches e localizações de envio de um armazém. Para isto foram adicionados os elementos da user interface que permitem fazer atualização, criação, listagem bem como apagar entradas referentes a cada entidade.
+
+Outra alteração foi a utilização de uma base de dados relacional ao invés da base de dados em memória previamente existente. O grupo decidiu utilizar mySql a implementar utilizando conteinerização. Para isto decidiram-se também os esquemas de cada entidade.
+
+Para a interligação entre a base de dados e o resto da aplicação foi criada (reaptada) uma camada de persistência.
+
 ## Documentação e Base de Dados
-Texto Aqui
+Relativamente à base de dados o requisito foi cumprido através da utilização de uma base de dados, utilizando uma imagem docker MySql. Um ficheiro docker compose está responsável por subir e descer a base de dados.
+
+### Adaptação do código
+
+Após a criação desta base de dados, foi necessário adaptar o código existente para adicionar esta camada de persistência, trocando a anteriormente exsitente (com dummy data em memória). 
+
+O código presente é consistente ao longo de todas as entidades existentes e baseia-se na utilização de uma classe que está responsável por fazer a conexão à Base de Dados (DBConnection) em que cada serviço vai utilizar essa conexão, com a utilização de drivers (JDBC) para aceder à pase de dados, através de prepared statements, nas classes de implementação de serviços de cada uma das entidades.
+
+Para manter os dados já previamente guardados na base de dados, utilizaram-se volumes no docker compose, para permitir manter os dados já persistidos quando o container é descido.
+
+### Documentação
+
+Relativamente à documentação necessária, foi gerado um PDF num dos passos da pipeline, este PDF é gerado automáticamente a partir do ficheiro readme.me (um ficheiro markdown). Este passo da pipeline utiliza o pandoc, um conersor de documentos, que neste caso faz a conversão do ficheiro em Markdown para PDF. Para além desta instalação também é necessário a instalação do Latex (em que especificamente é utilizado o PDFLatex), uma vez que este é utilizado pelo pandoc para fazer a conversão do ficheiro.
+
+O seguinte passo relativo a documentação é armazenamento e em um ficheiro ZIP dos reports de testes, ficheiro .war, entre outros artefactos gerados pelo jenkins ao longo da pipeline. Este passo é feito na mesma etapa de geração do ficheiro do PDF, em que todos estes ficheiros são copiados para um novo diretório, que é o dirtório que vai ser compactado originando o ficheiro ZIP suprarreferido.
+
+### 
 
 ## Code Quality e Integration Tests
 Texto Aqui
