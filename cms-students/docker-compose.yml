@@ -2,7 +2,7 @@ version: "3"
 services:
     #CMS Students
     cms:
-        image: mb1g1:${TAG}
+        image: cms:${TAG}
         build: .
         container_name: cms_students_app
         ports:
