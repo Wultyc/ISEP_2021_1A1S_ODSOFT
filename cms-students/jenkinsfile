@@ -251,8 +251,8 @@ pipeline {
 				}
 			}
 			steps{
-				runCmd("mkdir artifacts")
-				runCmd ("pandoc --verbose -V geometry:margin=1in -o artifacts/report.pdf readme.md")
+				runCmd("mkdir submissionsFiles")
+				runCmd ("pandoc --verbose -V geometry:margin=1in -o submissionsFiles/report.pdf readme.md")
 
 				echo "Generate Moodle Submission File"
 			}
