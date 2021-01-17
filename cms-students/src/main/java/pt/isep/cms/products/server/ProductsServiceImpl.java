@@ -10,6 +10,8 @@ import pt.isep.cms.batches.shared.Batche;
 import pt.isep.cms.products.client.ProductsService;
 import pt.isep.cms.products.shared.Product;
 import pt.isep.cms.products.shared.ProductDetails;
+import pt.isep.cms.batches.server.BatchesServiceImpl;
+import pt.isep.cms.batches.shared.Batche;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -61,7 +63,7 @@ public class ProductsServiceImpl extends RemoteServiceServlet implements
       ps.setString(1, product.getName());
       ps.setString(2, product.getDescrip());
       ps.setInt(3, Integer.parseInt(product.getPrice()));
-      ps.setInt(4, 1/*Integer.parseInt(product.getBatch().id)*/);
+      ps.setInt(4, Integer.parseInt(product.getBatch().id));
 
 
       ps.executeUpdate();

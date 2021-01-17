@@ -20,10 +20,12 @@ import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.ui.HasWidgets;
 
 import pt.isep.cms.products.client.view.ProductsDialog;
+import pt.isep.cms.batches.client.BatchesServiceAsync;
 
 public class ProductsController implements Presenter { // (ATB) No history at this level, ValueChangeHandler<String> {
 	private final HandlerManager eventBus;
 	private final ProductsServiceAsync rpcService;
+	private final BatchesServiceAsync batService;
 	private HasWidgets container;
 
 	public static interface CwConstants extends Constants {
@@ -38,6 +40,7 @@ public class ProductsController implements Presenter { // (ATB) No history at th
 	public ProductsController(ProductsServiceAsync rpcService, HandlerManager eventBus, ShowcaseConstants constants) {
 		this.eventBus = eventBus;
 		this.rpcService = rpcService;
+		this.batService = batService;
 		this.constants = constants;
 		this.globalConstants = constants;
 
@@ -75,13 +78,13 @@ public class ProductsController implements Presenter { // (ATB) No history at th
 
 	private void doAddNewProduct() {
 		// Lets use the presenter to display a dialog...
-		Presenter presenter = new EditProductPresenter(rpcService, eventBus, new ProductsDialog(globalConstants, ProductsDialog.Type.ADD));
+		Presenter presenter = new EditProductPresenter(rpcService, batService, eventBus, new ProductsDialog(globalConstants, ProductsDialog.Type.ADD));
 		presenter.go(container);
 
 	}
 
 	private void doEditProduct(String id) {
-		Presenter presenter = new EditProductPresenter(rpcService, eventBus, new ProductsDialog(globalConstants, ProductsDialog.Type.UPDATE), id);
+		Presenter presenter = new EditProductPresenter(rpcService, batService, eventBus, new ProductsDialog(globalConstants, ProductsDialog.Type.UPDATE), id);
 		presenter.go(container);
 	}
 
