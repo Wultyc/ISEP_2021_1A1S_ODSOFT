@@ -18,7 +18,7 @@ def gitRepo = 'bitbucket.org/1160929/odsoft-m1b_g1.git'
 def gitBranch = scm.branches[0].name
 
 //Project Tag
-def tag = "${gitBranch}-${BUILD_NUMBER}-${GIT_USERNAME}"
+def tag = "${gitBranch}-${BUILD_NUMBER}"
 
 //Project configs
 def cmsPath = 'cms-students'
@@ -229,7 +229,7 @@ pipeline {
         stage('Build & Run Docker Image') {
             steps {
                 dir(cmsPath) {
-                    runCmd("docker build -t cms:${tag}")
+                    runCmd("docker build -t cms:${tag}-${GIT_USERNAME}")
                     //runCmd("docker push mb1g1/cms:${tag}")
                     runCmd("docker-compose up")
 
@@ -349,12 +349,12 @@ pipeline {
     post {
         success {
             withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                sendTagToBitbucket(gitCred, gitRepo, "Success-${tag}");
+                sendTagToBitbucket(gitCred, gitRepo, "Success-${tag}-${GIT_USERNAME}");
             }
         }
         failure {
             withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                sendTagToBitbucket(gitCred, gitRepo, "Failed-${tag}");
+                sendTagToBitbucket(gitCred, gitRepo, "Failed-${tag}-${GIT_USERNAME}");
             }
 
             mail to: emailRecipient,
