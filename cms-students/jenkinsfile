@@ -26,7 +26,8 @@ def javadocPath = 'build/docs/javadoc/'
 //Tests configs
 def unitTestReport = 'build/reports/test'
 def unitTestResults = 'build/test-results/test'
-def integrationTestReport = 'build/reports/jacoco/jacocoIntegrationReport/html'
+def JintegrationTestReport = 'build/reports/jacoco/jacocoIntegrationReport/html'
+def integrationTestReport = 'build/reports/integrationTest'
 def integrationTestResults = 'build/test-results/integrationTest'
 def mutationTestResults = 'build/reports/pitest'
 
@@ -151,10 +152,12 @@ pipeline {
 									allowMissing         : false,
 									alwaysLinkToLastBuild: false,
 									keepAll              : false,
-									reportDir            : integrationTestReport,
+									reportDir            : JintegrationTestReport,
 									reportFiles          : 'index.html',
 									reportName           : 'Integration Test Coverage HTML Report',
 									reportTitles         : ''])
+									archiveArtifacts artifacts: 'JintegrationTestReport/index.html', followSymlinks: false
+									archiveArtifacts artifacts: 'integrationTestReport/index.html', followSymlinks: false
 						}
 					}
 				}
