@@ -13,11 +13,11 @@ public class Batche implements Serializable {
     public String descrip;
     public String manDate;
     public @Nullable
-    Warehouse warehouse;
+    String warehouse;
 	
 	public Batche() {}
 	
-	public Batche(String id, String name, String descrip, String manDate, Warehouse warehouse) {
+	public Batche(String id, String name, String descrip, String manDate, String warehouse) {
 		this.id = id;
 		this.name = name;
 		this.descrip = descrip;
@@ -38,7 +38,7 @@ public class Batche implements Serializable {
     public String getManDate() { return manDate; }
     public void setManDate(String manDate) { this.manDate = manDate; }
     public String getFullDetails() { return name + ": " + descrip; }
-    public Warehouse getWarehouse() { return warehouse; }
-    public void setWarehouse(Warehouse warehouse) { this.warehouse = warehouse; };
+    public String getWarehouse() { return warehouse; }
+    public void setWarehouse(String warehouse) { this.warehouse = warehouse; };
 
 }

@@ -49,7 +49,7 @@ public class BatchesServiceImpl extends RemoteServiceServlet implements
 
         Warehouse warehouse = warehousesService.getWarehouse(warehouseId.toString());
 
-        batches.put(id.toString(), new Batche(id.toString(), name, description, mandDate, warehouse));
+        batches.put(id.toString(), new Batche(id.toString(), name, description, mandDate, warehouseId.toString()));
       }
     } catch (SQLException sqle) {
       System.out.println("Database error while getting batch");
@@ -59,7 +59,6 @@ public class BatchesServiceImpl extends RemoteServiceServlet implements
   
   public Batche addBatche(Batche batche) {
     try {
-      System.out.println(batche.getName());
 
 
       PreparedStatement ps = connection.prepareStatement(
@@ -68,7 +67,7 @@ public class BatchesServiceImpl extends RemoteServiceServlet implements
       ps.setString(1, batche.getName());
       ps.setString(2, batche.getDescrip());
       ps.setString(3, batche.getManDate());
-      ps.setInt(4, Integer.parseInt(batche.getWarehouse().id));
+      ps.setInt(4, Integer.parseInt(batche.getWarehouse()));
 
       ps.executeUpdate();
 
@@ -139,7 +138,7 @@ public class BatchesServiceImpl extends RemoteServiceServlet implements
         String mandDate = rSet.getString("mandDate");
         Integer warehouseId = rSet.getInt("wareId");
 
-        Warehouse warehouse = warehousesService.getWarehouse(warehouseId.toString());
+        String warehouse = warehousesService.getWarehouse(warehouseId.toString()).getId();
 
         Batche batch = new Batche(id.toString(), name, description, mandDate, warehouse);
         batcheDetails.add(
@@ -166,7 +165,7 @@ public class BatchesServiceImpl extends RemoteServiceServlet implements
         String mandDate = rSet.getString("mandDate");
         Integer warehouseId = rSet.getInt("wareId");
 
-        Warehouse warehouse = warehousesService.getWarehouse(warehouseId.toString());
+        String warehouse = warehousesService.getWarehouse(warehouseId.toString()).getId();
 
         batches.put(id, new Batche(id.toString(), name, description, mandDate, warehouse));
       }

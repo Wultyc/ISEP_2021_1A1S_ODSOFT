@@ -46,23 +46,20 @@ public class EditBatchePresenter implements Presenter {
 
 	private Batche batche;
 	private final BatchesServiceAsync rpcService;
-	private final WarehousesServiceAsync warService;
 
 	private final HandlerManager eventBus;
 	private final Display display;
 
-	public EditBatchePresenter(BatchesServiceAsync rpcService, WarehousesServiceAsync warService, HandlerManager eventBus, Display display) {
+	public EditBatchePresenter(BatchesServiceAsync rpcService, HandlerManager eventBus, Display display) {
 		this.rpcService = rpcService;
-		this.warService = warService;
 		this.eventBus = eventBus;
 		this.batche = new Batche();
 		this.display = display;
 		bind();
 	}
 
-	public EditBatchePresenter(BatchesServiceAsync rpcService, WarehousesServiceAsync warService, HandlerManager eventBus, Display display, String id) {
+	public EditBatchePresenter(BatchesServiceAsync rpcService, HandlerManager eventBus, Display display, String id) {
 		this.rpcService = rpcService;
-		this.warService = warService;
 		this.eventBus = eventBus;
 		this.display = display;
 		bind();
@@ -105,22 +102,11 @@ public class EditBatchePresenter implements Presenter {
 	}
 
 	private void doSave() {
-
+			System.out.println("aqui");
 			batche.setName(display.getName().getValue());
 			batche.setDescrip(display.getDescrip().getValue());
 			batche.setManDate(display.getManDate().getValue());
-			warService.getWarehouse(display.getWarehouse().getValue(), new AsyncCallback<Warehouse>() {
-
-				public void onSuccess (Warehouse result) {
-					batche.setWarehouse(result);
-				}
-				public void onFailure (Throwable caught) {
-					Window.alert("Error adding batche: provide a valid WAREHOUSE ID");
-				}
-			});
-
-
-
+			batche.setWarehouse(display.getWarehouse().getValue());
 
 		// SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yy");
 		// String date = df2.format(display.getManDate().getValue());

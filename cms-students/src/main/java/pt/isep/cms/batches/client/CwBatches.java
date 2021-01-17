@@ -72,13 +72,12 @@ public class CwBatches extends ContentWidget {
 	public Widget onInitialize() {
 		// The service should be created on GWT module loading
 		BatchesServiceAsync rpcService = GWT.create(BatchesService.class);
-		WarehousesServiceAsync warService = GWT.create(WarehousesService.class);
 
 		// Should setup the Presenter Panel for the Batches....
 		VerticalPanel vPanel = new VerticalPanel();
 
 		HandlerManager eventBus = new HandlerManager(null);
-		BatchesController appViewer = new BatchesController(rpcService, warService, eventBus, this.globalConstants);
+		BatchesController appViewer = new BatchesController(rpcService, eventBus, this.globalConstants);
 		appViewer.go(vPanel);
 
 		// Return the panel

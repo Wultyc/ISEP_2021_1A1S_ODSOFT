@@ -19,9 +19,9 @@ import java.util.Properties;
 
 public class DBConnection extends RemoteServiceServlet {
     public Connection connection = null;
-    private String connString = "jdbc:mysql://localhost:3306/CMS_Students";
-    private String user = "application";
-    private String pass = "app_pw";
+    private String connString = "jdbc:mysql://mysql-odsoft.mysql.database.azure.com:3306/CMS_Students?useSSL=true&requireSSL=false&serverTimezone=UTC";
+    private String user = "application@mysql-odsoft";
+    private String pass = "odsoft_2021";
 
     public DBConnection() {
     }
