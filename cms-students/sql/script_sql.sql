@@ -41,9 +41,9 @@ name varchar(100),
 totalCapacity int,
     PRIMARY KEY (id)
                        );
-					   
+                       
 CREATE TABLE WAREHOUSE_LOCATION(
-id int,
+id int auto_increment,
 warehouseId int,
 locationId int,
 	FOREIGN KEY (warehouseId) REFERENCES WAREHOUSE(id),
