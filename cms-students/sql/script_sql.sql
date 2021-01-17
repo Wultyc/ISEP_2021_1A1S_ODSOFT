@@ -4,11 +4,17 @@ DROP TABLE PRODUCT;
 DROP TABLE SHIPPING_LOCATION;
 DROP TABLE WAREHOUSE;
 
+CREATE TABLE WAREHOUSE (
+    id int auto_increment,
+name varchar(100),
+totalCapacity int,
+    PRIMARY KEY (id)
+                       );
 CREATE TABLE BATCH (
     id int auto_increment,
 	name varchar(60),
 	description varchar(255),
-	mandDate DATE,
+	mandDate varchar(20),
 	wareId int,
     PRIMARY KEY (id),
 	FOREIGN KEY (wareId) REFERENCES WAREHOUSE(id)
@@ -35,13 +41,7 @@ CREATE TABLE SHIPPING_LOCATION (
 name varchar(100),
     PRIMARY KEY (id)
                                );
-CREATE TABLE WAREHOUSE (
-    id int auto_increment,
-name varchar(100),
-totalCapacity int,
-    PRIMARY KEY (id)
-                       );
-                       
+
 CREATE TABLE WAREHOUSE_LOCATION(
 id int auto_increment,
 warehouseId int,
