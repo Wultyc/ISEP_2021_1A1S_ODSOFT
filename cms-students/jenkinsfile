@@ -312,7 +312,7 @@ pipeline {
                     
                 }
 
-                zip zipFile: 'submission.zip', archive: false, dir: 'submissionsFiles'
+                //zip zipFile: 'submission.zip', archive: false, dir: 'submissionsFiles'
                 archiveArtifacts artifacts: 'test.zip', fingerprint: true
 				archiveArtifacts "submission.zip"
 				archiveArtifacts "submissionsFiles/report.pdf"
