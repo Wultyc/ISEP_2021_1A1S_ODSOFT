@@ -5,13 +5,13 @@ def isProd = findIfItsProd(scm.branches[0].name)
 //enable steps in dev
 def enable_cq_checkstyle = true
 def enable_cq_findbugs = true
-def enable_test_unit = false
-def enable_test_intg = false
+def enable_test_unit = true
+def enable_test_intg = true
 def enable_test_pitm = false
-def enable_test_acc_cucumber = true
-def enable_test_acc_selenium = true
+def enable_test_acc_cucumber = false
+def enable_test_acc_selenium = false
 def enable_send_email = false
-def enable_generate_pdf_and_zip = true
+def enable_generate_pdf_and_zip = false
 
 //Git configs 
 def gitCred = 'bitbucket-creds'
@@ -26,10 +26,15 @@ def cmsPath = 'cms-students'
 def warPath = 'build/libs/cms-students-1.0.war'
 def javadocPath = 'build/docs/javadoc/'
 
+
 //Tests configs
 def unitTestReport = 'build/reports/test'
 def unitTestResults = 'build/test-results/test'
+//def JintegrationTestReport = 'build/reports/jacoco/jacocoIntegrationReport/html'
+//def integrationTestReport = 'build/reports/integrationTest/index.html'
 def integrationTestResults = 'build/test-results/integrationTest'
+//def checkstyleReport = 'build/reports/checkstyle/main.html'
+//def findbugsReport = 'build/reports/findbugs/main.html'
 def mutationTestResults = 'build/reports/pitest'
 
 //Jenkins Archive
@@ -65,7 +70,7 @@ pipeline {
 			steps {
                 dir(cmsPath) {
                     script {
-                        runCmd('gradle war')
+                        runCmd('gradle clean war')
                     }
 
                     archiveArtifacts warPath
@@ -87,7 +92,7 @@ pipeline {
 		stage('Check Code Quality'){
 			failFast true
             parallel {
-                stage('FindBugs') {
+                stage('FindBugs + HTMLReport') {
 					when{
 						expression{
 							isToRunStage(isProd, enable_cq_findbugs)
@@ -95,9 +100,16 @@ pipeline {
 					}
                     steps{
                         echo "FindBugs"
+                        dir(cmsPath) {
+                        script {
+                        runCmd('gradle findbugsMain')
+                        }
+                        publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'build/reports/findbugs', reportFiles: 'main.html', reportName: 'Findbugs Report', reportTitles: ''])
+                        //archiveArtifacts findbugsReport
+                       }
                     }
                 }
-                stage('Checkstyle') {
+                stage('Checkstyle + HTMLReport') {
 					when{
 						expression{
 							isToRunStage(isProd, enable_cq_checkstyle)
@@ -105,10 +117,63 @@ pipeline {
 					}
                     steps{
                         echo "Checkstyle"
+                        dir(cmsPath) {
+                        script {
+                        runCmd('gradle checkstyleMain')
+                        }
+                        publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'build/reports/checkstyle', reportFiles: 'main.html', reportName: 'Checkstyle Report', reportTitles: ''])
+                        //archiveArtifacts checkstyleReport
+                  	  }
                     }
                 }
             }
         }
+        stage('Integration test') {
+					when{
+						expression{
+							isToRunStage(isProd, enable_test_intg)
+						}
+					}
+					steps {
+						dir(cmsPath) {
+							script {
+								runCmd('gradle integrationTest')
+								runCmd('gradle jacocoIntegrationReport')
+								// To show the contents on the log before publishing
+							}
+							jacoco buildOverBuild: true,
+									deltaBranchCoverage: '5',
+									deltaClassCoverage: '5',
+									deltaComplexityCoverage: '5',
+									deltaInstructionCoverage: '5',
+									deltaLineCoverage: '5',
+									deltaMethodCoverage: '5',
+									maximumBranchCoverage: '80',
+									maximumClassCoverage: '80',
+									maximumComplexityCoverage: '80',
+									maximumInstructionCoverage: '80',
+									maximumLineCoverage: '80',
+									maximumMethodCoverage: '80',
+									minimumBranchCoverage: '5',
+									minimumClassCoverage: '5',
+									minimumComplexityCoverage: '5',
+									minimumInstructionCoverage: '5',
+									minimumLineCoverage: '5',
+									minimumMethodCoverage: '5'
+							publishHTML([
+									allowMissing         : false,
+									alwaysLinkToLastBuild: false,
+									keepAll              : false,
+									reportDir            : JintegrationTestReport,
+									reportFiles          : 'index.html',
+									reportName           : 'Integration Test Coverage HTML Report',
+									reportTitles         : ''])
+									
+									//archiveArtifacts JintegrationTestReport/index.html
+									//archiveArtifacts integrationTestReport
+						}
+					}
+				}
 		stage('Run Tests'){
 			failFast true
             parallel {
@@ -136,7 +201,7 @@ pipeline {
 						}
 					}
 				}
-				stage('Integration test') {
+				/*stage('Integration test') {
 					when{
 						expression{
 							isToRunStage(isProd, enable_test_intg)
@@ -178,7 +243,7 @@ pipeline {
 									reportTitles         : ''])
 						}
 					}
-				}
+				}*/
 				stage('Mutation Test') {
 					when{
 						expression{

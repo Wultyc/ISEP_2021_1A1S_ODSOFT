@@ -27,6 +27,9 @@ repositories {
 
 configurations {
    moreLibs
+        cucumberRuntime {
+            extendsFrom testRuntime
+        }
 }
 
 dependencies {
@@ -36,6 +39,43 @@ dependencies {
 	//compile 'mysql:mysql-connector-java:6.0.5'
 	runtime 'mysql:mysql-connector-java:8.0.17'
 	compile 'com.puppycrawl.tools:checkstyle:8.27'
+
+        compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+
+    testCompile 'io.cucumber:cucumber-java:2.1.0'
+    testCompile 'io.cucumber:cucumber-junit:2.1.0'
+
+    testCompile 'junit:junit:4.12'
+
+    testCompile 'info.cukes:cucumber-junit:1.2.5'
+    testCompile 'info.cukes:cucumber-java:1.2.5'
+    // testCompile 'info.cukes:gherkin:2.12.2'
+
+    compile 'io.cucumber:cucumber-java:2.1.0'
+    // selenium
+    compile 'org.seleniumhq.selenium:selenium-java:3.7.1'
+    compile('org.seleniumhq.selenium:selenium-remote-driver:3.7.1')
+    compile('org.seleniumhq.selenium:selenium-server:3.7.1')
+    compile('org.seleniumhq.selenium:selenium-firefox-driver:3.7.1')
+
+    	//compile 'org.seleniumhq.selenium:selenium-server:2.+'
+    	//compile 'org.seleniumhq.selenium:firefox-driver:2.+'
+    	//compile 'org.seleniumhq.selenium:selenium-remote-driver:2.+'
+
+
+    // implementation module(":compile:1.0") {
+    //     dependency ":compile-transitive-1.0@jar"
+    //     dependency ":providedCompile-transitive:1.0@jar"
+    // }
+    // providedCompile "javax.servlet:servlet-api:2.5"
+    // providedCompile module(":providedCompile:1.0") {
+    //     dependency ":providedCompile-transitive:1.0@jar"
+    // }
+    // runtimeOnly ":runtime:1.0"
+    // providedRuntime ":providedRuntime:1.0@jar"
+    // testImplementation "junit:junit:4.13"
+    // moreLibs ":otherLib:1.0"
+
 }
 
 war {
@@ -207,7 +247,60 @@ tasks.withType(FindBugs) {
         html.enabled true
 		html.stylesheet resources.text.fromFile('config/xsl/checkstyle-simple-find-bugs.xsl')
     }
+
+
 }
+
+
+/**
+//Atenção !!! Cumcuber vs Selenium
+task cucumber() {
+    dependsOn assemble, compileTestJava
+    doLast {
+        javaexec {
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--glue', 'gradle.cucumber', 'src/test/java/features']
+            systemProperties = ['Headless': 'true' ]
+        }
+    }
+}
+
+task selenium() {
+    dependsOn assemble, compileTestJava
+    doLast {
+        javaexec {
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['src/test/java/features']
+            systemProperties = ['Headless': 'true' ]
+        }
+    }
+}
+**/
+task selenium() {
+    dependsOn assemble, compileTestJava
+    doLast {
+        javaexec {
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--glue', 'gradle.selenium', 'src/test/resources/gradle/selenium']
+            systemProperties = ['Headless': 'true' ]
+        }
+    }
+}
+
+
+task seleniumTest(type: Test) {
+    filter {
+        //include all tests from package
+        includeTestsMatching "gradle.selenium.*"
+    }
+}
+
+
+
+
 
 task deleteAppContainer(type: Exec) {
 	commandLine 'docker', 'container', 'rm', '-f', 'cms_students_app'
@@ -221,3 +314,4 @@ task cmsRun(type: Exec) {
 	commandLine 'docker-compose', 'up', '--build'
 }
 cmsRun.dependsOn(deleteContainers,clean,war)
+
