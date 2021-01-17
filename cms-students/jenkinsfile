@@ -18,6 +18,9 @@ def gitCred = 'bitbucket-creds'
 def gitRepo = 'bitbucket.org/1160929/odsoft-m1b_g1.git'
 def gitBranch = scm.branches[0].name
 
+//Project Tag
+def tag = "${gitBranch}-${BUILD_NUMBER}-${GIT_USERNAME}"
+
 //Project configs
 def cmsPath = 'cms-students'
 def warPath = 'build/libs/cms-students-1.0.war'
@@ -37,6 +40,10 @@ def jenkinsArchiveFolder = "archive"
 def artifactBuildPath = "build/libs/cms-students-1.0.war" 
 def artifactDeployPath = "/opt/tomcat/webapps/cms-students-sps.war" 
 def cmsHttp = 'http://127.0.0.1:8091/cms-students-sps/'
+
+//DB Settings
+def conString = "jdbc:mysql://localhost:3306/CMS_Students"
+def changelog = "./sql/db.changelog.sql"
 
 //Email
 def emailRecipient = '1150639@isep.ipp.pt,1160929@isep.ipp.pt,1161042@isep.ipp.pt,1191182@isep.ipp.pt'
@@ -278,41 +285,42 @@ pipeline {
 				archiveArtifacts "submissionsFiles/report.pdf"
 			}
 		}
-	    stage('Deploy to Production'){
-            parallel {
-                stage('Deploy contatainers') {
-					when{
-						expression{
-							isProd
-						}
-					}
-                    steps{
-                        echo "Deploy contatainers"
-                    }
-                }
-                stage('Update Database Schema') {
-					when{
-						expression{
-							isProd
-						}
-					}
-                    steps{
-                        echo "Update Database Schema"
-                    }
-                }
-            }
+		stage('Deploy contatainers') {
+			when{
+				expression{
+					isProd
+				}
+			}
+			steps{
+				dir(cmsPath) {
+					runCmd("docker-compose up -f docker-compose.prod.yml -e TAG=${tag}")
+				}
+			}
+		}
+		stage('Update Database Schema') {
+			when{
+				expression{
+					isProd
+				}
+			}
+			steps{
+				dir(cmsPath) {
+					runCmd("liquibase --url=${conString} --changeLogFile=${changelog} update")
+				}
+			}
+		}
         }
 	}
 	
 	post {
 		success {
 			withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-				sendTagToBitbucket(gitCred, gitRepo,"Success-${gitBranch}-Build-${BUILD_NUMBER}-${GIT_USERNAME}");
+				sendTagToBitbucket(gitCred, gitRepo,"Success-${tag}");
 			}
 		}
         failure {
 			withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-				sendTagToBitbucket(gitCred, gitRepo,"Failed-${gitBranch}-Build-${BUILD_NUMBER}-${GIT_USERNAME}");
+				sendTagToBitbucket(gitCred, gitRepo,"Failed-${tag}");
 			}
 
 			mail to: emailRecipient,
