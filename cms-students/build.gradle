@@ -34,7 +34,8 @@ dependencies {
  	testCompile 'org.easymock:easymock:2.5.2'
 	testCompile 'com.google.gwt:gwt-dev:2.8.1'
 	//compile 'mysql:mysql-connector-java:6.0.5'
-	runtime 'mysql:mysql-connector-java:8.0.17'
+	implementation 'mysql:mysql-connector-java:8.0.17'
+    implementation 'org.postgresql:postgresql:42.2.10'
 	compile 'com.puppycrawl.tools:checkstyle:8.27'
 }
 

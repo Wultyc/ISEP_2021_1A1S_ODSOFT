@@ -8,10 +8,23 @@ services:
           - 8080:8080
         networks:
           - default
+    #Postgres
+    db-postgres:
+      image: postgres
+      container_name: odsoft_postgres_db
+      restart: always
+      ports:
+        - "5432:5432"
+      environment:
+        POSTGRES_USER: application
+        POSTGRES_PASSWORD: app_pw
+        POSTGRES_DB: CMS_Students
+      networks:
+        - default
     #MySQL Service
-    db:
+    db-mysql:
         image: mysql:5.7.32
-        container_name: odsoft_db
+        container_name: odsoft_mysql_db
         restart: unless-stopped
         tty: true
         ports:
@@ -24,8 +37,9 @@ services:
         networks:
           - default
         volumes:
-           - odsoft_db_data:/var/lib/mysql
+           - odsoft_db_mysql_data:/var/lib/mysql
 volumes:
-    odsoft_db_data:
+    odsoft_db_mysql_data:
+    odsoft_db_postgres_data:
 networks:
     default:
