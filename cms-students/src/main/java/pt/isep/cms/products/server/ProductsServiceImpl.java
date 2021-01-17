@@ -161,7 +161,7 @@ public class ProductsServiceImpl extends RemoteServiceServlet implements
         products.put(id, new Product(id.toString(), name, description, price.toString(), batchId.toString()));
       }
     } catch (SQLException sqle) {
-      System.out.println("Database error while retrieving teacher");
+      System.out.println("Database error while retrieving Product");
       sqle.printStackTrace();
     }
     return products.get(id);

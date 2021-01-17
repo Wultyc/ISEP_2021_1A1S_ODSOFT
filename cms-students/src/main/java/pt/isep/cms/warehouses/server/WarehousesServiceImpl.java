@@ -147,7 +147,7 @@ public class WarehousesServiceImpl extends RemoteServiceServlet implements
         warehouses.put(id1.toString(), new Warehouse(id1.toString(), name, totalCap.toString()));
       }
     } catch (SQLException sqle) {
-      System.out.println("Database error while retrieving teacher");
+      System.out.println("Database error while retrieving Warehouse");
       sqle.printStackTrace();
     }
     return warehouses.get(id);
