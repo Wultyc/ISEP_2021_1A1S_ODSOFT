@@ -2,7 +2,7 @@ package pt.isep.cms.DBConnection;
 
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.mysql.cj.jdbc.MysqlDataSource;
+//import com.mysql.cj.jdbc.MysqlDataSource;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
