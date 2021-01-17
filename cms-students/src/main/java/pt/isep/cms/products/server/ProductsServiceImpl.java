@@ -45,9 +45,7 @@ public class ProductsServiceImpl extends RemoteServiceServlet implements
         Integer price = rSet.getInt("price");
         Integer batchId = rSet.getInt("batchId");
 
-        Batche batch = batchesService.getBatche(batchId.toString());
-
-        products.put(id.toString(), new Product(id.toString(), name, description, price.toString(), batch));
+        products.put(id.toString(), new Product(id.toString(), name, description, price.toString(), batchId.toString()));
       }
     } catch (SQLException sqle) {
       System.out.println("Database error while getting warehouses");
@@ -63,7 +61,7 @@ public class ProductsServiceImpl extends RemoteServiceServlet implements
       ps.setString(1, product.getName());
       ps.setString(2, product.getDescrip());
       ps.setInt(3, Integer.parseInt(product.getPrice()));
-      ps.setInt(4, Integer.parseInt(product.getBatch().id));
+      ps.setInt(4, Integer.parseInt(product.getBatch()));
 
 
       ps.executeUpdate();
@@ -136,7 +134,7 @@ public class ProductsServiceImpl extends RemoteServiceServlet implements
         Integer batchId = rs.getInt("batchId");
 
         Batche batch = batchesService.getBatche(batchId.toString());
-        Product product = new Product(id.toString(), name, description, price.toString(), batch);
+        Product product = new Product(id.toString(), name, description, price.toString(), batchId.toString());
         productDetails.add(
                 new ProductDetails(id.toString(), product.getFullDetails())
         );
@@ -160,10 +158,7 @@ public class ProductsServiceImpl extends RemoteServiceServlet implements
         String description = rSet.getString("description");
         Integer price = rSet.getInt("price");
         Integer batchId = rSet.getInt("batchId");
-
-        Batche batch = batchesService.getBatche(batchId.toString());
-
-        products.put(id, new Product(id.toString(), name, description, price.toString(), batch));
+        products.put(id, new Product(id.toString(), name, description, price.toString(), batchId.toString()));
       }
     } catch (SQLException sqle) {
       System.out.println("Database error while retrieving teacher");

@@ -40,23 +40,20 @@ public class EditProductPresenter implements Presenter {
 
 	private Product product;
 	private final ProductsServiceAsync rpcService;
-	private final BatchesServiceAsync batService;
-	
+
 	private final HandlerManager eventBus;
 	private final Display display;
 
-	public EditProductPresenter(ProductsServiceAsync rpcService, BatchesServiceAsync batService, HandlerManager eventBus, Display display) {
+	public EditProductPresenter(ProductsServiceAsync rpcService, HandlerManager eventBus, Display display) {
 		this.rpcService = rpcService;
-		this.batService = batService;
 		this.eventBus = eventBus;
 		this.product = new Product();
 		this.display = display;
 		bind();
 	}
 
-	public EditProductPresenter(ProductsServiceAsync rpcService, BatchesServiceAsync batService, HandlerManager eventBus, Display display, String id) {
+	public EditProductPresenter(ProductsServiceAsync rpcService, HandlerManager eventBus, Display display, String id) {
 		this.rpcService = rpcService;
-		this.batService = batService;
 		this.eventBus = eventBus;
 		this.display = display;
 		bind();
@@ -101,19 +98,11 @@ public class EditProductPresenter implements Presenter {
 	private void doSave() {
 		product.setName(display.getName().getValue());
 		product.setDescrip(display.getDescrip().getValue());
-		product.setPrice(display.getPrice().getValue());
-		batService.getBatch(display.getBatch().getValue(), new AsyncCallback<Batche>() {
+		product.setBatch(display.getBatch().getValue());
 
-			public void onSuccess (Batche result) {
-				product.setBatch(result);
-			}
-			public void onFailure (Throwable caught) {
-				Window.alert("Error adding batche: provide a valid WAREHOUSE ID");
-			}
-		});
-			
-			
+
 		if (product.getId() == null) {
+			product.setPrice(display.getPrice().getValue());
 			// Adding new product
 			rpcService.addProduct(product, new AsyncCallback<Product>() {
 				public void onSuccess(Product result) {

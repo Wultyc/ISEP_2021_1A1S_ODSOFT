@@ -12,11 +12,11 @@ public class Product implements Serializable {
     public String descrip;
     public String price;
     public @Nullable
-    Batche batch;
+    String batch;
 	
 	public Product() {}
 	
-	public Product(String id, String name, String descrip, String price, @Nullable Batche batch) {
+	public Product(String id, String name, String descrip, String price, @Nullable String batch) {
 		this.id = id;
 		this.name = name;
 		this.descrip = descrip;
@@ -38,6 +38,6 @@ public class Product implements Serializable {
     public String getPrice() { return price; }
     public void setPrice(String price) { this.price = price; }
     public String getFullDetails() { return name + ": " + descrip; }
-    public Batche getBatch() { return batch; }
-    public void setBatch(Batche batch) { this.batch = batch; }
+    public String getBatch() { return batch; }
+    public void setBatch(String batch) { this.batch = batch; }
 }
