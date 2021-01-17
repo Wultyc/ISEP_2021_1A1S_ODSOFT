@@ -4,14 +4,25 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.TextBox;
 import pt.isep.cms.batches.client.BatchesServiceAsync;
 import pt.isep.cms.batches.client.event.BatcheUpdatedEvent;
 import pt.isep.cms.batches.client.event.EditBatcheCancelledEvent;
 import pt.isep.cms.batches.shared.Batche;
+import pt.isep.cms.warehouses.client.WarehousesService;
+import pt.isep.cms.warehouses.client.WarehousesServiceAsync;
+import pt.isep.cms.warehouses.shared.Warehouse;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class EditBatchePresenter implements Presenter {
 	public interface Display {
@@ -25,6 +36,9 @@ public class EditBatchePresenter implements Presenter {
 
 		HasValue<String> getManDate();
 
+		HasValue<String> getWarehouse();
+
+
 		void show();
 
 		void hide();
@@ -32,6 +46,7 @@ public class EditBatchePresenter implements Presenter {
 
 	private Batche batche;
 	private final BatchesServiceAsync rpcService;
+
 	private final HandlerManager eventBus;
 	private final Display display;
 
@@ -54,7 +69,9 @@ public class EditBatchePresenter implements Presenter {
 				batche = result;
 				EditBatchePresenter.this.display.getName().setValue(batche.getName());
 				EditBatchePresenter.this.display.getDescrip().setValue(batche.getDescrip());
-				EditBatchePresenter.this.display.getManDate().setValue(batche.getManDate());
+				EditBatchePresenter.this.display.getManDate().setValue(batche.getManDate().toString());
+				EditBatchePresenter.this.display.getWarehouse().setValue(batche.getWarehouse().toString());
+
 			}
 
 			public void onFailure(Throwable caught) {
@@ -85,9 +102,15 @@ public class EditBatchePresenter implements Presenter {
 	}
 
 	private void doSave() {
-		batche.setName(display.getName().getValue());
-		batche.setDescrip(display.getDescrip().getValue());
-		batche.setManDate(display.getManDate().getValue());
+			System.out.println("aqui");
+			batche.setName(display.getName().getValue());
+			batche.setDescrip(display.getDescrip().getValue());
+			batche.setManDate(display.getManDate().getValue());
+			batche.setWarehouse(display.getWarehouse().getValue());
+
+		// SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yy");
+		// String date = df2.format(display.getManDate().getValue());
+
 
 		if (batche.getId() == null) {
 			// Adding new batche

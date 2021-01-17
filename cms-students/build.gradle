@@ -21,11 +21,6 @@ version = '1.0'
  
 repositories { 
 	mavenCentral() 
-
-    maven {
-        url 'https://dl.google.com/dl/android/maven2'
-    }
-
     flatDir { dirs "lib" }
     jcenter()
 }
@@ -41,7 +36,10 @@ dependencies {
  	testCompile 'junit:junit:4.12'
  	testCompile 'org.easymock:easymock:2.5.2'
 	testCompile 'com.google.gwt:gwt-dev:2.8.1'
+	//compile 'mysql:mysql-connector-java:6.0.5'
+	runtime 'mysql:mysql-connector-java:8.0.17'
 	compile 'com.puppycrawl.tools:checkstyle:8.27'
+
         compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
 
     testCompile 'io.cucumber:cucumber-java:2.1.0'
@@ -77,17 +75,22 @@ dependencies {
     // providedRuntime ":providedRuntime:1.0@jar"
     // testImplementation "junit:junit:4.13"
     // moreLibs ":otherLib:1.0"
+
 }
 
 war {
     from 'src/main' // adds a file-set to the root of the archive
     webInf { from 'src/main/webapp/WEB-INF' } // adds a file-set to the WEB-INF dir.
-    // classpath fileTree('additionalLibs') // adds a file-set to the WEB-INF/lib dir.
-    // classpath configurations.moreLibs // adds a configuration to the WEB-INF/lib dir.
     webXml = file('src/main/webapp/WEB-INF/web.xml') // copies a file to WEB-INF/web.xml
+    classpath fileTree('additionalLibs') // adds a file-set to the WEB-INF/lib dir.
+    classpath configurations.moreLibs // adds a configuration to the WEB-INF/lib dir.
     classpath configurations.compile
 }
 
+
+task renderPlantUml(type: RenderPlantUmlTask){
+	println "RenderPlantUml Executed! "
+}
 
 javadoc {
     source = sourceSets.main.allJava
@@ -95,10 +98,7 @@ javadoc {
     options.overview = "src/main/javadoc/overview.html" // relative to source root
     
 }
-
-task renderPlantUml(type: RenderPlantUmlTask){
-	println "RenderPlantUml Executed! "
-}
+javadoc.dependsOn(renderPlantUml)
 
 // If we woant to use the default ant build inside gradle
 // ant.importBuild "build.xml"
@@ -188,7 +188,6 @@ pitest {
 	outputFormats = ['XML','HTML']
 }
 
-javadoc.dependsOn(renderPlantUml)
 
 
 // Checkstyle
@@ -249,6 +248,7 @@ tasks.withType(FindBugs) {
 		html.stylesheet resources.text.fromFile('config/xsl/checkstyle-simple-find-bugs.xsl')
     }
 
+
 }
 
 
@@ -298,4 +298,20 @@ task seleniumTest(type: Test) {
     }
 }
 
+
+
+
+
+task deleteAppContainer(type: Exec) {
+	commandLine 'docker', 'container', 'rm', '-f', 'cms_students_app'
+}
+task deleteDBContainer(type: Exec) {
+	commandLine 'docker', 'container', 'rm', '-f', 'odsoft_db'
+}
+task deleteContainers() {}
+deleteContainers.dependsOn(deleteAppContainer,deleteDBContainer)
+task cmsRun(type: Exec) {
+	commandLine 'docker-compose', 'up', '--build'
+}
+cmsRun.dependsOn(deleteContainers,clean,war)
 

@@ -3,7 +3,6 @@ services:
     #CMS Students
     cms:
         image: mb1g1:${TAG}
-        build: .
         container_name: cms_students_app
         ports:
           - 8080:8080

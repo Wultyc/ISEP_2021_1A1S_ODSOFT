@@ -20,6 +20,7 @@ import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.ui.HasWidgets;
 
 import pt.isep.cms.products.client.view.ProductsDialog;
+import pt.isep.cms.batches.client.BatchesServiceAsync;
 
 public class ProductsController implements Presenter { // (ATB) No history at this level, ValueChangeHandler<String> {
 	private final HandlerManager eventBus;

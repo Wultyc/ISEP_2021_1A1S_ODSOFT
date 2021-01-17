@@ -8,10 +8,16 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.TextBox;
 import pt.isep.cms.products.client.ProductsServiceAsync;
 import pt.isep.cms.products.client.event.ProductUpdatedEvent;
 import pt.isep.cms.products.client.event.EditProductCancelledEvent;
 import pt.isep.cms.products.shared.Product;
+import pt.isep.cms.batches.client.BatchesService;
+import pt.isep.cms.batches.client.BatchesServiceAsync;
+import pt.isep.cms.batches.shared.Batche;
+
+import java.util.Locale;
 
 public class EditProductPresenter implements Presenter {
 	public interface Display {
@@ -24,6 +30,8 @@ public class EditProductPresenter implements Presenter {
 		HasValue<String> getDescrip();
 
 		HasValue<String> getPrice();
+		
+		HasValue<String> getBatch();
 
 		void show();
 
@@ -32,6 +40,7 @@ public class EditProductPresenter implements Presenter {
 
 	private Product product;
 	private final ProductsServiceAsync rpcService;
+
 	private final HandlerManager eventBus;
 	private final Display display;
 
@@ -55,6 +64,8 @@ public class EditProductPresenter implements Presenter {
 				EditProductPresenter.this.display.getName().setValue(product.getName());
 				EditProductPresenter.this.display.getDescrip().setValue(product.getDescrip());
 				EditProductPresenter.this.display.getPrice().setValue(product.getPrice());
+				EditProductPresenter.this.display.getBatch().setValue(product.getBatch().toString());
+
 			}
 
 			public void onFailure(Throwable caught) {
@@ -87,9 +98,11 @@ public class EditProductPresenter implements Presenter {
 	private void doSave() {
 		product.setName(display.getName().getValue());
 		product.setDescrip(display.getDescrip().getValue());
-		product.setPrice(display.getPrice().getValue());
+		product.setBatch(display.getBatch().getValue());
+
 
 		if (product.getId() == null) {
+			product.setPrice(display.getPrice().getValue());
 			// Adding new product
 			rpcService.addProduct(product, new AsyncCallback<Product>() {
 				public void onSuccess(Product result) {

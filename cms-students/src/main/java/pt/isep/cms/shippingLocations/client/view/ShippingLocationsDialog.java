@@ -74,6 +74,7 @@ public class ShippingLocationsDialog implements EditShippingLocationPresenter.Di
 
 	// Widgets
 	private final TextBox name;
+	private final TextBox warehouses;
 	private final FlexTable detailsTable;
 	private final Button saveButton;
 	private final Button cancelButton;
@@ -81,7 +82,11 @@ public class ShippingLocationsDialog implements EditShippingLocationPresenter.Di
 	private void initDetailsTable() {
 		detailsTable.setWidget(0, 0, new Label("ShippingLocation Name"));
 		detailsTable.setWidget(0, 1, name);
+		detailsTable.setWidget(1, 0, new Label("Warehouse Id"));
+		detailsTable.setWidget(1, 1, warehouses);
 		name.setFocus(true);
+		warehouses.setFocus(true);
+
 	}
 
 	DecoratorPanel contentDetailsDecorator;
@@ -115,6 +120,7 @@ public class ShippingLocationsDialog implements EditShippingLocationPresenter.Di
 		detailsTable.addStyleName("shippingLocations-ListContainer");
 		detailsTable.getColumnFormatter().addStyleName(1, "add-shippingLocation-input");
 		name = new TextBox();
+		warehouses = new TextBox();
 		
 		initDetailsTable();
 		contentDetailsPanel.add(detailsTable);
@@ -166,6 +172,13 @@ public class ShippingLocationsDialog implements EditShippingLocationPresenter.Di
 	public HasValue<String> getName() {
 		// TODO Auto-generated method stub
 		return name;
+		// return null;
+	}
+
+	@Override
+	public HasValue<String> getWarehouse() {
+		// TODO Auto-generated method stub
+		return warehouses;
 		// return null;
 	}
 
