@@ -59,7 +59,7 @@ pipeline {
                 	credentialsId: gitCred
             }
         }
-	   /* stage('Build War file') {
+	    stage('Build War file') {
 			steps {
                 dir(cmsPath) {
                     script {
@@ -69,8 +69,8 @@ pipeline {
                     archiveArtifacts warPath
                 }
             }
-        }*/
-	   /* stage('Javadoc') {
+        }
+	    stage('Javadoc') {
 			steps {
                 dir(cmsPath) {
                     script {
@@ -81,7 +81,7 @@ pipeline {
                             keepAll: false
                 }
             }
-        }*/
+        }
 		stage('Check Code Quality'){
 			failFast true
             parallel {
