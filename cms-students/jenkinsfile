@@ -3,9 +3,9 @@
 def isProd = findIfItsProd(scm.branches[0].name)
 
 //enable steps in dev
-def enable_cq_checkstyle = true
-def enable_cq_findbugs = true
-def enable_test_unit = true
+def enable_cq_checkstyle = false
+def enable_cq_findbugs = false
+def enable_test_unit = false
 def enable_test_intg = true
 def enable_test_pitm = false
 def enable_test_acc_cucumber = false
@@ -27,7 +27,7 @@ def javadocPath = 'build/docs/javadoc/'
 //Tests configs
 def unitTestReport = 'build/reports/test'
 def unitTestResults = 'build/test-results/test'
-def JintegrationTestReport = 'build/reports/jacoco/jacocoIntegrationReport/html/index.html'
+def JintegrationTestReport = 'build/reports/jacoco/jacocoIntegrationReport/html'
 def integrationTestReport = 'build/reports/integrationTest/index.html'
 def integrationTestResults = 'build/test-results/integrationTest'
 def checkstyleReport = 'build/reports/checkstyle/main.html'
@@ -162,7 +162,7 @@ pipeline {
 									reportName           : 'Integration Test Coverage HTML Report',
 									reportTitles         : ''])
 									
-									archiveArtifacts JintegrationTestReport
+									//archiveArtifacts JintegrationTestReport/index.html
 									archiveArtifacts integrationTestReport
 						}
 					}
