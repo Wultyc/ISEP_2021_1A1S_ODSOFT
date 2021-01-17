@@ -132,52 +132,6 @@ pipeline {
                 }
             }
         }
-        stage('Integration test') {
-            when {
-                expression {
-                    isToRunStage(isProd, enable_test_intg)
-                }
-            }
-            steps {
-                dir(cmsPath) {
-                    script {
-                        runCmd('gradle integrationTest')
-                        runCmd('gradle jacocoIntegrationReport')
-                        // To show the contents on the log before publishing
-                    }
-                    jacoco buildOverBuild: true,
-                            deltaBranchCoverage: '5',
-                            deltaClassCoverage: '5',
-                            deltaComplexityCoverage: '5',
-                            deltaInstructionCoverage: '5',
-                            deltaLineCoverage: '5',
-                            deltaMethodCoverage: '5',
-                            maximumBranchCoverage: '80',
-                            maximumClassCoverage: '80',
-                            maximumComplexityCoverage: '80',
-                            maximumInstructionCoverage: '80',
-                            maximumLineCoverage: '80',
-                            maximumMethodCoverage: '80',
-                            minimumBranchCoverage: '5',
-                            minimumClassCoverage: '5',
-                            minimumComplexityCoverage: '5',
-                            minimumInstructionCoverage: '5',
-                            minimumLineCoverage: '5',
-                            minimumMethodCoverage: '5'
-                    publishHTML([
-                            allowMissing         : false,
-                            alwaysLinkToLastBuild: false,
-                            keepAll              : false,
-                            reportDir            : JintegrationTestReport,
-                            reportFiles          : 'index.html',
-                            reportName           : 'Integration Test Coverage HTML Report',
-                            reportTitles         : ''])
-
-                    //archiveArtifacts JintegrationTestReport/index.html
-                    //archiveArtifacts integrationTestReport
-                }
-            }
-        }
         stage('Run Tests') {
             failFast true
             parallel {
@@ -333,17 +287,40 @@ pipeline {
             }
         }
         stage('Generate PDF Report and Moodle Submission File') {
-            when {
-                expression {
-                    isToRunStage(isProd, enable_generate_pdf_and_zip)
-                }
-            }
-            steps {
-                echo "Generate PDF Report"
-                echo "Generate Moodle Submission File"
-            }
-        }
-        stage('Deploy contatainers') {
+			when{
+				expression{
+					isToRunStage(isProd, enable_generate_pdf_and_zip)
+				}
+			}
+			steps{
+				runCmd("mkdir submissionsFiles")
+				runCmd ("pandoc --verbose -V geometry:margin=1in -o submissionsFiles/report.pdf readme.md")
+
+				if(isUnix()){
+						sh 'cp -vr cms-students/build/reports ./submissionsFiles/reports'
+						sh 'cp -v cms-students/jenkinsfile ./submissionsFiles'
+						sh 'cp -vr cms-students/build/libs/cms-students-1.0.war ./submissionsFiles'
+						sh 'cp -vr cms-students/build/docs/javadoc ./submissionsFiles/javadoc'
+						sh 'cp -vr cms-students/build/docs/test-results ./submissionsFiles/test-results'
+
+
+					} else {
+						bat 'Xcopy /E /I /Y cms-students\\build\\reports .\\submissionsFiles\\reports'
+						bat 'copy /Y cms-students\\jenkinsfile .\\submissionsFiles'
+						bat 'copy /Y cms-students\\build\\libs\\cms-students-1.0.war .\\submissionsFiles'
+						bat 'Xcopy /E /I /Y cms-students\\build\\docs\\javadoc .\\submissionsFiles\\javadoc'
+						bat 'Xcopy /E /I /Y cms-students\\build\\test-results .\\submissionsFiles\\tests-results'
+						
+
+					}
+
+				zip archive: true, dir: 'submissionsFiles', zipFile: 'submission.zip'
+
+				archiveArtifacts "submission.zip"
+				archiveArtifacts "submissionsFiles/report.pdf"
+			}
+		}
+		stage('Deploy contatainers') {
             when {
                 expression {
                     isProd
@@ -367,6 +344,7 @@ pipeline {
                 }
             }
         }
+        
     }
     post {
         success {

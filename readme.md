@@ -207,11 +207,181 @@ O ficheiro Jenkins conta ainda ainda com a possibilidade de desativar a execuç�
 ## Organização das configurações das aplicações
 De modo a manter uma total sintonia no grupo face às configurações das diferentes aplicações, o grupo decidiu criar um ficheiro de [configurações](./configurations.md) para manter uma lista atualizada de todas as configurações necessárias para executar o projeto, desde as configurações básicas do Jenkins até às portas onde as aplicações finais estarão à escuta aguardando pedidos.
 
+## Persistência e novas funcionalidades
+Foram adicionados novos componentes ao projeto cms, que permitem guardar produtos, batches e localizações de envio de um armazém. Para isto foram adicionados os elementos da user interface que permitem fazer atualização, criação, listagem bem como apagar entradas referentes a cada entidade.
+
+Outra alteração foi a utilização de uma base de dados relacional ao invés da base de dados em memória previamente existente. O grupo decidiu utilizar mySql a implementar utilizando conteinerização. Para isto decidiram-se também os esquemas de cada entidade.
+
+Para a interligação entre a base de dados e o resto da aplicação foi criada (reaptada) uma camada de persistência.
+
 ## Documentação e Base de Dados
-Texto Aqui
+Relativamente à base de dados o requisito foi cumprido através da utilização de uma base de dados, utilizando uma imagem docker MySql. Um ficheiro docker compose está responsável por subir e descer a base de dados.
+
+### Adaptação do código
+
+Após a criação desta base de dados, foi necessário adaptar o código existente para adicionar esta camada de persistência, trocando a anteriormente exsitente (com dummy data em memória). 
+
+O código presente é consistente ao longo de todas as entidades existentes e baseia-se na utilização de uma classe que está responsável por fazer a conexão à Base de Dados (DBConnection) em que cada serviço vai utilizar essa conexão, com a utilização de drivers (JDBC) para aceder à pase de dados, através de prepared statements, nas classes de implementação de serviços de cada uma das entidades.
+
+Para manter os dados já previamente guardados na base de dados, utilizaram-se volumes no docker compose, para permitir manter os dados já persistidos quando o container é descido.
+
+### Documentação
+
+Relativamente à documentação necessária, foi gerado um PDF num dos passos da pipeline, este PDF é gerado automáticamente a partir do ficheiro readme.me (um ficheiro markdown). Este passo da pipeline utiliza o pandoc, um conersor de documentos, que neste caso faz a conversão do ficheiro em Markdown para PDF. Para além desta instalação também é necessário a instalação do Latex (em que especificamente é utilizado o PDFLatex), uma vez que este é utilizado pelo pandoc para fazer a conversão do ficheiro.
+
+O seguinte passo relativo a documentação é armazenamento e em um ficheiro ZIP dos reports de testes, ficheiro .war, entre outros artefactos gerados pelo jenkins ao longo da pipeline. Este passo é feito na mesma etapa de geração do ficheiro do PDF, em que todos estes ficheiros são copiados para um novo diretório, que é o dirtório que vai ser compactado originando o ficheiro ZIP suprarreferido.
+
+### 
 
 ## Code Quality e Integration Tests
-Texto Aqui
+
+
+
+# 2.3 Code Quality and Integration Tests
+
+### "CheckStyle" Plugin
+
+O Checkstyle plugin realiza verificações de qualidade nos ficheiros de origem Java do projeto usando Checkstyle e gera relatórios dessas verificações.
+Para este projeto, decidimos usar o plugin checkstyle das ferramentas "puppycrawl".
+#### Como usar?
+Para integrar este plugin no projeto GWT foi necessário introduzir no ficheiro build.gradle:
+
+
+1. Introduzir o plugins do checkstyle ID 
+
+
+   > id "checkstyle"
+    
+2. Adicionar a dependência do checkstyle na secção
+
+
+   > compile 'com.puppycrawl.tools:checkstyle:8.27'
+    
+3. Adicionar umas configurações relativas ao checkstyle
+     
+   > checkstyle {
+    
+   >     configFile = rootProject.file('config/checkstyle/checkstyle.xml') //root do config file do checkstyle
+        
+   >     toolVersion = '8.27' //versão usada
+        
+   >     checkstyleTest.enabled = true // permite que faça análise às classes de teste
+        
+   >     showViolations = false //caso seja necessário mostrar validação, mudar para true
+        
+   >     sourceSets = [] // fonte se necessário
+   > }
+   
+   > //executa o checkstyle nos arquivos de origem Java de produção
+   
+   > checkstyleMain {
+   
+   >     source ='src/main/java'
+   
+   > }
+   
+   > //executa o checkstyle nos arquivos de origem Java de teste
+   
+   > checkstyleTest {
+   
+   >     source ='src/test/java'
+   
+   > }
+
+
+4. Adicionar a task do Checkstyle
+   
+   > tasks.withType(Checkstyle) {
+    
+   >     reports {
+        
+   >         xml.enabled true //permite gerar relatório xml
+            
+   >         html.enabled true //permite gerar relatório HTML
+            
+   >         html.stylesheet resources.text.fromFile('config/xsl/checkstyle-simple-check-style.xsl') //root do stylesheet do checkstyle
+            
+   >     }
+        
+   >     // retirado de https://bit.ly/34Hj1gT
+        
+   >     def maxWarnings = 7500 //máx de avisos que permite
+        
+   >     doLast {
+        
+   >         reports.all { report ->
+            
+   >             def outputFile = report.destination //destino do relatório
+                
+   >             //verificar numero de avisos ("erros")
+                
+   >             if (outputFile.exists()) {
+                
+   >                 def count = outputFile.text.count("<error ")
+                    
+   >                 if (count > maxWarnings) {
+                    
+   >                     throw new GradleException("[Threshold=$maxWarnings] There were $count checkstyle warnings! Check $outputFile")
+                        
+   >                 }
+                    
+   >             }
+                
+   >         }
+            
+   >     }
+        
+   > }
+    
+
+    
+### "FindBugs" Plugin
+
+O Findbugs plugin realiza também verificações de qualidade nos ficheiros de origem Java do projeto usando FindBugs e gera relatórios dessas verificações.
+Para este projeto, decidimos usar o plugin checkstyle das ferramentas "puppycrawl".
+#### Como usar?
+Para integrar este plugin no projeto GWT foi necessário introduzir no ficheiro build.gradle:
+
+
+1. Introduzir o plugins do findbugs ID 
+
+
+   > id "findbugs"
+    
+2. Adicionar umas configurações relativas ao findbugs
+
+   > findbugs {
+    
+   >     ignoreFailures = true // permite que a build continue se houver avisos
+        
+   >     toolVersion = '3.0.1' //versão usada
+        
+   >     excludeFilter = file("config/findbugs/excludeFilter.xml") //caminho do ficheiro que específica os bugs a serem excluídos do relatório
+    
+   >     effort = "max" //nível de esforço de análise. max->aumenta a precisão e encontra mais bugs, demorando mais tempo de execução e mais consumo de memória
+        
+   >     reportLevel  = "low" //específica o limite de confiança/prioridade para relatar problemas. low ->a confiança não é usada para filtrar bugs
+        
+   >     sourceSets = [] // fonte se necessário para a tarefa check e build
+   
+   > }
+
+
+4. Adicionar a task do FindBugs
+
+   > tasks.withType(FindBugs) {
+    
+   >     reports {
+        
+   >         xml.enabled false //permite gerar relatório xml se tiver true
+            
+   >         html.enabled true //permite gerar relatório HTML, apenas um (ou xml ou html) pode estar enabled pois entra em conflito
+            
+   >         html.stylesheet resources.text.fromFile('config/xsl/checkstyle-simple-find-bugs.xsl') //root do stylesheet do findbugs
+            
+   >     }
+        
+   > }
 
 ## Funtional e Smoke Tests
 Texto Aqui
