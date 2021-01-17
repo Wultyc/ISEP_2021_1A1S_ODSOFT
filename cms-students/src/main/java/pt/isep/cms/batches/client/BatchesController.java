@@ -20,6 +20,8 @@ import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.ui.HasWidgets;
 
 import pt.isep.cms.batches.client.view.BatchesDialog;
+import pt.isep.cms.warehouses.client.WarehousesService;
+import pt.isep.cms.warehouses.client.WarehousesServiceAsync;
 
 public class BatchesController implements Presenter { // (ATB) No history at this level, ValueChangeHandler<String> {
 	private final HandlerManager eventBus;

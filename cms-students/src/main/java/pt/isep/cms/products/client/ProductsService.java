@@ -13,7 +13,7 @@ public interface ProductsService extends RemoteService {
 	
   Product addProduct(Product product);
   Boolean deleteProduct(String id); 
-  ArrayList<ProductDetails> deleteProducts(ArrayList<String> ids);
+  ArrayList<pt.isep.cms.products.shared.ProductDetails> deleteProducts(ArrayList<String> ids);
   ArrayList<ProductDetails> getProductDetails();
   Product getProduct(String id);
   Product updateProduct(Product product);

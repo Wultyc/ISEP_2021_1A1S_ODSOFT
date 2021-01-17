@@ -206,3 +206,15 @@ O ficheiro Jenkins conta ainda ainda com a possibilidade de desativar a execuç�
 
 ## Organização das configurações das aplicações
 De modo a manter uma total sintonia no grupo face às configurações das diferentes aplicações, o grupo decidiu criar um ficheiro de [configurações](./configurations.md) para manter uma lista atualizada de todas as configurações necessárias para executar o projeto, desde as configurações básicas do Jenkins até às portas onde as aplicações finais estarão à escuta aguardando pedidos.
+
+## Documentação e Base de Dados
+Texto Aqui
+
+## Code Quality e Integration Tests
+Texto Aqui
+
+## Funtional e Smoke Tests
+Texto Aqui
+
+## Continuous Deployment
+Texto Aqui

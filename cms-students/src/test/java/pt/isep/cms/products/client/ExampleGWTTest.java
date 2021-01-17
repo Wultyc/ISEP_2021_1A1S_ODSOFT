@@ -7,6 +7,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 
 
+import pt.isep.cms.batches.shared.Batche;
 import pt.isep.cms.products.client.ProductsService;
 import pt.isep.cms.products.client.ProductsServiceAsync;
 import pt.isep.cms.products.client.presenter.ProductsPresenter;
@@ -79,89 +80,5 @@ public class ExampleGWTTest extends GWTTestCase {
 		});
 	}
 	
-/*	public void testUpdateProduct() {
-		// Create the service that we will test.
-				ProductsServiceAsync productsService = GWT.create(ProductsService.class);
-				ServiceDefTarget target = (ServiceDefTarget) productsService;
-				target.setServiceEntryPoint(GWT.getModuleBaseURL() + "products/productsService");
 
-				// Since RPC calls are asynchronous, we will need to wait for a response
-				// after this test method returns. This line tells the test runner to wait
-				// up to 10 seconds before timing out.
-				delayTestFinish(10000);
-
-				// fail("Ainda nao implementado");
-		
-				// Post a warehouse
-				productsService.addProduct(new Product(null, "ProdutoX", "excelente", "500"), new AsyncCallback<Product>() {
-					public void onFailure(Throwable caught) {
-						// The request resulted in an unexpected error.
-						fail("Request failure: " + caught.getMessage());
-					}
-
-					public void onSuccess(Product result) {
-						assertTrue(result != null);
-						// Get warehouse by id
-						productsService.getProduct("2", new AsyncCallback<Product>() {
-							public void onFailure(Throwable caught) {
-								// The request resulted in an unexpected error.
-								fail("Request failure: " + caught.getMessage());
-							}
-
-							public void onSuccess(Product result) {
-								// change warehouse attributes
-								
-								result.setName("Prod1");
-								result.setDescrip("mtBom");
-								result.setPrice("20");
-								
-	
-								// put (update product)
-								productsService.updateProduct(result, new AsyncCallback<Product>() {
-									public void onFailure(Throwable caught) {
-										// The request resulted in an unexpected error.
-										fail("Request failure: " + caught.getMessage());
-									}
-
-									public void onSuccess(Product result) {
-										// just ensure the update was successful
-										assertTrue(result != null);
-
-										// get again to check if update worked
-										productsService.getProduct(result.getId(), new AsyncCallback<Product>() {
-											public void onFailure(Throwable caught) {
-												// The request resulted in an unexpected error.
-												fail("Request failure: " + caught.getMessage());
-											}
-
-											public void onSuccess(Product result) {
-												assertTrue(result != null);
-												// checking if changes are equal to expected
-												assertEquals("Prod1", result.getName());
-												assertEquals("mtBom", result.getDescrip());
-												assertEquals("20", result.getPrice());
-												
-												
-												productsService.deleteProduct(result.getId(), new AsyncCallback<Boolean>() {
-													public void onFailure(Throwable caught) {
-														// The request resulted in an unexpected error.
-														fail("Request failure: " + caught.getMessage());
-													}
-													public void onSuccess(Boolean result) {
-														assertTrue(result);
-														// Now that we have received a response, we need to tell the test runner
-														// that the test is complete. You must call finishTest() after an
-														// asynchronous test finishes successfully, or the test will time out.
-														finishTest();
-													}
-												});
-											}
-										});
-									}
-								});
-							}
-						});
-					}
-				});
-	}*/
 }

@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import pt.isep.cms.batches.shared.Batche;
 
 /**
  * Dialog Box for Adding and Updating Products.
@@ -76,6 +77,7 @@ public class ProductsDialog implements EditProductPresenter.Display {
 	private final TextBox name;
 	private final TextBox descrip;
 	private final TextBox price;
+	private final TextBox batche;
 	private final FlexTable detailsTable;
 	private final Button saveButton;
 	private final Button cancelButton;
@@ -87,6 +89,8 @@ public class ProductsDialog implements EditProductPresenter.Display {
 		detailsTable.setWidget(1, 1, descrip);
 		detailsTable.setWidget(2, 0, new Label("Price"));
 		detailsTable.setWidget(2, 1, price);
+		detailsTable.setWidget(3, 0, new Label("Batch"));
+		detailsTable.setWidget(3, 1, batche);
 		name.setFocus(true);
 	}
 
@@ -123,6 +127,7 @@ public class ProductsDialog implements EditProductPresenter.Display {
 		name = new TextBox();
 		descrip = new TextBox();
 		price = new TextBox();
+		batche = new TextBox();
 		initDetailsTable();
 		contentDetailsPanel.add(detailsTable);
 
@@ -187,6 +192,13 @@ public class ProductsDialog implements EditProductPresenter.Display {
 	public HasValue<String> getPrice() {
 		// TODO Auto-generated method stub
 		return price;
+		// return null;
+	}
+	
+	@Override
+	public HasValue <String> getBatch() {
+		// TODO Auto-generated method stub
+		return batche;
 		// return null;
 	}
 

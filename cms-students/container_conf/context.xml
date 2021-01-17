@@ -1,0 +1,15 @@
+<Context>
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+    <WatchedResource>WEB-INF/tomcat-web.xml</WatchedResource>
+    <WatchedResource>${catalina.base}/conf/web.xml</WatchedResource>
+
+	<Resource
+		name="jdbc/CMS_Students"
+		type="javax.sql.DataSource"
+		auth="Container"
+		username="application"
+		password="app_pw"
+		driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://db:3306/CMS_Students?autoReconnect=true">
+	</Resource>
+</Context>
