@@ -387,11 +387,10 @@ Para integrar este plugin no projeto GWT foi necessário introduzir no ficheiro 
 Texto Aqui
 
 ## Continuous Deployment
-Texto Aqui
+O continuos deployment esta assente em docker compose. Foi criado um ficheiro especifico para a simulação do do ambiente de produção que apenas é executado quando a branch sobre a qual a pipeline esta a correr é Master. Para o update do schema da base de dados foi usado o liquibase. Inicialmente pensou-se em executar estes passos em paralelo no entanto o grupo decidiu que a base de dados e a aplicação deveria ser subidos simultaneamente. Deste modo consegue-se reutilizar a solução do docker compose.
 
 
-##
-Maturity Model
+## Maturity Model
 
 1. Maturity Level: Build Management and Continuous Integration
 Level:0
