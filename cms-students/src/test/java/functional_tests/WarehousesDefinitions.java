@@ -40,7 +40,7 @@ public class WarehousesDefinitions implements SeleniumCucumber {
 
 	@When("^I click to add Warehouse$")
 	public void click_to_add_Warehouse()  {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
 		driver.findElement(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[1]/td/table/tbody/tr/td[1]/button")).click();
 	}
 
@@ -48,21 +48,21 @@ public class WarehousesDefinitions implements SeleniumCucumber {
 	//Total Capacity
 	@And("^I fill the Warehouse fields$")
 	public void fill_Warehouse_fields() {
-		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
 		driver.findElement(By.xpath("/html/body/div[6]/div/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td[2]/div/table/tbody/tr[1]/td/table/tbody/tr[1]/td[2]/input")).sendKeys("Warehouse_X_Testing");
 		driver.findElement(By.xpath("/html/body/div[6]/div/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td[2]/div/table/tbody/tr[1]/td/table/tbody/tr[2]/td[2]/input")).sendKeys("Capacity_Y_Testing");
 	}
 
 	@And("^I click to save Warehouse$")
 	public void click_to_save_Warehouse() {
-		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
 		driver.findElement(By.xpath("/html/body/div[6]/div/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td[1]/button")).click();
 	}
 
 	@Then("^Save Warehouse$")
 	public void save_Warehouse() {
-		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-		List<WebElement> list = driver.findElements(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody"));
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+		List<WebElement> list = driver.findElements(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td/table"));
 		Assert.assertTrue(definitionObj.find(list, "Warehouse_X_Testing: Capacity_Y_Testing"));
 		definitionObj.delete(list, "Warehouse_X_Testing: Capacity_Y_Testing");
 		driver.findElement(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[1]/td/table/tbody/tr/td[2]/button")).click();
@@ -73,8 +73,8 @@ public class WarehousesDefinitions implements SeleniumCucumber {
 	//Scenario: Delete Warehouse
 	@And("^I click to delete Warehouse$")
 	public void i_click_to_delete_Warehouse() {
-		List<WebElement> list = driver.findElements(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody"));
-		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+		List<WebElement> list = driver.findElements(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td/table"));
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
 		definitionObj.delete(list, "Warehouse_X_Testing: Capacity_Y_Testing");
 		driver.findElement(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[1]/td/table/tbody/tr/td[2]/button")).click();
 	}
@@ -82,8 +82,8 @@ public class WarehousesDefinitions implements SeleniumCucumber {
 
 	@Then("^Delete Warehouse$")
 	public void delete_Warehouse() {
-		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-		List<WebElement> list = driver.findElements(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody"));
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+		List<WebElement> list = driver.findElements(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td/table"));
 		Assert.assertFalse(definitionObj.find(list, "Warehouse_X_Testing: Capacity_Y_Testing"));
 		driver.close();
 	}
@@ -92,8 +92,8 @@ public class WarehousesDefinitions implements SeleniumCucumber {
 	//Scenario: Edit Warehouse
 	@When("^I click to edit Warehouse$")
 	public void i_click_to_edit_Warehouse() {
-		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-		List<WebElement> list = driver.findElements(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody"));
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+		List<WebElement> list = driver.findElements(By.xpath("/html/body/div[4]/div[2]/div/div[4]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td/table"));
 		definitionObj.edit(list, "Warehouse_X_Testing: Capacity_Y_Testing");
 
 	}

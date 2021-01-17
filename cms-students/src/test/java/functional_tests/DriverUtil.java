@@ -43,8 +43,9 @@ public class DriverUtil {
 		}
 
 		for (String key : config.keySet()) {
-			if (key.equals("firefox")) {
-				return loadFirefoxDriver(path);
+			//firefox
+			if (key.equals("chrome")) {
+				return loadChromeDriver(path);
 			}
 		}
 		return new HtmlUnitDriver();
