@@ -1,0 +1,68 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="jorge (generated)" id="1610898860486-1">
+        <createTable tableName="BATCH">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(60)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="mandDate" type="date"/>
+            <column name="wareId" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="jorge (generated)" id="1610898860486-2">
+        <createTable tableName="CONTACT">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="firstName" type="VARCHAR(40)"/>
+            <column name="lastName" type="VARCHAR(40)"/>
+            <column name="emailAddress" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="jorge (generated)" id="1610898860486-3">
+        <createTable tableName="PRODUCT">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="price" type="VARCHAR(20)"/>
+            <column name="batchId" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="jorge (generated)" id="1610898860486-4">
+        <createTable tableName="SHIPPING_LOCATION">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="jorge (generated)" id="1610898860486-5">
+        <createTable tableName="WAREHOUSE">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)"/>
+            <column name="totalCapacity" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="jorge (generated)" id="1610898860486-6">
+        <createIndex indexName="batchId" tableName="PRODUCT">
+            <column name="batchId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="jorge (generated)" id="1610898860486-7">
+        <createIndex indexName="wareId" tableName="BATCH">
+            <column name="wareId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="jorge (generated)" id="1610898860486-8">
+        <addForeignKeyConstraint baseColumnNames="wareId" baseTableName="BATCH" constraintName="BATCH_ibfk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="WAREHOUSE" validate="true"/>
+    </changeSet>
+    <changeSet author="jorge (generated)" id="1610898860486-9">
+        <addForeignKeyConstraint baseColumnNames="batchId" baseTableName="PRODUCT" constraintName="PRODUCT_ibfk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="BATCH" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
