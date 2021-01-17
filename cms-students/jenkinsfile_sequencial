@@ -2,7 +2,7 @@
 
 def projectName = 'cms-student-seq-pipeline'
 
-def gitCred = 'db746efe-3c61-40e5-8071-c81f2763b723'
+def gitCred = 'bitbucket-creds'
 def gitRepo = 'bitbucket.org/1160929/odsoft-m1b_g1.git'
 def gitBranch = 'master'
 def gitUsername = "1160929"
@@ -16,11 +16,11 @@ def unitTestResults = 'build/test-results/test'
 def integrationTestResults = 'build/test-results/integrationTest'
 def mutationTestResults = 'build/reports/pitest'
 
-def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms-student-seq-pipeline/builds"
+def jenkinsBuildFolder = "/var/lib/jenkins/jobs/SequencialPipelineCA2/builds"
 def jenkinsArchiveFolder = "archive"
 def artifactBuildPath = "build/libs/cms-students-1.0.war" 
 def artifactDeployPath = "/opt/tomcat/webapps/cms-students-sps.war" 
-def cmsHttp = 'http://127.0.0.1:8080/cms-students-sps/'
+def cmsHttp = 'http://127.0.0.1:8091/cms-students-sps/'
 
 pipeline {
     agent any

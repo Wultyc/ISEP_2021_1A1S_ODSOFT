@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module rename-to='testproducts'>
+
+    <inherits name='pt.isep.cms.Showcase'/>
+
+    <servlet path="/products/productsService" class="pt.isep.cms.products.server.ProductsServiceImpl" />
+
+</module>

@@ -1,30 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app>
 
+  <!-- Reference to database connection on tomcat -->
+  <resource-env-ref>
+    <resource-env-ref-name>jdbc/CMS_Students</resource-env-ref-name>
+    <resource-env-ref-type>javax.sql.DataSource</resource-env-ref-type>
+  </resource-env-ref>
+
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>Showcase.html</welcome-file>
   </welcome-file-list>
-  
+
   <!-- Servlets for the contacts -->
   <servlet>
     <servlet-name>contactsServiceServlet</servlet-name>
     <servlet-class>pt.isep.cms.contacts.server.ContactsServiceImpl</servlet-class>
   </servlet>
-  
+
   <servlet-mapping>
     <servlet-name>contactsServiceServlet</servlet-name>
     <url-pattern>/showcase/contactsService</url-pattern>
   </servlet-mapping>
 
-	<!-- Servlets for the Warehouses -->
+  <!-- Servlets for the Warehouses -->
   <servlet>
     <servlet-name>warehousesServiceServlet</servlet-name>
     <servlet-class>pt.isep.cms.warehouses.server.WarehousesServiceImpl</servlet-class>
   </servlet>
-  
+
   <servlet-mapping>
     <servlet-name>warehousesServiceServlet</servlet-name>
     <url-pattern>/showcase/warehousesService</url-pattern>
+  </servlet-mapping>
+
+  <!-- Servlets for the Batches -->
+
+  <servlet>
+    <servlet-name>batchesServiceServlet</servlet-name>
+    <servlet-class>pt.isep.cms.batches.server.BatchesServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>batchesServiceServlet</servlet-name>
+    <url-pattern>/showcase/batchesService</url-pattern>
+  </servlet-mapping>
+
+  <!-- Servlets for the ShippingLocations -->
+
+  <servlet>
+
+    <servlet-name>shippingLocationsServiceServlet</servlet-name>
+    <servlet-class>pt.isep.cms.shippingLocations.server.ShippingLocationsServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>shippingLocationsServiceServlet</servlet-name>
+    <url-pattern>/showcase/shippingLocationsService</url-pattern>
+  </servlet-mapping>
+
+  <!-- Servlets for the Products -->
+
+  <servlet>
+    <servlet-name>productsServiceServlet</servlet-name>
+    <servlet-class>pt.isep.cms.products.server.ProductsServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>productsServiceServlet</servlet-name>
+    <url-pattern>/showcase/productsService</url-pattern>
   </servlet-mapping>
 </web-app>

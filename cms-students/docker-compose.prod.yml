@@ -1,0 +1,31 @@
+version: "3"
+services:
+    #CMS Students
+    cms:
+        image: cms:${TAG}
+        container_name: cms_students_app
+        ports:
+          - 8080:8080
+        networks:
+          - default
+    #MySQL Service
+    db:
+        image: mysql:5.7.32
+        container_name: odsoft_db
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: CMS_Students
+            MYSQL_ROOT_PASSWORD: 9MAojmPlOb3e
+            MYSQL_USER: application
+            MYSQL_PASSWORD: app_pw
+        networks:
+          - default
+        volumes:
+           - odsoft_db_data:/var/lib/mysql
+volumes:
+    odsoft_db_data:
+networks:
+    default:

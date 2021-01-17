@@ -29,10 +29,10 @@ def artifactDeployPath = "/opt/tomcat/webapps/cms-students-spp.war"
 
 //  [Jorge]     [Jorge] [Jorge]     [Jorge]     [Jorge]
 def email_to = '1160929@isep.ipp.pt'
-def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms-student-parallel-pipeline/builds/"
+def jenkinsBuildFolder = "/var/lib/jenkins/jobs/SequencialPipelineCA2/builds/"
 def gitUsername = "1160929"
-def credential_ID = 'db746efe-3c61-40e5-8071-c81f2763b723' //laptop jorge
-def cmsHttp = 'http://127.0.0.1:8080/cms-students-spp/'
+def credential_ID = 'bitbucket-creds' //laptop jorge
+def cmsHttp = 'http://127.0.0.1:8091/cms-students-spp/'
 
 
 pipeline {

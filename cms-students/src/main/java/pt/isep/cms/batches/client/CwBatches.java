@@ -28,6 +28,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 import pt.isep.cms.client.ContentWidget;
 import pt.isep.cms.client.ShowcaseConstants;
+import pt.isep.cms.warehouses.client.WarehousesService;
+import pt.isep.cms.warehouses.client.WarehousesServiceAsync;
 
 /**
  * Main Content Widget for Batches.
