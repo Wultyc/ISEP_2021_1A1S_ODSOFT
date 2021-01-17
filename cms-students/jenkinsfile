@@ -278,7 +278,7 @@ pipeline {
             steps{
                 dir(cmsPath) {
                     runCmd("docker build -t cms:${tag}")
-                    runCmd("docker push mb1g1/cms:${tag}")
+                    //runCmd("docker push mb1g1/cms:${tag}")
                     runCmd("docker-compose up")
 
                 }
