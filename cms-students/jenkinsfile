@@ -286,40 +286,40 @@ pipeline {
                 input 'Approve deploy?'
             }
         }
-        stage('Generate PDF Report and Moodle Submission File') {
-			when{
-				expression{
-					isToRunStage(isProd, enable_generate_pdf_and_zip)
-				}
-			}
-			steps{
-				runCmd("mkdir submissionsFiles")
-				runCmd ("pandoc --verbose -V geometry:margin=1in -o submissionsFiles/report.pdf readme.md")
+        // stage('Generate PDF Report and Moodle Submission File') {
+		// 	when{
+		// 		expression{
+		// 			isToRunStage(isProd, enable_generate_pdf_and_zip)
+		// 		}
+		// 	}
+		// 	steps{
+		// 		runCmd("mkdir submissionsFiles")
+		// 		runCmd ("pandoc --verbose -V geometry:margin=1in -o submissionsFiles/report.pdf readme.md")
 
-				if(isUnix()){
-                    sh 'cp -vr cms-students/build/reports ./submissionsFiles/reports'
-                    sh 'cp -v cms-students/jenkinsfile ./submissionsFiles'
-                    sh 'cp -vr cms-students/build/libs/cms-students-1.0.war ./submissionsFiles'
-                    sh 'cp -vr cms-students/build/docs/javadoc ./submissionsFiles/javadoc'
-                    sh 'cp -vr cms-students/build/docs/test-results ./submissionsFiles/test-results'
+		// 		if(isUnix()){
+        //             sh 'cp -vr cms-students/build/reports ./submissionsFiles/reports'
+        //             sh 'cp -v cms-students/jenkinsfile ./submissionsFiles'
+        //             sh 'cp -vr cms-students/build/libs/cms-students-1.0.war ./submissionsFiles'
+        //             sh 'cp -vr cms-students/build/docs/javadoc ./submissionsFiles/javadoc'
+        //             sh 'cp -vr cms-students/build/docs/test-results ./submissionsFiles/test-results'
 
 
-                } else {
-                    bat 'Xcopy /E /I /Y cms-students\\build\\reports .\\submissionsFiles\\reports'
-                    bat 'copy /Y cms-students\\jenkinsfile .\\submissionsFiles'
-                    bat 'copy /Y cms-students\\build\\libs\\cms-students-1.0.war .\\submissionsFiles'
-                    bat 'Xcopy /E /I /Y cms-students\\build\\docs\\javadoc .\\submissionsFiles\\javadoc'
-                    bat 'Xcopy /E /I /Y cms-students\\build\\test-results .\\submissionsFiles\\tests-results'
+        //         } else {
+        //             bat 'Xcopy /E /I /Y cms-students\\build\\reports .\\submissionsFiles\\reports'
+        //             bat 'copy /Y cms-students\\jenkinsfile .\\submissionsFiles'
+        //             bat 'copy /Y cms-students\\build\\libs\\cms-students-1.0.war .\\submissionsFiles'
+        //             bat 'Xcopy /E /I /Y cms-students\\build\\docs\\javadoc .\\submissionsFiles\\javadoc'
+        //             bat 'Xcopy /E /I /Y cms-students\\build\\test-results .\\submissionsFiles\\tests-results'
                     
 
-                }
+        //         }
 
-				zip archive: true, dir: 'submissionsFiles', zipFile: 'submission.zip'
+		// 		zip archive: true, dir: 'submissionsFiles', zipFile: 'submission.zip'
 
-				archiveArtifacts "submission.zip"
-				archiveArtifacts "submissionsFiles/report.pdf"
-			}
-		}
+		// 		archiveArtifacts "submission.zip"
+		// 		archiveArtifacts "submissionsFiles/report.pdf"
+		// 	}
+		// }
 		stage('Deploy contatainers') {
             when {
                 expression {
