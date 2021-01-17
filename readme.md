@@ -387,7 +387,16 @@ Para integrar este plugin no projeto GWT foi necessário introduzir no ficheiro 
    > }
 
 ## Funtional e Smoke Tests
-Texto Aqui
+
+Optou-se pela integração dos testes do Cucumber e dos testes de Selenium. Por um lado temos as regras detalhadas do Cucumber e o motor de “aplicação” através dos drivers operados pelo Selenium. 
+Para as regras foram criadas 3 principais ações, das quais: 
+
+> Editar                                                                        
+> Criar                                                                         
+> Apagar                                                                                                   
+
+Para todos os atributos da aplicação (Produtos, Armazéns, Lotes, Localização).   
+
 
 ## Continuous Deployment
 O continuos deployment esta assente em docker compose. Foi criado um ficheiro especifico para a simulação do do ambiente de produção que apenas é executado quando a branch sobre a qual a pipeline esta a correr é Master. Para o update do schema da base de dados foi usado o liquibase. Inicialmente pensou-se em executar estes passos em paralelo no entanto o grupo decidiu que a base de dados e a aplicação deveria ser subidos simultaneamente. Deste modo consegue-se reutilizar a solução do docker compose.
