@@ -3,12 +3,13 @@
 def isProd = findIfItsProd(scm.branches[0].name)
 
 //enable steps in dev
-def enable_cq_checkstyle = false
-def enable_cq_findbugs = false
-def enable_test_unit = false
+def enable_cq_checkstyle = true
+def enable_cq_findbugs = true
+def enable_test_unit = true
 def enable_test_intg = false
 def enable_test_pitm = false
-def enable_test_acc_selenium = false
+def enable_test_acc_cucumber = true
+def enable_test_acc_selenium = true
 def enable_send_email = false
 def enable_generate_pdf_and_zip = true
 
@@ -18,7 +19,7 @@ def gitRepo = 'bitbucket.org/1160929/odsoft-m1b_g1.git'
 def gitBranch = scm.branches[0].name
 
 //Project Tag
-def tag = "${gitBranch}-${BUILD_NUMBER}"
+def tag = "${gitBranch}-${BUILD_NUMBER}-${GIT_USERNAME}"
 
 //Project configs
 def cmsPath = 'cms-students'
@@ -28,27 +29,17 @@ def javadocPath = 'build/docs/javadoc/'
 //Tests configs
 def unitTestReport = 'build/reports/test'
 def unitTestResults = 'build/test-results/test'
-def JintegrationTestReport = 'build/reports/jacoco/jacocoIntegrationReport/html'
-def integrationTestReport = 'build/reports/integrationTest/index.html'
 def integrationTestResults = 'build/test-results/integrationTest'
-def checkstyleReport = 'build/reports/checkstyle/main.html'
-def findbugsReport = 'build/reports/findbugs/main.html'
 def mutationTestResults = 'build/reports/pitest'
 
 //Jenkins Archive
 def jenkinsBuildFolder = "/var/lib/jenkins/jobs/cms-student-seq-pipeline/builds"
 def jenkinsArchiveFolder = "archive"
 
-//Acc tests
-def cmsHttp = 'http://127.0.0.1:8091/cms-students-sps/'
-def cmsHttp_Prod = 'http://127.0.0.1:8091/cms-students-1.0/#!CwProducts'
-def cmsHttp_Ship = 'http://127.0.0.1:8091/cms-students-1.0/#!CwShippingLocations'
-def cmsHttp_Batch = 'http://127.0.0.1:8091/cms-students-1.0/#!CwBatches'
-def cmsHttp_Ware = 'http://localhost:8091/cms-students-1.0/#!CwWarehouses'
-
 //Tomcat setting
-def artifactBuildPath = "build/libs/cms-students-1.0.war"
-def artifactDeployPath = "/opt/tomcat/webapps/cms-students-sps.war"
+def artifactBuildPath = "build/libs/cms-students-1.0.war" 
+def artifactDeployPath = "/opt/tomcat/webapps/cms-students-sps.war" 
+def cmsHttp = 'http://127.0.0.1:8091/cms-students-sps/'
 
 //DB Settings
 def conString = "jdbc:mysql://localhost:3306/CMS_Students"
@@ -60,29 +51,29 @@ def emailRecipient = '1150639@isep.ipp.pt,1160929@isep.ipp.pt,1161042@isep.ipp.p
 pipeline {
     agent any
 
-    stages {
-        stage('Repository Checkout') {
-            steps {
-                echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL} [Build number: ${env.BUILD_NUMBER}] [Workspace: ${env.WORKSPACE}] [Environment: ${isProd ? 'Production' : 'Development'}]"
-                echo "Checkout from ${gitBranch}"
+	stages {
+	    stage('Repository Checkout') {
+			steps{
+                echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL} [Build number: ${env.BUILD_NUMBER}] [Workspace: ${env.WORKSPACE}] [Environment: ${isProd ? 'Production':'Development'}]"
+				echo "Checkout from ${gitBranch}"
                 git url: "https://${gitRepo}",
-                        branch: gitBranch,
-                        credentialsId: gitCred
+                	branch: gitBranch,
+                	credentialsId: gitCred
             }
         }
-        stage('Build War file') {
-            steps {
+	    stage('Build War file') {
+			steps {
                 dir(cmsPath) {
                     script {
-                        runCmd('gradle clean war')
+                        runCmd('gradle war')
                     }
 
                     archiveArtifacts warPath
                 }
             }
         }
-        stage('Javadoc') {
-            steps {
+	    stage('Javadoc') {
+			steps {
                 dir(cmsPath) {
                     script {
                         runCmd('gradle javadoc')
@@ -93,200 +84,174 @@ pipeline {
                 }
             }
         }
-        stage('Check Code Quality') {
-            failFast true
+		stage('Check Code Quality'){
+			failFast true
             parallel {
-                stage('FindBugs + HTMLReport') {
-                    when {
-                        expression {
-                            isToRunStage(isProd, enable_cq_findbugs)
-                        }
-                    }
-                    steps {
+                stage('FindBugs') {
+					when{
+						expression{
+							isToRunStage(isProd, enable_cq_findbugs)
+						}
+					}
+                    steps{
                         echo "FindBugs"
-                        dir(cmsPath) {
-                            script {
-                                runCmd('gradle findbugsMain')
-                            }
-                            publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'build/reports/findbugs', reportFiles: 'main.html', reportName: 'Findbugs Report', reportTitles: ''])
-                            //archiveArtifacts findbugsReport
-                        }
                     }
                 }
-                stage('Checkstyle + HTMLReport') {
-                    when {
-                        expression {
-                            isToRunStage(isProd, enable_cq_checkstyle)
-                        }
-                    }
-                    steps {
+                stage('Checkstyle') {
+					when{
+						expression{
+							isToRunStage(isProd, enable_cq_checkstyle)
+						}
+					}
+                    steps{
                         echo "Checkstyle"
-                        dir(cmsPath) {
-                            script {
-                                runCmd('gradle checkstyleMain')
-                            }
-                            publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'build/reports/checkstyle', reportFiles: 'main.html', reportName: 'Checkstyle Report', reportTitles: ''])
-                            //archiveArtifacts checkstyleReport
-                        }
                     }
                 }
             }
         }
-        stage('Run Tests') {
-            failFast true
+		stage('Run Tests'){
+			failFast true
             parallel {
-                stage('Unit test') {
-                    when {
-                        expression {
-                            isToRunStage(isProd, enable_test_unit)
-                        }
-                    }
-                    steps {
-                        dir(cmsPath) {
-                            script {
-                                runCmd('gradle test')
-                                runCmd('gradle jacocoTestReport')
-                            }
-                            junit unitTestResults + '/*.xml'
-                            publishHTML([
-                                    allowMissing         : false,
-                                    alwaysLinkToLastBuild: false,
-                                    keepAll              : false,
-                                    reportDir            : unitTestReport,
-                                    reportFiles          : 'index.html',
-                                    reportName           : 'Unit Test Coverage HTML Report',
-                                    reportTitles         : ''])
-                        }
+				stage('Unit test') {
+					when{
+						expression{
+							isToRunStage(isProd, enable_test_unit)
+						}
+					}
+					steps {
+						dir(cmsPath) {
+							script {
+								runCmd('gradle test')
+								runCmd('gradle jacocoTestReport')
+							}
+							junit unitTestResults + '/*.xml'
+							publishHTML([
+									allowMissing         : false,
+									alwaysLinkToLastBuild: false,
+									keepAll              : false,
+									reportDir            : unitTestReport,
+									reportFiles          : 'index.html',
+									reportName           : 'Unit Test Coverage HTML Report',
+									reportTitles         : ''])
+						}
+					}
+				}
+				stage('Integration test') {
+					when{
+						expression{
+							isToRunStage(isProd, enable_test_intg)
+						}
+					}
+					steps {
+						dir(cmsPath) {
+							script {
+								runCmd('gradle integrationTest')
+								runCmd('gradle jacocoIntegrationReport')
+								// To show the contents on the log before publishing
+							}
+							jacoco buildOverBuild: true,
+									deltaBranchCoverage: '5',
+									deltaClassCoverage: '5',
+									deltaComplexityCoverage: '5',
+									deltaInstructionCoverage: '5',
+									deltaLineCoverage: '5',
+									deltaMethodCoverage: '5',
+									maximumBranchCoverage: '80',
+									maximumClassCoverage: '80',
+									maximumComplexityCoverage: '80',
+									maximumInstructionCoverage: '80',
+									maximumLineCoverage: '80',
+									maximumMethodCoverage: '80',
+									minimumBranchCoverage: '5',
+									minimumClassCoverage: '5',
+									minimumComplexityCoverage: '5',
+									minimumInstructionCoverage: '5',
+									minimumLineCoverage: '5',
+									minimumMethodCoverage: '5'
+							publishHTML([
+									allowMissing         : false,
+									alwaysLinkToLastBuild: false,
+									keepAll              : false,
+									reportDir            : integrationTestResults,
+									reportFiles          : 'index.html',
+									reportName           : 'Integration Test Coverage HTML Report',
+									reportTitles         : ''])
+						}
+					}
+				}
+				stage('Mutation Test') {
+					when{
+						expression{
+							isToRunStage(isProd, enable_test_pitm)
+						}
+					}
+					steps {
+						dir(cmsPath) {
+							script {
+								runCmd('gradle pitest')
+							}
+							publishHTML([
+									allowMissing         : false,
+									alwaysLinkToLastBuild: false,
+									keepAll              : false,
+									reportDir            : mutationTestResults,
+									reportFiles          : 'index.html',
+									reportName           : 'Pit Mutation Test Coverage HTML Report',
+									reportTitles         : ''])
+						}
+					}
+				}
+			}
+		}
+		stage('Build & Run Docker Image') {
+			steps{
+				echo "Build Docker Image"
+				echo "Run Docker Image"
+			}
+		}
+	    stage('Acceptance Tests'){
+            parallel {
+                stage('Acceptance Tests with Cucumber') {
+					when{
+						expression{
+							isToRunStage(isProd, enable_test_acc_cucumber)
+						}
+					}
+                    steps{
+                        echo "Acceptance Tests with Cucumber"
                     }
                 }
-                stage('Integration test') {
-                    when {
-                        expression {
-                            isToRunStage(isProd, enable_test_intg)
-                        }
-                    }
-                    steps {
-                        dir(cmsPath) {
-                            script {
-                                runCmd('gradle integrationTest')
-                                runCmd('gradle jacocoIntegrationReport')
-                                // To show the contents on the log before publishing
-                            }
-                            jacoco buildOverBuild: true,
-                                    deltaBranchCoverage: '5',
-                                    deltaClassCoverage: '5',
-                                    deltaComplexityCoverage: '5',
-                                    deltaInstructionCoverage: '5',
-                                    deltaLineCoverage: '5',
-                                    deltaMethodCoverage: '5',
-                                    maximumBranchCoverage: '80',
-                                    maximumClassCoverage: '80',
-                                    maximumComplexityCoverage: '80',
-                                    maximumInstructionCoverage: '80',
-                                    maximumLineCoverage: '80',
-                                    maximumMethodCoverage: '80',
-                                    minimumBranchCoverage: '5',
-                                    minimumClassCoverage: '5',
-                                    minimumComplexityCoverage: '5',
-                                    minimumInstructionCoverage: '5',
-                                    minimumLineCoverage: '5',
-                                    minimumMethodCoverage: '5'
-                            publishHTML([
-                                    allowMissing         : false,
-                                    alwaysLinkToLastBuild: false,
-                                    keepAll              : false,
-                                    reportDir            : integrationTestResults,
-                                    reportFiles          : 'index.html',
-                                    reportName           : 'Integration Test Coverage HTML Report',
-                                    reportTitles         : ''])
-                        }
+                stage('Acceptance Tests with Selenium') {
+					when{
+						expression{
+							isToRunStage(isProd, enable_test_acc_selenium)
+						}
+					}
+                    steps{
+                        echo "Acceptance Tests with Selenium"
                     }
                 }
-                stage('Mutation Test') {
-                    when {
-                        expression {
-                            isToRunStage(isProd, enable_test_pitm)
-                        }
-                    }
-                    steps {
-                        dir(cmsPath) {
-                            script {
-                                runCmd('gradle pitest')
-                            }
-                            publishHTML([
-                                    allowMissing         : false,
-                                    alwaysLinkToLastBuild: false,
-                                    keepAll              : false,
-                                    reportDir            : mutationTestResults,
-                                    reportFiles          : 'index.html',
-                                    reportName           : 'Pit Mutation Test Coverage HTML Report',
-                                    reportTitles         : ''])
-                        }
+                stage('Smoke Test') {
+                    steps{
+                        echo "Smoke Test"
                     }
                 }
             }
         }
-        stage('Build & Run Docker Image') {
-            steps {
-                dir(cmsPath) {
-                    runCmd("docker build -t cms:${tag}-${GIT_USERNAME}")
-                    //runCmd("docker push mb1g1/cms:${tag}")
-                    runCmd("docker-compose up")
-
-                }
-            }
+	    stage('Manual approval') {
+			when{
+				expression{
+					isToRunStage(isProd, enable_send_email)
+				}
+			}
+			steps {
+				mail to: emailRecipient,
+					 subject: "Job ${env.JOB_NAME} (${env.BUILD_NUMBER}) is waiting for approval",
+					 body: "The job ${env.JOB_NAME} is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue."
+				input 'Approve deploy?'
+			}
         }
-        // stage('Acceptance Tests') {
-        //     parallel {
-        //         stage('Acceptance Tests with Selenium and Cucumber') {
-        //             expression {
-        //                 isToRunStage(isProd, enable_test_acc_selenium)
-        //             }
-        //             steps {
-        //                 if (isUnix()) {
-        //                     sh './gradlew selenium'
-        //                 } else {
-        //                     bat 'gradlew.bat selenium'
-        //                 }
-        //             }
-        //         }
-        //         stage('Smoke test') {
-        //             steps {
-        //                 echo 'Waiting 10 seconds before Smoke Test...'
-        //                 sleep(
-        //                         time: 10,
-        //                         unit: "SECONDS"
-        //                 )
-        //                 script {
-        //                     def response = sh(
-        //                             returnStdout: true,
-        //                             script: 'curl --write-out "%{http_code}" --silent --output /dev/null ' + cmsHttp_Ware
-        //                     )
-        //                     if (response == "200") {
-        //                         echo 'CMS is up! (HTTP 200)'
-        //                         return true
-        //                     } else {
-        //                         error("Error executing smoke test! Response code: " + response)
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-        stage('Manual approval') {
-            when {
-                expression {
-                    isToRunStage(isProd, enable_send_email)
-                }
-            }
-            steps {
-                mail to: emailRecipient,
-                        subject: "Job ${env.JOB_NAME} (${env.BUILD_NUMBER}) is waiting for approval",
-                        body: "The job ${env.JOB_NAME} is currently building and it's on the Manual Test phase. Please go to ${env.BUILD_URL}. to continue."
-                input 'Approve deploy?'
-            }
-        }
-        stage('Generate PDF Report and Moodle Submission File') {
+		stage('Generate PDF Report and Moodle Submission File') {
 			when{
 				expression{
 					isToRunStage(isProd, enable_generate_pdf_and_zip)
@@ -320,74 +285,74 @@ pipeline {
 			}
 		}
 		stage('Deploy contatainers') {
-            when {
-                expression {
-                    isProd
-                }
-            }
-            steps {
-                dir(cmsPath) {
-                    runCmd("docker-compose up -f docker-compose.prod.yml -e TAG=${tag}")
-                }
-            }
-        }
-        stage('Update Database Schema') {
-            when {
-                expression {
-                    isProd
-                }
-            }
-            steps {
-                dir(cmsPath) {
-                    runCmd("liquibase --url=${conString} --changeLogFile=${changelog} update")
-                }
-            }
-        }
-        
-    }
-    post {
-        success {
-            withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                sendTagToBitbucket(gitCred, gitRepo, "Success-${tag}-${GIT_USERNAME}");
-            }
-        }
+			when{
+				expression{
+					isProd
+				}
+			}
+			steps{
+				dir(cmsPath) {
+					runCmd("docker-compose up -f docker-compose.prod.yml -e TAG=${tag}")
+				}
+			}
+		}
+		stage('Update Database Schema') {
+			when{
+				expression{
+					isProd
+				}
+			}
+			steps{
+				dir(cmsPath) {
+					runCmd("liquibase --url=${conString} --changeLogFile=${changelog} update")
+				}
+			}
+		}
+	}
+	
+	post {
+		success {
+			withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+				sendTagToBitbucket(gitCred, gitRepo,"Success-${tag}");
+			}
+		}
         failure {
-            withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                sendTagToBitbucket(gitCred, gitRepo, "Failed-${tag}-${GIT_USERNAME}");
-            }
+			withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+				sendTagToBitbucket(gitCred, gitRepo,"Failed-${tag}");
+			}
 
-            mail to: emailRecipient,
-                    subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) failled",
-                    body: "The job '${env.JOB_NAME}' failled. Please go to ${env.BUILD_URL}. to for more details."
+			mail to: emailRecipient,
+				 subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) failled",
+				 body: "The job '${env.JOB_NAME}' failled. Please go to ${env.BUILD_URL}. to for more details."
         }
     }
 }
 
-def sendTagToBitbucket(gitCred, gitRepo, message) {
-    script {
-        withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-            runCmd("git tag ${message}")
-            runCmd("git push https://${env.GIT_USERNAME}:${env.GIT_PASSWORD}@${gitRepo} --tags")
-        }
-    }
+def sendTagToBitbucket(gitCred, gitRepo, message){
+	script {
+		withCredentials([usernamePassword(credentialsId: gitCred, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+			runCmd("git tag ${message}")
+			runCmd("git push https://${env.GIT_USERNAME}:${env.GIT_PASSWORD}@${gitRepo} --tags")
+		}
+	}
 }
 
-def isToRunStage(boolean isProd, boolean runFlag) {
-    return isProd || runFlag
+def isToRunStage(boolean isProd, boolean runFlag){
+	return isProd || runFlag
 }
 
 def findIfItsProd(branch) {
-    if (branch == 'master') {
-        return true
-    } else {
-        return false
-    }
+  if (branch == 'master') {
+    return true
+  } else {
+    return false
+ }
 }
 
-def runCmd(String cmd) {
-    if (isUnix()) {
-        sh cmd
-    } else {
-        bat cmd
-    }
+def runCmd(String cmd){
+	if(isUnix()){
+		sh cmd
+	} else {
+		bat cmd
+	}
 }
