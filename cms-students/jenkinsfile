@@ -19,7 +19,7 @@ def gitRepo = 'bitbucket.org/1160929/odsoft-m1b_g1.git'
 def gitBranch = scm.branches[0].name
 
 //Project Tag
-def tag = "${gitBranch}-${BUILD_NUMBER}-${GIT_USERNAME}"
+def tag = "${gitBranch}-${BUILD_NUMBER}-1160929"
 
 //Project configs
 def cmsPath = 'cms-students'
