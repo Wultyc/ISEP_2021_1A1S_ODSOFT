@@ -311,8 +311,9 @@ pipeline {
                     bat 'Xcopy /E /I /Y cms-students\\build\\test-results .\\submissionsFiles\\tests-results'
                     
                 }
-
+                script{
                 zip zipFile: 'submission.zip', archive: false, dir: 'submissionsFiles'
+                }
                 archiveArtifacts artifacts: 'test.zip', fingerprint: true
 				archiveArtifacts "submission.zip"
 				archiveArtifacts "submissionsFiles/report.pdf"
