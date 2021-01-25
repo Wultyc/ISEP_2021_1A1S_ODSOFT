@@ -260,6 +260,7 @@ pipeline {
 			steps{
 				runCmd("mkdir submissionsFiles")
 				runCmd ("pandoc --verbose -V geometry:margin=1in -o submissionsFiles/report.pdf readme.md")
+                script {
                 if(isUnix()){
                     sh 'cp -vr cms-students/build/reports ./submissionsFiles/reports'
                     sh 'cp -v cms-students/jenkinsfile ./submissionsFiles'
@@ -274,7 +275,8 @@ pipeline {
                     bat 'Xcopy /E /I /Y cms-students\\build\\docs\\javadoc .\\submissionsFiles\\javadoc'
                     bat 'Xcopy /E /I /Y cms-students\\build\\test-results .\\submissionsFiles\\tests-results'
                     
-                 }
+                 }                 
+                }
                 zip zipFile: 'submission.zip', archive: false, dir: 'submissionsFiles'
                 
                 archiveArtifacts artifacts: 'submission.zip', fingerprint: true
